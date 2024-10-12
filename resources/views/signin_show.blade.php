@@ -1,5 +1,5 @@
 @extends('layouts.left-navbar')
-@section('title', 'Авторизация')
+@section('title', 'Аккаунт')
 @section('content')
     
 @endsection
