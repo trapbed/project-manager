@@ -10,4 +10,5 @@ use App\Http\Controllers\ReportController;
 // Route::get('/', function () {return view('welcome');
 // });
 Route::get('/', function(){ return view('signin_show'); });
+// Route::get('/index', function(){ return view('index'); })->name('index');
 

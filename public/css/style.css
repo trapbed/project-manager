@@ -1,0 +1,157 @@
+@font-face{
+    font-family: "inter";
+    src: url('/fonts/Inter_18pt-Light.ttf');
+}
+*{
+    font-family: 'inter';
+    margin: 0;
+    padding: 0;
+}
+
+.mouseHid{
+    display: none;
+}
+.content{
+    display: flex;
+    flex-direction: row;
+    gap: 4vmax;
+    width: auto;
+    padding-right: 4vmax;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+#leftNavbar{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 5vmax;
+    height: 100vmin;
+    box-shadow: 0.2vmax 0px 1.2vmax 0 rgba(0, 0, 0, 0.1);
+}
+#logoNav{
+    display: flex;
+    flex-direction: row;
+}
+#logoNav{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 1.4vmax;
+    gap: 2.4vmax;
+    font-size: 0.6vmax;
+    /* font-weight: 100; */
+    font-family: 'inter';
+    font-size: 0.6vmax;
+    /* width: 100%; */
+    height: 4.8vmax;
+}
+#logoNav>img{
+    width: 2.5vmax;
+}
+
+.linkNav{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 1.4vmax;
+    gap: 2.4vmax;
+    /* font-weight: 100; */
+    font-family: 'inter';
+    font-size: 0.6vmax;
+    /* width: 100%; */
+    height: 3.4vmax;
+}
+.linkNav>img{
+    width: 2.5vmax;
+}
+.linkNav>h2{
+    font-family: 'inter';
+    font-size: 1.1vmax;
+}
+
+.br1{
+    background-color: pink;
+    height: 1vmax;
+}
+.br04{
+    height: 0.6vmax;
+}
+
+#accountNav{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    padding-left: 1.4vmax;
+    gap: 2.4vmax;
+    font-family: 'inter';
+    font-size: 1.2vmax;
+    height: 5.6vmax;
+}
+#accountNav>img{
+    width: 2.5vmax;
+    height: 2.5vmax;
+}
+.backgroundNav:hover{
+    background-color: rgba(118, 159, 203, 0.4);
+}
+
+#backgrounfdModal{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100vmax;
+    height: 100vmin;
+    font-family: 'inter';
+    font-weight: 200;
+    /* background-color: #0C122A; */
+}
+#formLogin{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: -10vmax;
+    width: 30vmax;
+    height: 50vmin;
+    background-color: rgba(118, 159, 203, 0.4);
+    border-radius: 1vmax;
+}
+#formLogin>form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2vmax;
+}
+#formLogin>form>label{
+    display: flex;
+    flex-direction: column;
+    gap: 1vmax;
+    font-size: 1.2vmax;
+}
+#formLogin>form>label>input{
+    font-size: 1.2vmax;
+    width: 25vmax;
+    padding-left: 1vmax;
+    height: 2.6vmax;
+    outline: none;
+    border: transparent;
+    border-radius: 0.4vmax;
+}
+#formLogin>form>input{
+    align-self: flex-end;
+    width: 10vmax;
+    height: 2.6vmax;
+    border-radius: 0.4vmax;
+    outline: none;
+    border: transparent;
+    font-family: inter;
+    font-size: 1.2vmax;
+    background-color: transparent;
+    text-decoration: underline;
+}
+#formLogin>form>input:hover{
+    background-color: #0C122A;
+    color: aliceblue;
+    text-decoration: transparent;
+}
