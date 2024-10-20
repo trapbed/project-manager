@@ -10,20 +10,20 @@
 <body>
     <div id="backgrounfdModal">
         <div id="formLogin">
-            <form action="{{route('index')}}">
+            <form action="{{route('login')}}" method="post">
+                @csrf
                 <h1>Войти</h1>
                 <label>
                     Почта
-                    <input type="text">
+                    <input type="text" name="email" class="form-control @error('title') is-invalid @enderror" >
                 </label>
                 <label>
                     Пароль
-                    <input type="password">
+                    <input type="password" name="pass" class="form-control @error('content') is-invalid @enderror" >
                 </label>
                 <input type="submit" value="Войти">
             </form>
         </div>
     </div>    
-        
 </body>
 </html>
