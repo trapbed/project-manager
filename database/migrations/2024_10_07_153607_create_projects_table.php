@@ -17,9 +17,10 @@ return new class extends Migration
             $table->id();
             $table->string('title', 200);
             $table->text('description');
+            $table->foreignid('user_id')->constrained();
             $table->date('started_at');
             $table->date('finished_at');
-            $table->enum('status', ['0','1','2']);
+            $table->enum('status', ['Создан','Впроцессе','Завершен']);
             $table->timestamps();
         });
     }

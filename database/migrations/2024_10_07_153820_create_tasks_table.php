@@ -18,12 +18,15 @@ return new class extends Migration
             $table->string('title', 200);
             $table->text('description');
             $table->unsignedBigInteger('project_id');
+            $table->datetimes('started_at')->useCurrent();
+            $table->datetimes('finished_at');
             $table->foreign('project_id')
             ->references('id')->on('projects')
             ->onDelete('cascade');
             // $table->unsignedBigInteger('user_id');
             $table->foreignid('user_id')->constrained();
-            $table->enum('priority', ['0','1','2']);
+            $table->enum('priority', ['Низкий','Высокий','Средний']);
+            $table->enum('status', ['Назначена','Выполняется','Завершена']);
             $table->timestamps();
         });
     }
