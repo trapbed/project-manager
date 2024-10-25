@@ -1,0 +1,58 @@
+pages/users/tasks
+
+@extends('layouts.left-navbar')
+@section('title', 'Проекты')
+@section('content')
+@foreach($tasks as $task)
+    <div class='oneTaskUser'>
+        {{$task->title}}
+    </div>
+@endforeach
+@endsection('content')
+
+
+WorkerMiddleware
+<?php
+namespace App\Http\Middleware;
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
+class WorkerMiddleware
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function handle(Request $request, Closure $next): Response
+    {
+        if(Auth::user()->role=='worker') {return redirect('my_tasks');}
+        else {
+            // $mess = $request->sessionput('mess' ,'Войдите в аккаунт!');
+            return redirect('tasks')->with(['mess'=>'LOGIN!']);
+        }
+    }
+}
+
+
+Kernel
+protected $routeMiddleware = [
+        'auth'=>\app\Http\Middleware\AuthMiddleware::class,
+        'admin'=>\app\Http\Middleware\AdminMiddleware::class,
+        'worker'=>\app\Http\Middleware\WorkerMiddleware::class,
+];
+
+
+web.php
+Route::get('/', function(){return view('index');})->name('');
+Route::post('/', [AuthController::class, 'login'])->name('login');
+Route::group(['middleware'=>['auth']], function(){
+    Route::get('my_tasks', [TaskController::class, 'user_tasks'])->middleware('worker');
+    Route::get('tasks', [TaskController::class, 'user_tasks'])->name('tasks');
+    Route::get('users', [UserController::class, 'all_users'])->name('users');
+    Route::get('projects', [ProjectController::class, 'all_projects'])->name('project');
+    Route::get('/logout', function(){Auth::logout();return redirect('/');})->name('logout');
+});
+Route::post('register_user', [AuthController::class, 'register'])->name('register_user');
+
