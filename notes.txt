@@ -56,3 +56,6 @@ Route::group(['middleware'=>['auth']], function(){
 });
 Route::post('register_user', [AuthController::class, 'register'])->name('register_user');
 
+
+
+NO VIEWS, GITIGNORE
