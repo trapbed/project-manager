@@ -2,7 +2,7 @@
     require 'layouts/header.php';
    //  require "js/tasks_api.js";
 ?>
-<script src=" ../js/projects_api.js"></script>
+<!-- <script src=" ../js/projects_api.js"></script> -->
 
 <div id="left_block">
    <div id="search_select">
@@ -19,39 +19,67 @@
 
    
    <div id="infoRows">
-        <table class="table" id="projectsTable">
-            <tr id="infoRowHeader">
-            <td class="taskN">Название проекта</td>
-            <td class="taskD">Описание</td>
-            <td class="taskM">Руководитель</td>
-            <td class="taskW">Статус</td>
-            <td class="taskP">Дата начала</td>
-            <td class="taskE">Дата окончания</td>
-            <td class="taskS">Подробнее</td>
-            <td class="taskA">Действия</td>
-            </tr>
-    <!-- <table class="table" id="tasksTable">
-         <tr id="infoRowHeader">
-            <td class="taskN">Название задачи</td>
-            <td class="taskD">Описание</td>
-            <td class="taskNP">Название проекта</td>
-            <td class="taskM">Руководитель</td>
-            <td class="taskW"> Исполнитель</td>
-            <td class="taskP">Приоритет</td>
-            <td class="taskE">Окончание</td>
-            <td class="taskS">Статус</td>
-            <td class="taskA">Действия</td>
-         </tr>
-      </table>
-   </div>-->
+   <div class="oneProject">
+            <div class="titleOneProject"></div>
+            <div class="oneProjSeeMore more">
+                Подробнее
+            </div>
+            <div class="moreOneProj">
+                <hr class="BTWOneProj">
+                <div class="oneProjMoreInfo">
+                    <div class="dateStatusOne">
+                        <div class="row1">Дата начала: </div>
+                        <div class="row2">Дата окончания: </div>
+                        <div class="row3">Осталось дней: </div>
+                        <div class="row4">Статус: </div>
+                    </div>
+                    <div class="tasksOneProj">
+                        
+                        <div class="allinfoTasksOneProj">
+                            <div class="row1">Задач: </div>
+                            <div class="row2">Выполнено: </div>
+                            <div class="row3">Осталось: </div>
+                        </div>
+                        <div class="scheudleTasksOneProj">
+                            <span class="more seeTasks">Смотреть задачи &#9650;</span>
+                            <!--  -->
+                            <table class="tasksOneProject">
+                                <tr>
+                                    <td class="nameTaskProj">Название задачи</td>
+                                    <td class="workerTaskProj">Исполнитель</td>
+                                    <td class="statusTaskProj">Статус</td>
+                                    <td class="endTaskProj">Окончание</td>
+                                </tr>
+                                    <tr class="taskRowOneProj">
+                                        <td class="nameTaskProj"></td>
+                                        
+                                        <td class="workerTaskProj"></td>
+                                        <td class="statusTaskProj"></td>
+                                        <td class="endTaskProj"></td>
+                                    </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="descOneProj">
+                        <span>Описание:</span>
+                        <span class="more descOneProjMore">Смотреть</span>
+                        <div class="descOneProjHide"><span></span> <span class="more hideDescOneProj">Скрыть</span></div>
+                    </div>
+                    <div class="btnsOneProj">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        
    <div id="paginate">
       
    </div> 
 </div>
 <script>
-   if(sessionStorage.getItem('role') != 'admin'){
-      location.href = sessionStorage.getItem('role')+'tasks.php';
-   }
+   // if(sessionStorage.getItem('role') != 'admin'){
+   //    location.href = sessionStorage.getItem('role')+'tasks.php';
+   // }
 </script>
 <script src="../js/script.js"></script>
 </body>

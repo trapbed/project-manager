@@ -10,10 +10,16 @@ $.ajax({
         title = "";
             $.each(tasks, function(key, value){ 
                     let tr = document.createElement('tr'); 
+                    // console.log(value);
                     tr.classList.add("infoRow");
                     if(sessionStorage.getItem('role') == 'admin'){
                         newClass = 'blur'; 
                         title = title=`title = "админу не доступны инструменты управления!"`;
+                    }
+                    actions =  `<img onclick="edit_task(${value.tasks_id})" src="../img/edit.png">`;
+                    console.log( value.status);
+                    if(value.status == 'Назначена'){
+                        actions =  `<img onclick="edit_task(${value.tasks_id})" src="../img/edit.png"><img onclick="delete_task(${value.tasks_id})" src="../img/delete.png">`;
                     }
                     tr.innerHTML = `
                         <td class="taskN">${value.title_task}</td>
@@ -23,7 +29,7 @@ $.ajax({
                         <td class="taskP">${value.priority}</td>
                         <td class="taskE">${value.finished_at}</td>
                         <td class="taskS">${value.status}</td>
-                        <td class="taskA"><div ${title} class="BTWAct ${newClass}"><img src="../img/edit.png"><img src="../img/delete.png"></div></td>`;
+                        <td class="taskA"><div ${title} class="BTWAct ${newClass}">${actions}</div></td>`;
                     $("#tasksTable").append(tr);
             });
 
@@ -50,6 +56,7 @@ function change_page(page_id){
         data: {page_id:page_id}, 
         url: "http://pm.b/page_tasks",
         success: (response)=>{
+            console.log(response);
             $(".infoRow").remove();
             window.sessionStorage.setItem('tasks', response);
             let tasks = response; 
@@ -61,6 +68,11 @@ function change_page(page_id){
                     }
                   let tr = document.createElement('tr'); 
                   tr.classList.add("infoRow");
+                  actions =  `<img onclick="edit_task(${value.tasks_id})" src="../img/edit.png">`;
+                  console.log( value.status);
+                  if(value.status == 'Назначена'){
+                    actions =  `<img onclick="edit_task(${value.tasks_id})" src="../img/edit.png"><img onclick="delete_task(${value.tasks_id})" src="../img/delete.png">`;
+                  }
                   tr.innerHTML = `
                     <td class="taskN">${value.title_task}</td>
                     <td class="taskD" onclick= "modalTaskDesc(${value.tasks_id})">Подробнее</td>
@@ -69,7 +81,7 @@ function change_page(page_id){
                     <td class="taskP">${value.priority}</td>
                     <td class="taskE">${value.finished_at}</td>
                     <td class="taskS">${value.status}</td>
-                    <td class="taskA"><div ${title} class="BTWAct ${newClass}"><img src="../img/edit.png"><img src="../img/delete.png"></div></td>`;
+                    <td class="taskA"><div ${title} class="BTWAct ${newClass}">${actions}</div></td>`;
                     // console.log(key);
                     $("#tasksTable").append(tr);
             });

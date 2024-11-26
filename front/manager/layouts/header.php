@@ -9,6 +9,7 @@
     <script src="\js\script_api.js"></script>
     <script src="../js/mess.js"></script>
     <script src="../js/task_manager_api.js"></script>
+    <script src="../js/projects_manager.js"></script>
 </head>
 <body>
 <div class="background_blur" id="task_desc_more_info">

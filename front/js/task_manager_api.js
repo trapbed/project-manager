@@ -68,7 +68,7 @@ function choose_proj_to_task(event){
             div_form.innerHTML = `
                     <div id='title_close'>
                     <span>Назначение задачи к проекту: ${info.title}</span><img onclick='close_modal()' src='../img/x.svg' alt='close'></div>
-                        <form id='forma_dlya_naznacheniya_zadachi' onsubmit='create_task(event)'>
+                        <form id='form_create_task_end' onsubmit='create_task(event)'>
                             <input class='display_none' type='text' name='id_project' value='${info.id}'>
                             <div>   
                                 <label for='user'>Заголовок:</label>
@@ -122,7 +122,7 @@ function change_min_end(){
 
 function create_task(event){
     event.preventDefault();
-    data_cr_task = $("#forma_dlya_naznacheniya_zadachi").serialize();
+    data_cr_task = $("#form_create_task_end").serialize();
     $.ajax({
         type: "POST",
         data: data_cr_task,
@@ -139,57 +139,187 @@ function create_task(event){
         }
     })
 }
-    // $.ajax({
-    //     type: "POST",
-    //     data: {'form_data': data_cr_task},
-    //     url: "http://pm.b/end_step_create_task",
-    //     success:(response)=>{
-    //         console.log(response);
-    //     },
-    //     error:()=>{
 
-    //     }
-    // })
-/* <div id='add_to_squad_modal'>
-                <div id='title_close'>
-                    <span>Назначение задачи</span><img onclick='close_modal()' src='../img/x.svg' alt='close'></div>
-                    <form id='form_create_task' onsubmit='create_task(event)'>
-                    <div>   
-                        <label for='user'>Заголовок:</label>
-                        <input type="">
-                    </div>    
-                    <div>
-                        <label for='user'>Описание:</label>
-                        <input type="">
-                    </div>    
-                    <div>   
-                        <label for='user'>К проекту:</label>
-                        <select>
-                        <option value=""></option>
-                        </select>
-                    </div>    
-                    <div>   
-                        <label for='user'>Начало:</label>
-                        <input type="date">
-                    </div>    
-                    <div> 
-                        <label for='user'>Конец:</label>
-                        <input type="date">
-                    </div>    
-                    <div>   
-                        <label for='user'>Исполнитель:</label>
-                        <select>
-                        <option value=""></option>
-                        </select>
-                    </div>    
-                    <div>   
-                        <label for='user'>Приоритет:</label>
-                        <select>
-                        <option value=""></option>
-                        </select>
-                    </div>    
-                        <input type='submit' value='Назначить' id='submit_update_squad'>
-                    </form>
-                </div>
-            </div> */
-        
+function edit_task(id_task){
+    $.ajax({
+        type:"POST",
+        data:{"id_task": id_task},
+        url:"http://pm.b/get_info_to_edit_task",
+        success:(response)=>{
+            console.log(response);
+            task = response.info;
+            dates = response.dates;
+            selects = ``;
+            div = document.createElement(`div`);
+            div.setAttribute('id','background_blur');
+            div.innerHTML = `
+                <div id="add_to_squad_modal">
+                    <div id='title_close'>
+                    <span>Изменение задачи: </span><img onclick='close_modal()' src='../img/x.svg' alt='close'></div>
+                        <form id='form_update_task_end' onsubmit='update_task(event)'>
+                            <input class='display_none' type='text' name='id_task' value='${task.id}'>
+                            <div>   
+                                <label for='user'>Заголовок:</label>
+                                <input name='title' id='str' type="text" value="${task.title}">
+                            </div>    
+                            <div>
+                                <label for='user'>Описание:</label>
+                                <input name='description' type="text" value="${task.description}">
+                            </div>      
+                            <div>   
+                                <label for='user'>Начало:</label>
+                                <input name='started_at' id='date_started_at' onchange="change_min_end_in_update()" type="date" min='${dates.started_at}' max='${dates.finished_at}' value="${task.started_at}">
+                            </div>    
+                            <div> 
+                                <label for='user'>Конец:</label>
+                                <input name='finished_at' id='date_finished_at' type="date" min='${dates.started_at}' max='${dates.finished_at}' value="${task.finished_at}">
+                            </div>  
+                            <input type='submit' value='Назначить' id='submit_update_squad'>
+                        </form>
+                    </div>
+                </div> `;
+            $('.content').append(div);
+        },
+        error:()=>{
+            alert('Не удалось прогрузить форму!');
+        }
+    })
+}
+
+function update_task(event){
+    event.preventDefault();
+    form_data = $("#form_update_task_end").serialize();
+    $.ajax({
+        type: "POST",
+        data: form_data,
+        url: "http://pm.b/update_task",
+        success:(response)=>{
+            if(response.res == true){
+                alert(response.mess);
+                $("#background_blur").remove();
+                $("#add_to_squad_modal").remove();
+                $(".infoRow").remove();
+                $(".btn_paginate").remove();
+
+                let tasks = response.tasks; 
+                // console.log(response);
+                title = "";
+                    $.each(tasks, function(key, value){ 
+                            let tr = document.createElement('tr'); 
+                            // console.log(value);
+                            tr.classList.add("infoRow");
+                            if(sessionStorage.getItem('role') == 'admin'){
+                                newClass = 'blur'; 
+                                title = title=`title = "админу не доступны инструменты управления!"`;
+                            }
+                            actions =  `<img onclick="edit_task(${value.tasks_id})" src="../img/edit.png">`;
+                            console.log( value.status);
+                            if(value.status == 'Назначена'){
+                                actions =  `<img onclick="edit_task(${value.tasks_id})" src="../img/edit.png"><img onclick="delete_task(${value.tasks_id})" src="../img/delete.png">`;
+                            }
+                            tr.innerHTML = `
+                                <td class="taskN">${value.title_task}</td>
+                                <td class="taskD" onclick= "modalTaskDesc(${value.tasks_id})">Подробнее</td>
+                                <td class="taskNP">${value.title_project}</td>
+                                <td class="taskW"> ${value.worker}</td>
+                                <td class="taskP">${value.priority}</td>
+                                <td class="taskE">${value.finished_at}</td>
+                                <td class="taskS">${value.status}</td>
+                                <td class="taskA"><div ${title} class="BTWAct ${newClass}">${actions}</div></td>`;
+                            $("#tasksTable").append(tr);
+                    });
+
+                    if(response.count>10){
+                        let paginate_d = $("#paginate");
+                        let pages = Math.ceil(response.count/10);
+                            for(let i=1; i<=pages; i++){
+                                // console.log(i);
+                                paginate.innerHTML += `<div class="btn_paginate" onclick="change_page(${i})">${i}</div>`;
+                            }
+                        $("#session").append(paginate);
+                    }
+
+
+            }
+            else{
+                alert(response.mess);
+            }
+            console.log(response);
+        },
+        error:()=>{
+
+        }
+    })
+}
+
+function change_min_end_in_update(){
+    change = document.querySelectorAll("input")[4].value;
+    console.log(change);
+    plus_day = new Date(change);
+    plus_day.setDate(plus_day.getDate() + 1);
+    plus_day = plus_day.getFullYear()+"-"+(plus_day.getMonth()+1)+"-"+plus_day.getDate();
+    $("input")[5].setAttribute('min', plus_day);
+}
+
+function delete_task(id_task){
+    ask_delete = confirm('Вы точно хотите удалить задачу? Восстановить ее нельзя будет!');
+    if(ask_delete){
+        $.ajax({
+            type: "POST",
+            data: {"id_task": id_task},
+            url: "http://pm.b/delete_task",
+            success:(response)=>{
+                console.log(response);
+                if(response.res == true){
+                    let tasks = response.tasks; 
+                // console.log(response);
+                $(".infoRow").remove();
+                $(".btn_paginate").remove();
+
+                title = "";
+                    $.each(tasks, function(key, value){ 
+                            let tr = document.createElement('tr'); 
+                            // console.log(value);
+                            tr.classList.add("infoRow");
+                            if(sessionStorage.getItem('role') == 'admin'){
+                                newClass = 'blur'; 
+                                title = title=`title = "админу не доступны инструменты управления!"`;
+                            }
+                            actions =  `<img onclick="edit_task(${value.tasks_id})" src="../img/edit.png">`;
+                            console.log( value.status);
+                            if(value.status == 'Назначена'){
+                                actions =  `<img onclick="edit_task(${value.tasks_id})" src="../img/edit.png"><img onclick="delete_task(${value.tasks_id})" src="../img/delete.png">`;
+                            }
+                            tr.innerHTML = `
+                                <td class="taskN">${value.title_task}</td>
+                                <td class="taskD" onclick= "modalTaskDesc(${value.tasks_id})">Подробнее</td>
+                                <td class="taskNP">${value.title_project}</td>
+                                <td class="taskW"> ${value.worker}</td>
+                                <td class="taskP">${value.priority}</td>
+                                <td class="taskE">${value.finished_at}</td>
+                                <td class="taskS">${value.status}</td>
+                                <td class="taskA"><div ${title} class="BTWAct ${newClass}">${actions}</div></td>`;
+                            $("#tasksTable").append(tr);
+                    });
+
+                    if(response.count>10){
+                        let paginate_d = $("#paginate");
+                        let pages = Math.ceil(response.count/10);
+                            for(let i=1; i<=pages; i++){
+                                // console.log(i);
+                                paginate.innerHTML += `<div class="btn_paginate" onclick="change_page(${i})">${i}</div>`;
+                            }
+                        $("#session").append(paginate);
+                    }
+                }
+                alert(response.mess);
+            },
+            error:()=>{
+                alert('Не удалось удалить задачу!');
+            }
+        })
+    }
+    else{
+
+    }
+}

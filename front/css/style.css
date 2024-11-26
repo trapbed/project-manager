@@ -484,13 +484,13 @@ a{
     flex-direction: column;
     align-items: center;
     border-radius: 1vmax;
-    gap: 1vmax;
+    gap: 0.5vmax;
     width: 99%;
     height: auto;
     border:  0.2vmax solid rgba(118, 159, 203, 0.4);
 }
 .oneProject>*{
-    font-size: 1.2vmax;
+    font-size: 0.8vmax;
 }
 .oneProjSeeMore{
     width: 97.73%;
@@ -734,7 +734,7 @@ a{
     flex-direction: column;
     align-items: center;
     padding: 1vmax;
-    gap: 1vmax;
+    gap: 2vmax;
     transform: translate(-50%, -50%);
     top: 50%;
     left: 50%;
@@ -754,6 +754,9 @@ a{
    right: 1vmax;
    height: 2vmax;
 }  
+#title_close>span{
+    font-size: 1.2vmax;
+}
 
 #background_blur{
     position: absolute;
@@ -768,24 +771,24 @@ a{
     background-color: rgba(255, 255, 255, 0.532);
 }
 
-#form_update_squad, #form_create_task, #form_create_task_end{
+#form_update_squad, #form_create_task, #form_create_task_end, #form_update_task_end{
     display: flex;
     flex-direction: column;
-    font-size: 1.4vmax;
-    gap: 2vmax;
+    font-size: 1.2vmax;
+    gap: 1vmax;
     width: 38vmax;
 }
-#form_update_squad>label, #form_create_task_end>label{
+#form_update_squad>label, #form_create_task_end>label, #form_update_task_end>label{
     display: flex;
     flex-direction: column;
     gap: 1vmax;
 }
-#form_update_squad>label>select, #form_create_task_end>label>select{
+#form_update_squad>label>select, #form_create_task_end>label>select, #form_update_task_end>label>select{
     width: 20vmax;
-    font-size: 1.2vmax;
+    font-size: 1vmax;
     outline: transparent;
 }
-#form_update_squad>input, #form_create_task>input, #form_create_task_end>input{
+#form_update_squad>input, #form_create_task>input, #form_create_task_end>input, #form_update_task_end>input{
     font-size: 1vmax;
     padding: 0.5vmax;
     width: 8vmax;
@@ -795,15 +798,16 @@ a{
     border: transparent;
 }
 
-#form_create_task>div, #form_create_task_end>div{
+#form_create_task>div, #form_create_task_end>div, #form_update_task_end>div{
     display: flex;
     flex-direction: row;
+    font-size: 1vmax;
     gap: 2vmax;
 }
-#form_create_task>div>label, #form_create_task_end>div>label{
+#form_create_task>div>label, #form_create_task_end>div>label, #form_update_task_end>div>label{
     width: 10vmax;
 }
-#form_create_task>div>input, #form_create_task>div>select, #form_create_task_end>div>select{
+#form_create_task>div>input, #form_create_task>div>select, #form_create_task_end>div>select, #form_update_task_end>div>input{
     width: 18vmax;
 }
 
@@ -818,4 +822,8 @@ a{
 
 .display_none{
     display: none;
+}
+
+select, input{
+    font-size: 1vmax;
 }

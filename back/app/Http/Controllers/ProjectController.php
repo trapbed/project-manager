@@ -85,7 +85,7 @@ class ProjectController extends Controller
         $users = DB::table('users')->select('name')->where('role', '=', 'worker')->get();
         return response()->json(['mess'=>$mess, 'project'=>$project, 'users'=>$users, 'squad'=>$arr_squad]);
     }
-    public function delete_from_squad(Response $response){
+    public function delete_from_squad(Request $request){
 
     }
 
@@ -93,5 +93,12 @@ class ProjectController extends Controller
         $today = date('Y-m-d');
         $titles = DB::table('projects')->where('finished_at', '>=',$today)->select('id','title')->get();
         return response()->json($titles);
+    }
+
+
+    public function projects_info_admin(Request $request){
+        $projects = DB::table('projects')->select('title', 'description', 'user_id', 'started_at', 'finished_at', 'status', 'squad')->where('user_id', '=', $request->id)->get();
+        $count = DB::table('projects')->where('user_id', '=', $request->id)->count();
+        return response()->json(['projects'=>$projects, 'count'=>$count]);
     }
 }
