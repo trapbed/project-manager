@@ -7,7 +7,6 @@
 <div id="left_block">
    <div id="search_select">
       <form action="">
-         <input type="search" name="" id=""> 
          <select name="" id="">
             <option value="">Статус</option>
             <option value="">Создан</option>

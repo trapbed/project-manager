@@ -50,10 +50,8 @@ class ProjectController extends Controller
                 array_push($condition, ['id' , '!=',$user]);
             }
             $users = DB::table('users')->select('id', 'name')->where($condition)->where('role','=','worker')->get();
-            // $count = DB::table('users')->select('id', 'name')->where($condition)->where('role','=','worker')->count();
         }else{
             $users = DB::table('users')->select('id', 'name')->where('role','=','worker')->get();
-            // $count = DB::table('users')->select('id', 'name')->where('role','=','worker')->count();
         }
         
         return response()->json(['users'=>$users]);
@@ -97,8 +95,14 @@ class ProjectController extends Controller
 
 
     public function projects_info_admin(Request $request){
-        $projects = DB::table('projects')->select('title', 'description', 'user_id', 'started_at', 'finished_at', 'status', 'squad')->where('user_id', '=', $request->id)->get();
+        $projects = DB::table('projects')->select('id','title', 'description', 'user_id', 'started_at', 'finished_at', 'status', 'squad')->where('user_id', '=', $request->id)->limit(2)->get();
         $count = DB::table('projects')->where('user_id', '=', $request->id)->count();
         return response()->json(['projects'=>$projects, 'count'=>$count]);
+    }
+
+    public function update_project_info(Request $request){
+        $current_proj_info = DB::table('projects')->select('id','title','description','user_id','started_at', 'finished_at', 'status', 'squad')->where('id','=', $request->id_proj)->get();
+        $users = DB::table('users')->select('id','name')->where('role', '=', 'worker')->where('blocked','=',0)->get();
+        return response()->json(['project'=>$current_proj_info, 'users'=>$users]);
     }
 }

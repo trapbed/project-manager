@@ -176,6 +176,8 @@ a{
     width: 100%;
     display: flex;
     align-items: center;
+    justify-content: start;
+    gap: 2vmax;
 }
 #search_select>form{
     display: flex;
@@ -209,6 +211,9 @@ a{
 }
 
 #infoRows{
+    display: flex;
+    flex-direction: column;
+    gap: 1vmax;
     width: 100%;
     height: 70%;
     /* background-color: darksalmon; */
@@ -608,7 +613,34 @@ a{
 /* #one_project_M{
 
 } */
-
+.btnsOneProj{
+    display: flex;
+    flex-direction: row;
+    align-self: flex-end;
+    gap: 1vmax;
+    margin-bottom: 1vmax;
+}
+.oneBTNproj{
+    padding: 0.5vmax;
+    border: transparent;
+    outline: transparent;
+    border-radius: 0.2vmax;
+    color: white;
+    font-size: 0.8vmax;
+    font-family: 'inter';
+}
+.update_project{
+    background-color: rgba(118, 159, 203, 0.5);
+}
+.update_project:hover{
+    background-color: rgba(118, 159, 203, 1);
+}
+.delete_project{
+    background-color: rgba(203, 118, 118, 0.4);
+}
+.delete_project:hover{
+    background-color: rgba(203, 118, 118, 1);
+}
 .BTWonProj{
     width: 100%;
     height: 1vmax;
@@ -813,7 +845,7 @@ a{
 
 #create_something{
     height: 6.5vmax;
-    width: 100%;
+    /* width: 100%; */
     display: flex;
     align-items: center;
 }

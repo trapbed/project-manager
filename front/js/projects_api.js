@@ -1,3 +1,6 @@
+// Добавить действие из подробнее в редактирвоание (админ)
+// Добавить удаление из команды (желательно найти код) 
+
 $.ajax({
     type: "post",
     url: "http://pm.b/projects",
@@ -20,7 +23,7 @@ $.ajax({
                     <td class="taskP">${value.started_at}</td>
                     <td class="taskE">${value.finished_at}</td>
                     <td class="taskS" onclick="get_info_one_project(${value.project_id})">Подробнее</td>
-                        <td class="taskA"><div ${title} class="BTWAct ${newClass}"><img src="../img/edit.png"><img src="../img/delete.png"></div></td>`;
+                        <td class="taskA"><div ${title} class="BTWAct"><img src="../img/edit.png"><img src="../img/delete.png"></div></td>`;
                     $("#projectsTable").append(tr);
             });
 
@@ -67,7 +70,7 @@ function change_page(page_id){
                     <td class="taskP">${value.started_at}</td>
                     <td class="taskE">${value.finished_at}</td>
                     <td class="taskS" onclick="get_info_one_project(${value.project_id})">Подробнее</td>
-                        <td class="taskA"><div ${title} class="BTWAct ${newClass}"><img src="../img/edit.png"><img src="../img/delete.png"></div></td>`;
+                        <td class="taskA"><div ${title} class="BTWAct"><img src="../img/edit.png"><img src="../img/delete.png"></div></td>`;
                     $("#projectsTable").append(tr);
             });
 

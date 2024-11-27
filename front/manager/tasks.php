@@ -3,24 +3,22 @@
    //  require "js/tasks_api.js";
 ?>
 <script src=" ../js\tasks_api.js"></script>
-
+<script src="../js/task_manager_api.js"></script>
                   
 
 <div id="left_block">
    <div id="search_select">
+      <div id="create_something" onclick="create_task_modal()">
+      <div class="create"><img src="/img/group 189.svg" alt=""></div>
+   </div>
       <form action="">
-         <input type="search" name="" id=""> 
          <select name="" id="">
-            <option value="">Рейтинг</option>
-            <option value="">Высокий</option>
-            <option value="">Средний</option>
-            <option value="">Низкий</option>
+            <option value="">Статус</option>
+            <option value="">Создан</option>
+            <option value="">В процессе</option>
+            <option value="">Завершен</option>
          </select>
       </form>
-      
-   </div>
-   <div id="create_something" onclick="create_task_modal()">
-      <div class="create"><img src="/img/group 189.svg" alt=""></div>
    </div>
    <div id="infoRows">
       <table class="table">

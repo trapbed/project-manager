@@ -45,6 +45,7 @@ Route::post('/delete_from_squad', [ProjectController::class, 'delete_from_squad'
 Route::post('/get_projects_title', [ProjectController::class, 'get_projects_title'])->name('get_projects_title');
 
 Route::post('/projects_info_admin', [ProjectController::class, 'projects_info_admin'])->name('projects_info_admin');
+Route::post('/update_project_info', [ProjectController::class, 'update_project_info'])->name('update_project_info');
 
 
 Route::post('/users', [UserController::class, 'all_users'])->name('users');

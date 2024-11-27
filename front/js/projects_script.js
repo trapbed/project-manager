@@ -11,22 +11,22 @@ $(".oneProjSeeMore").on("click", function(e){
     }
 })
 
-// $(".descOneProjMore").on("click", function(){
-//     if($(this).closest($(".descOneProj")).find(".descOneProjHide").css("display") == 'flex'){
-//         $(this).closest($(".descOneProj")).find(".descOneProjHide").css("display", "none");
-//         $(this).css("display","block");
-//     }
-//     else{
-//         $(this).closest($(".descOneProj")).find(".descOneProjHide").css("display", "flex");
-//         $(this).css("display","none");
-//     }
-// })
+$(".descOneProjMore").on("click", function(){
+    if($(this).closest($(".descOneProj")).find(".descOneProjHide").css("display") == 'flex'){
+        $(this).closest($(".descOneProj")).find(".descOneProjHide").css("display", "none");
+        $(this).css("display","block");
+    }
+    else{
+        $(this).closest($(".descOneProj")).find(".descOneProjHide").css("display", "flex");
+        $(this).css("display","none");
+    }
+})
 
-// $(".hideDescOneProj").on("click", function(){
-//     let parent = $(this).closest($(".descOneProj"));
-//     parent.find(".descOneProjMore").css("display","flex");
-//     parent.find(".descOneProjHide").css("display","none");
-// })
+$(".hideDescOneProj").on("click", function(){
+    let parent = $(this).closest($(".descOneProj"));
+    parent.find(".descOneProjMore").css("display","flex");
+    parent.find(".descOneProjHide").css("display","none");
+})
 
 $(".seeTasks").on("click", function(){
     let parent = $(this).closest(".scheudleTasksOneProj");
