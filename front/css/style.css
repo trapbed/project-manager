@@ -803,24 +803,24 @@ a{
     background-color: rgba(255, 255, 255, 0.532);
 }
 
-#form_update_squad, #form_create_task, #form_create_task_end, #form_update_task_end{
+#form_update_squad, #form_create_task, #form_create_task_end, #form_update_task_end, #form_create_project_end{
     display: flex;
     flex-direction: column;
     font-size: 1.2vmax;
     gap: 1vmax;
     width: 38vmax;
 }
-#form_update_squad>label, #form_create_task_end>label, #form_update_task_end>label{
+#form_update_squad>label, #form_create_task_end>label, #form_update_task_end>label, #form_create_project_end>label{
     display: flex;
     flex-direction: column;
     gap: 1vmax;
 }
-#form_update_squad>label>select, #form_create_task_end>label>select, #form_update_task_end>label>select{
+#form_update_squad>label>select, #form_create_task_end>label>select, #form_update_task_end>label>select, #form_create_project_end>label>select{
     width: 20vmax;
     font-size: 1vmax;
     outline: transparent;
 }
-#form_update_squad>input, #form_create_task>input, #form_create_task_end>input, #form_update_task_end>input{
+#form_update_squad>input, #form_create_task>input, #form_create_task_end>input, #form_update_task_end>input, #form_create_project_end>input{
     font-size: 1vmax;
     padding: 0.5vmax;
     width: 8vmax;
@@ -830,17 +830,25 @@ a{
     border: transparent;
 }
 
-#form_create_task>div, #form_create_task_end>div, #form_update_task_end>div{
+#form_create_task>div, #form_create_task_end>div, #form_update_task_end>div, #form_create_project_end>div{
     display: flex;
     flex-direction: row;
     font-size: 1vmax;
     gap: 2vmax;
 }
-#form_create_task>div>label, #form_create_task_end>div>label, #form_update_task_end>div>label{
+#form_create_task>div>label, #form_create_task_end>div>label, #form_update_task_end>div>label, #form_create_project_end>div>label{
     width: 10vmax;
 }
 #form_create_task>div>input, #form_create_task>div>select, #form_create_task_end>div>select, #form_update_task_end>div>input{
     width: 18vmax;
+}
+#form_create_task>div>input, #form_create_task>div>select, #form_create_task_end>div>select, #form_update_task_end>div>input{
+    width: 18vmax;
+}
+.fix_inp_width{
+    width: 25vmax;
+    height: 1vmax;
+    padding: 1vmax 0.5vmax;
 }
 
 #create_something{

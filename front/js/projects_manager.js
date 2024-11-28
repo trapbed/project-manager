@@ -86,58 +86,39 @@ function update_project_modal(id){
         url: "http://pm.b/update_project_info",
         success:(response)=>{
             console.log(response);
+
+            project = response.project[0];
+console.log(project);
+
             div_form = document.createElement(`div`);
             div_form.setAttribute('id','background_blur'); 
-
-
             selects = ``;
-            // $.each(response.squad, function(key, value){
-            //     // console.log(key);
-            //     // console.log(value);
-            //     selects +=`<option value='${key}'>${value}</option>`;
-            // });
-
-
             div_form.innerHTML = `
             <div id="add_to_squad_modal">
                 <div id='title_close'>
-                    <span>Назначение задачи к проекту: </span><img onclick='close_modal()' src='../img/x.svg' alt='close'></div>
-                        <form id='form_create_task_end' onsubmit='create_task(event)'>
-                            <input class='display_none' type='text' name='id_project' value=''>
-                            <div>   
-                                <label for='user'>Заголовок:</label>
-                                <input name='title' id='str' type="text">
-                            </div>    
-                            <div>
-                                <label for='user'>Описание:</label>
-                                <input name='description' type="text">
-                            </div>      
-                            <div>   
-                                <label for='user'>Начало:</label>
-                                <input name='started_at' id='date_started_at' onchange="change_min_end()" type="date" min='' max=''>
-                            </div>    
-                            <div> 
-                                <label for='user'>Конец:</label>
-                                <input name='finished_at' id='date_finished_at' type="date" min='' max=''>
-                            </div>    
-                            <div>
-                                <select>
-                                    <option>Селекты с воркерами</option>
-                                </select><br>
-                                <div>Уже имеющися воркер (как у админа в изм. проекта)</div>
-
-                            </div>
-                            <div>   
-                                <label for='user'>Статус:</label>
-                                <select name='priority'>
-                                    <option value="Создан">Создан</option>
-                                    <option value="В процессе">В процессе</option>
-                                    <option value="Завершен">Завершен</option>
-                                </select>
-                            </div>    
-                            <input type='submit' value='Назначить' id='submit_update_squad'>
-                        </form>
-                </div> </div>`;
+                    <span>Редактирование проекта : ${project.title}</span><img onclick='close_modal()' src='../img/x.svg' alt='close'>
+                </div>
+                    <form id='form_create_project_end' onsubmit='save_create_project(event)'>
+                       <input class='display_none' type='text' name='id_project' value='${project.id}'>
+                       <div>   
+                           <label for='user'>Заголовок:</label>
+                           <input class='fix_inp_width' name='title' id='str' type="text" value="${project.title}">
+                       </div>    
+                       <div>
+                           <label for='user'>Описание:</label>
+                           <textarea class='fix_inp_width mimax_w_ta' name='description'>${project.description}</textarea>
+                       </div> 
+                       <div>   
+                           <label for='user'>Статус:</label>
+                           <select class='fix_inp_width' name='priority'>
+                               <option value="Создан">Создан</option>
+                               <option value="В процессе">В процессе</option>
+                               <option value="Завершен">Завершен</option>
+                           </select>
+                       </div>    
+                       <input type='submit' value='Изменить' id='submit_update_squad'>
+                    </form>
+                </div>`;
             $('.content').append(div_form);
         }, 
         error:()=>{
@@ -145,6 +126,22 @@ function update_project_modal(id){
         }
     })
 
+}
+
+
+function save_create_project(event){
+    event.preventDefault();
+    $.ajax({
+        type: "POST",
+        data: $().serialize(),
+        url:"",
+        success:()=>{
+
+        },
+        error:()=>{
+
+        }
+    })
 }
 
 // function create_project_modal(){

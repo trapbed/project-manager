@@ -101,8 +101,8 @@ class ProjectController extends Controller
     }
 
     public function update_project_info(Request $request){
-        $current_proj_info = DB::table('projects')->select('id','title','description','user_id','started_at', 'finished_at', 'status', 'squad')->where('id','=', $request->id_proj)->get();
-        $users = DB::table('users')->select('id','name')->where('role', '=', 'worker')->where('blocked','=',0)->get();
-        return response()->json(['project'=>$current_proj_info, 'users'=>$users]);
+        $current_proj_info = DB::table('projects')->select('id','title','description','status')->where('id','=', $request->id_proj)->get();
+        // $users = DB::table('users')->select('id','name')->where('role', '=', 'worker')->where('blocked','=',0)->get();
+        return response()->json(['project'=>$current_proj_info]);
     }
 }
