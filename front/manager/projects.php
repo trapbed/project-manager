@@ -8,7 +8,7 @@
 
 <div id="left_block">
    <div id="search_select">
-      <div id="create_something" onclick="create_project_modal()">
+      <div id="create_something" onclick="modal_create_project()">
       <div class="create"><img src="/img/group 189.svg" alt=""></div>
    </div>
       <form action="">
@@ -25,8 +25,8 @@
    
    <div id="infoRows">
         
-    </div>
-        
+   </div>
+   <div class="hv2vx"></div>   
    <div id="paginate">
       
    </div> 

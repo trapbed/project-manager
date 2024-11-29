@@ -3,12 +3,9 @@ function create_task_modal(){
         type: "POST", 
         url: "http://pm.b/get_projects_title",
         success:(response)=>{
-            // console.log(response);
             let options =  ``;
             projects = response;
             $.each(projects, function(key, value){
-                // console.log(value);
-                // selects.push();
                 options+=`<option value='${value.id}'>${value.title}</option>`;
             })
             let div = document.createElement(`div`);
@@ -27,8 +24,7 @@ function create_task_modal(){
                         <input type='submit' value='Выбрать' id='submit_update_squad'>
                     </form>
                 </div>
-            </div>
-            `;
+            </div>`;
             $('.content').append(div);
         },
         error:()=>{
@@ -45,24 +41,18 @@ function close_modal(){
 
 function choose_proj_to_task(event){
     event.preventDefault();
-    // $("#add_to_squad_modal").remove();
     data = $("#form_create_task").serialize();
     $.ajax({
         type:"POST",
         data:{"project_id":data},
         url:"http://pm.b/get_info_form_create_task",
         success:(response)=>{
-            // console.log(response);
             info = response.info[0];
-            // console.log(info[0].title);
             div_form = document.createElement(`div`);
             div_form.setAttribute('id','add_to_squad_modal');
-            // console.log(JSON.parse(response.squad.squad));
             console.log(response);
             selects = ``;
             $.each(response.arr, function(key, value){
-                // console.log(key);
-                // console.log(value);
                 selects +=`<option value='${key}'>${value}</option>`;
             });
             div_form.innerHTML = `
@@ -200,54 +190,46 @@ function update_task(event){
                 $("#add_to_squad_modal").remove();
                 $(".infoRow").remove();
                 $(".btn_paginate").remove();
-
                 let tasks = response.tasks; 
-                // console.log(response);
                 title = "";
-                    $.each(tasks, function(key, value){ 
-                            let tr = document.createElement('tr'); 
-                            // console.log(value);
-                            tr.classList.add("infoRow");
-                            if(sessionStorage.getItem('role') == 'admin'){
-                                newClass = 'blur'; 
-                                title = title=`title = "админу не доступны инструменты управления!"`;
-                            }
-                            actions =  `<img onclick="edit_task(${value.tasks_id})" src="../img/edit.png">`;
-                            console.log( value.status);
-                            if(value.status == 'Назначена'){
-                                actions =  `<img onclick="edit_task(${value.tasks_id})" src="../img/edit.png"><img onclick="delete_task(${value.tasks_id})" src="../img/delete.png">`;
-                            }
-                            tr.innerHTML = `
-                                <td class="taskN">${value.title_task}</td>
-                                <td class="taskD" onclick= "modalTaskDesc(${value.tasks_id})">Подробнее</td>
-                                <td class="taskNP">${value.title_project}</td>
-                                <td class="taskW"> ${value.worker}</td>
-                                <td class="taskP">${value.priority}</td>
-                                <td class="taskE">${value.finished_at}</td>
-                                <td class="taskS">${value.status}</td>
-                                <td class="taskA"><div ${title} class="BTWAct ${newClass}">${actions}</div></td>`;
-                            $("#tasksTable").append(tr);
-                    });
-
-                    if(response.count>10){
-                        let paginate_d = $("#paginate");
-                        let pages = Math.ceil(response.count/10);
-                            for(let i=1; i<=pages; i++){
-                                // console.log(i);
-                                paginate.innerHTML += `<div class="btn_paginate" onclick="change_page(${i})">${i}</div>`;
-                            }
-                        $("#session").append(paginate);
+                $.each(tasks, function(key, value){ 
+                        let tr = document.createElement('tr'); 
+                        tr.classList.add("infoRow");
+                        if(sessionStorage.getItem('role') == 'admin'){
+                            newClass = 'blur'; 
+                            title = title=`title = "админу не доступны инструменты управления!"`;
+                        }
+                        actions =  `<img onclick="edit_task(${value.tasks_id})" src="../img/edit.png">`;
+                        console.log( value.status);
+                        if(value.status == 'Назначена'){
+                            actions =  `<img onclick="edit_task(${value.tasks_id})" src="../img/edit.png"><img onclick="delete_task(${value.tasks_id})" src="../img/delete.png">`;
+                        }
+                        tr.innerHTML = `
+                            <td class="taskN">${value.title_task}</td>
+                            <td class="taskD" onclick= "modalTaskDesc(${value.tasks_id})">Подробнее</td>
+                            <td class="taskNP">${value.title_project}</td>
+                            <td class="taskW"> ${value.worker}</td>
+                            <td class="taskP">${value.priority}</td>
+                            <td class="taskE">${value.finished_at}</td>
+                            <td class="taskS">${value.status}</td>
+                            <td class="taskA"><div ${title} class="BTWAct ${newClass}">${actions}</div></td>`;
+                        $("#tasksTable").append(tr);
+                });
+                if(response.count>10){
+                    let paginate_d = $("#paginate");
+                    let pages = Math.ceil(response.count/10);
+                    for(let i=1; i<=pages; i++){
+                        paginate.innerHTML += `<div class="btn_paginate" onclick="change_page(${i})">${i}</div>`;
                     }
-
-
+                    $("#session").append(paginate);
+                }
             }
             else{
                 alert(response.mess);
             }
-            console.log(response);
         },
         error:()=>{
-
+            // VOID
         }
     })
 }
@@ -271,15 +253,12 @@ function delete_task(id_task){
             success:(response)=>{
                 console.log(response);
                 if(response.res == true){
-                    let tasks = response.tasks; 
-                // console.log(response);
+                    let tasks = response.tasks;
                 $(".infoRow").remove();
                 $(".btn_paginate").remove();
-
                 title = "";
                     $.each(tasks, function(key, value){ 
-                            let tr = document.createElement('tr'); 
-                            // console.log(value);
+                            let tr = document.createElement('tr');
                             tr.classList.add("infoRow");
                             if(sessionStorage.getItem('role') == 'admin'){
                                 newClass = 'blur'; 
@@ -301,12 +280,10 @@ function delete_task(id_task){
                                 <td class="taskA"><div ${title} class="BTWAct ${newClass}">${actions}</div></td>`;
                             $("#tasksTable").append(tr);
                     });
-
                     if(response.count>10){
                         let paginate_d = $("#paginate");
                         let pages = Math.ceil(response.count/10);
                             for(let i=1; i<=pages; i++){
-                                // console.log(i);
                                 paginate.innerHTML += `<div class="btn_paginate" onclick="change_page(${i})">${i}</div>`;
                             }
                         $("#session").append(paginate);

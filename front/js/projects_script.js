@@ -1,5 +1,3 @@
-
-
 $(".oneProjSeeMore").on("click", function(e){
     if($(this).closest($(".oneProject")).find(".moreOneProj").css("display") == 'flex'){
         $(this).closest($(".oneProject")).find(".moreOneProj").css("display", "none");

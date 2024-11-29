@@ -857,7 +857,11 @@ a{
     display: flex;
     align-items: center;
 }
-
+.select_width{
+    width: 26vmax;
+    height: 3vmax;
+    padding: 0;
+}
 
 
 .display_none{
@@ -866,4 +870,8 @@ a{
 
 select, input{
     font-size: 1vmax;
+}
+.hv2vx{
+    height: 2vmax;
+    width: 100%;
 }

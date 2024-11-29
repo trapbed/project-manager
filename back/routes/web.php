@@ -46,6 +46,9 @@ Route::post('/get_projects_title', [ProjectController::class, 'get_projects_titl
 
 Route::post('/projects_info_admin', [ProjectController::class, 'projects_info_admin'])->name('projects_info_admin');
 Route::post('/update_project_info', [ProjectController::class, 'update_project_info'])->name('update_project_info');
+Route::post('/save_update_proj', [ProjectController::class, 'save_update_proj'])->name('save_update_proj');
+Route::post('/delete_project', [ProjectController::class, 'delete_project'])->name('delete_project');
+Route::post('/save_create_project', [ProjectController::class, 'save_create_project'])->name('save_create_project');
 
 
 Route::post('/users', [UserController::class, 'all_users'])->name('users');
