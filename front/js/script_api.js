@@ -6,7 +6,8 @@ $("document").ready(()=>{
             method: "POST", 
             data: $("#login_api").serialize(),
             success:(response)=>{
-                if(response.blocked !='true'){
+                    console.log(response);
+                if(response.res){
                     sessionStorage.setItem('role',response.role);
                     sessionStorage.setItem('email',response.email);
                     sessionStorage.setItem('id',response.id);

@@ -1,4 +1,5 @@
 console.log(sessionStorage);
+// sessionStorage.getItem('workers_list').remove();
 $.ajax({
     type: "POST",
     data: {'id': sessionStorage.getItem('id')},
@@ -255,48 +256,164 @@ function save_update_project(event){
 }
 
 function modal_create_project(){
-    div_form = document.createElement(`div`);
-    div_form.setAttribute('id','background_blur'); 
+    $.ajax({
+        type: "POST", 
+        url: "http://pm.b/create_proj_modal_info",
+        success:(response)=>{
+            workers = response.workers;
+            workers_list = [];
+            options_workers = ``;
+            $.each(workers, function(key, value){
+                options_workers +=`<option value='${value.id}'>${value.name}</option>`;
+                // if(value !== undefined && value !== null && value !== ''){
+                    workers_list[value.id] = value.name;
+                // }
+                // console.log(value.id);
+                // console.log(value.name);
+                // console.log(typeof value.name);
+            })
+            // console.log(workers_list);
+
+            new_workers_list = Object.entries(workers_list).reduce((acc, [key, value])=>{
+                if(value !== undefined && value !== null && value !== ''){
+                    acc[key] = value;
+                }
+                return acc;
+            }, {});
+            new_workers_list = Object(new_workers_list);
+            sessionStorage.setItem('workers_list',JSON.stringify(new_workers_list));
+            // new_workers_list = [];
+            // for(let i=0; i<workers_list.length; i++){
+            //     if(workers_list[i] !== '' && workers_list[i] !== null && workers_list[i] !== undefined){
+            //         new_workers_list[i] = workers_list[i];
+            //         // console.log(typeof workers_list[i]);
+            //     }
+            // }
+            // $.each(workers_list, function(key, value){
+            //     if(value !== undefined && value !== null && value !== ''){
+            //         new_workers_list[key] = value;
+            //         console.log(key);
+            //     }
+            //     else{
+            //         new_workers_list.splice(key); 
+            //         console.log(key);
+            //     }
+            //     // console.log(key);
+            //     // console.log( value);
+            //     // console.log(typeof value);
+            // })
+            // let arr = [1, 2, '', 4, null, undefined, 6, 7, 8, 9, 10];
+            // let newArr = [];
+
+            // for (let i = 0; i < arr.length; i++) {
+            //     if (arr[i] !== '' && arr[i] !== null && arr[i] !== undefined) {
+            //         newArr[i] = arr[i];
+            //     }
+            // }
+            // console.log(newArr);
+
+            // workers_list = workers_list.filter(Boolean);
+            // console.log(new_workers_list);
+            // console.log(JSON.parse(new_workers_list));
+            div_form = document.createElement(`div`);
+            div_form.setAttribute('id','background_blur'); 
+            div_form.innerHTML = `
+            <div id="add_to_squad_modal">
+                <div id='title_close'>
+                    <span>Создание проекта : </span><img onclick='close_modal()' src='../img/x.svg' alt='close'>
+                </div>
+                    <form id='form_create_project_end' onsubmit='save_create_project(event)'>
+                    <input class='display_none' type='text' name='id_user' value='${sessionStorage.getItem('id')}'>
+                    <div>   
+                        <label for='user'>Заголовок:</label>
+                        <input class='fix_inp_width' name='title' id='str' type="text" value="">
+                    </div>    
+                    <div>
+                        <label for='user'>Описание:</label>
+                        <textarea class='fix_inp_width mimax_w_ta' name='description'></textarea>
+                    </div> 
+                    <div>   
+                        <label for='user'>Начало:</label>
+                        <input class='fix_inp_width' name='title' id='str' type="date" value="">
+                    </div>
+                    <div>   
+                        <label for='user'>Конец:</label>
+                        <input class='fix_inp_width' name='title' id='str' type="date" value="">
+                    </div>
+                    <div>   
+                        <label for='user'>Выберите исполнителей в команду:</label>
+                        <select class='fix_inp_width select_width' id='select_user_to_squad' name='status' onchange="modal_form_squad('add', event, null)">
+                            <option value=''>Выберите исполнителей</option>
+                            ${options_workers}
+                        </select>
+                    </div>
+                    <div>   
+                        <label for='user'>Команда:</label>
+                        <div id='for_add_squad'></div>
+                    </div>
+                    <input type='submit' value='Создать' id=''>
+                    </form>
+                </div>`;
+            $('.content').append(div_form);
+        }
+    })
     
-    div_form.innerHTML = `
-    <div id="add_to_squad_modal">
-        <div id='title_close'>
-            <span>Создание проекта : </span><img onclick='close_modal()' src='../img/x.svg' alt='close'>
-        </div>
-            <form id='form_create_project_end' onsubmit='save_create_project(event)'>
-               <input class='display_none' type='text' name='id_user' value='${sessionStorage.getItem('id')}'>
-               <div>   
-                   <label for='user'>Заголовок:</label>
-                   <input class='fix_inp_width' name='title' id='str' type="text" value="">
-               </div>    
-               <div>
-                   <label for='user'>Описание:</label>
-                   <textarea class='fix_inp_width mimax_w_ta' name='description'></textarea>
-               </div> 
-               <div>   
-                   <label for='user'>Начало:</label>
-                   <input class='fix_inp_width' name='title' id='str' type="date" value="">
-               </div>
-               <div>   
-                   <label for='user'>Конец:</label>
-                   <input class='fix_inp_width' name='title' id='str' type="date" value="">
-               </div>
-               <div>   
-                   <label for='user'>Выберите исполнителей в команду:</label>
-                   <select class='fix_inp_width select_width' name='status'>
-                        <option value='Создан'>Создан</option>
-                        <option value='В процессе'>В процессе</option>
-                        <option value='Завершен'>Завершен</option>
-                   </select>
-               </div>
-               <div>   
-                   <label for='user'>Команда:</label>
-                   
-               </div>
-               <input type='submit' value='Создать' id=''>
-            </form>
-        </div>`;
-    $('.content').append(div_form);
+}
+arr_workers_json = [];
+function modal_form_squad(act, event, id_w){
+    if(act == 'add'){
+        // workers_list = JSON.parse(sessionStorage.getItem('workers_list'));
+        // console.log(workers_list);
+        id_worker = event.target.value;
+        worker_name = workers_list[id_worker];
+        console.log(worker_name);
+        add_to_squad = document.createElement(`div`);
+        add_to_squad.classList.add(`worker`);
+        add_to_squad.innerHTML = `${worker_name}<img src='../img/x_white.svg' alt='x' onclick="modal_form_squad('delete',event, ${id_worker})">`;
+        $("#for_add_squad").append(add_to_squad);
+        $(`option[value='${id_worker}']`).remove();
+        arr_workers_json[id_worker] = worker_name;
+        console.log(arr_workers_json);
+        arr_wor_json = Object.entries(arr_workers_json).reduce((acc, [key, value])=>{
+            if(value !== undefined && value !== null && value !== ''){
+                acc[key] = value;
+            }
+            // console.log(acc);
+            return acc;
+        }, {});
+        console.log(arr_wor_json);
+        // arr_workers_json = Object(arr_wor_json);
+        // console.log(arr_workers_json);
+        sessionStorage.setItem('array_squad', JSON.stringify( arr_wor_json));
+
+        console.log(sessionStorage.getItem('array_squad'));
+        // // console.log(arr_workers_json);
+        // console.log(sessionStorage.getItem('array_squad'));
+
+        // console.log('FFFFFF');
+    }
+    else if(act == 'delete'){
+        // event.target.parentNode.remove();
+
+        // arr_sq = JSON.parse(sessionStorage.getItem('array_squad'));
+        // delete arr_sq[id_w];
+        // console.log(arr_sq);
+        // add_opt = document.createElement(`option`);
+        // add_opt.setAttribute('value',id_w);
+        // add_opt.innerHTML = arr_sq[id_w];
+        // $("#select_user_to_squad").append(add_opt);
+        
+        // console.log(arr_sq);
+        // sessionStorage.setItem('array_squad', JSON.stringify( arr_sq));
+        
+        // console.log(id_w);
+        // console.log(arr_sq[id_w]);
+        // console.log(arr_sq);
+        // console.log('smth');
+    }
+    // sessionStorage.setItem('json_workers',JSON.stringify(arr_workers_json));
+    // console.log(sessionStorage.getItem('json_workers'));
+
 }
 
 function paginate_func(count){
@@ -314,6 +431,9 @@ function change_page_proj(page_id){
 }
 
 function close_modal(){
+    if(sessionStorage.getItem('array_squad')){
+        sessionStorage.removeItem('array_squad');
+    }
     $("#background_blur").remove();
     $("#add_to_squad_modal").remove();
 }

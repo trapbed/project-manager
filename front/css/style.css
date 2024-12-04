@@ -336,9 +336,6 @@ a{
     width: 1.6vmax;
     height: 1.6vmax;
 }
-.BTWAct>div{
-    /* background-color: red; */
-}
 .BTWAct{
     display: flex;
     flex-direction: row;
@@ -874,4 +871,12 @@ select, input{
 .hv2vx{
     height: 2vmax;
     width: 100%;
+}
+
+#for_add_squad{
+    width: 25vmax;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5vmax;
 }

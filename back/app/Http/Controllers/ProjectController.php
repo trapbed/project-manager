@@ -162,6 +162,10 @@ class ProjectController extends Controller
         }
         // return response()->json();
     }
+    public function create_proj_modal_info(){
+        $users = DB::table('users')->where('role', '=', 'worker')->where('blocked', '=', '0')->get();
+        return response()->json(['workers'=>$users]);
+    }
     public function save_create_project(Request $request){
         // check title unique
     }
