@@ -95,7 +95,7 @@ class ProjectController extends Controller
 
 
     public function projects_info_admin(Request $request){
-        $projects = DB::table('projects')->select('id','title', 'description', 'user_id', 'started_at', 'finished_at', 'status', 'squad')->where('user_id', '=', $request->id)->limit(2)->get();
+        $projects = DB::table('projects')->select('id','title', 'description', 'user_id', 'started_at', 'finished_at', 'status', 'squad')->orderBy('finished_at')->where('user_id', '=', $request->id)->get();
         $count = DB::table('projects')->where('user_id', '=', $request->id)->count();
         return response()->json(['projects'=>$projects, 'count'=>$count]);
     }
@@ -121,7 +121,7 @@ class ProjectController extends Controller
                 if($update){    
                     $mess = 'Успешное изменение проекта!';
                     $res = true;
-                    $projects = DB::table('projects')->select('id','title', 'description', 'user_id', 'started_at', 'finished_at', 'status', 'squad')->where('user_id', '=', $request->id_user)->limit(2)->get();
+                    $projects = DB::table('projects')->select('id','title', 'description', 'user_id', 'started_at', 'finished_at', 'status', 'squad')->orderBy('finished_at')->where('user_id', '=', $request->id_user)->get();
                     $count = DB::table('projects')->where('user_id', '=', $request->id_user)->count();
                 }
                 else{
@@ -152,7 +152,7 @@ class ProjectController extends Controller
         if($delete){
             $mess = 'Проект удален!';
             $res = true;
-            $projects = DB::table('projects')->select('id','title', 'description', 'user_id', 'started_at', 'finished_at', 'status', 'squad')->where('user_id', '=', $request->id_user)->limit(2)->get();
+            $projects = DB::table('projects')->select('id','title', 'description', 'user_id', 'started_at', 'finished_at', 'status', 'squad')->where('user_id', '=', $request->id_user)->get();
             $count = DB::table('projects')->where('user_id', '=', $request->id_user)->count();
             return response()->json(['mess'=>$mess, 'res'=>$res,'projects'=>$projects, 'count'=>$count]);
         }else{
@@ -166,10 +166,62 @@ class ProjectController extends Controller
         $users = DB::table('users')->where('role', '=', 'worker')->where('blocked', '=', '0')->get();
         return response()->json(['workers'=>$users]);
     }
-    public function save_create_project(Request $request){
-        // check title unique
+    public function save_created_project(Request $request){
+        $res = false;
+        $mess = '';
+        $projects = false;
+        $count = false;
+
+        $title = strlen(trim($request->title))>0 ? $request->title : false;
+        $description = strlen(trim($request->description))>0 ? $request->description : false;
+        $id_user = strlen(trim($request->id_user))>0 ? $request->id_user : false;
+        $squad = strlen(trim($request->squad))>0 ? $request->squad : false;
+        $start = strlen(trim($request->start))>0 ? $request->start : false;
+        $end = strlen(trim($request->end))>0 ? $request->end : false;
+
+        if($title && $description && $id_user && $start && $end && $squad){
+            $check_exist_title = DB::table('projects')->where('title','=',$title)->get();
+            if(count($check_exist_title) == 0){
+                $squad =  trim($squad, "[]");
+                $squad = explode(',', $squad);
+                $squad = json_encode(['squad'=>$squad]);
+                $start = mb_substr($start,0, 4 )."-".mb_substr($start, 5, 2)."-".mb_substr($start, 8, 2);
+                $finish = mb_substr($end,0, 4 )."-".mb_substr($end, 5, 2)."-".mb_substr($end, 8, 2);
+                $project = Project::create([
+                    'title'=>$title,
+                    'description'=>$description,
+                    'user_id'=>$id_user,
+                    'finished_at'=>$end,
+                    'started_at'=>$start,
+                    'status'=>'Создан', 
+                    'squad'=>$squad
+                ]);
+                if($project){
+                    $mess = 'Проект успешно создан!';
+                    $projects = DB::table('projects')->select('id','title', 'description', 'user_id', 'started_at', 'finished_at', 'status', 'squad')->orderBy('finished_at')->where('user_id', '=', $request->id_user)->get();
+                    $count = DB::table('projects')->where('user_id', '=', $request->id_user)->count();
+                    $res = true;
+                }
+                else{
+                    $mess = 'Не удалось создать проект!';
+                }
+            }
+            else if($title<=3){
+                $mess = 'Название проекта слишком короткое!';
+            }
+            else{
+                $mess = 'Такой проект уже существует, придумайте другое название!';
+            }
+        }
+        else{
+            $mess = 'Заполните все поля и выберите команду!';
+        }
+        // return response()->json([$title , $description , $id_user , $squad ,'start'=> $start ,'finish'=> $finish]);
+        // return response()->json([ $start , $finish]);
+        return response()->json(['mess'=>$mess , 'res'=>$res, 'projects'=>$projects, 'count'=>$count]);
     }
 }
 
-
+// check title unique
+        // $check_exist_title = DB::table('projects')->where('title','=',$request->title)->exist();
 // INSERT INTO `projects` (`id`, `title`, `description`, `user_id`, `started_at`, `finished_at`, `status`, `squad`, `created_at`, `updated_at`) VALUES (NULL, 'Some project for test', 'description of \"Some project for test\"', '12', '2024-10-17', '2024-10-29', 'Завершен', '{\"squad\":[3,10]}', NULL, NULL);

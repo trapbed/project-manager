@@ -489,6 +489,7 @@ a{
     gap: 0.5vmax;
     width: 99%;
     height: auto;
+    min-height: 14vmax;
     border:  0.2vmax solid rgba(118, 159, 203, 0.4);
 }
 .oneProject>*{
@@ -879,4 +880,15 @@ select, input{
     flex-direction: row;
     flex-wrap: wrap;
     gap: 0.5vmax;
+}
+
+.mimax_w_ta{
+    min-width: 25vmax;
+    max-width: 25vmax;
+    max-height: 10vmax;
+    min-height: 1vmax;
+}
+.scroll_div{
+    overflow-y: scroll;
+    scrollbar-width: thin;
 }

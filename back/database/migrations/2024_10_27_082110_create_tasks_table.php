@@ -23,6 +23,7 @@ return new class extends Migration
             $table->foreign('project_id')
             ->references('id')->on('projects')
             ->onDelete('cascade');
+            $table->integer('manager_id');
             // $table->unsignedBigInteger('user_id');
             $table->foreignid('user_id')->constrained();
             $table->enum('priority', ['Низкий','Высокий','Средний']);

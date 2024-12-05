@@ -33,6 +33,7 @@ Route::post('/save_create_task', [TaskController::class, 'save_create_task'])->n
 Route::post('/get_info_to_edit_task', [TaskController::class, 'get_info_to_edit_task'])->name('get_info_to_edit_task');
 Route::post('/update_task', [TaskController::class, 'update_task'])->name('update_task');
 Route::post('/delete_task', [TaskController::class, 'delete_task'])->name('delete_task');
+Route::get('/tasks_manager', [ProjectController::class, 'tasks_manager'])->name('tasks_manager');
 
 
 Route::post('/manager_p', [TaskController::class, 'get_manager_of_project'])->name('manager_p');
@@ -44,12 +45,13 @@ Route::post('/save_update_squad', [ProjectController::class, 'save_update_squad'
 Route::post('/delete_from_squad', [ProjectController::class, 'delete_from_squad'])->name('delete_from_squad');
 Route::post('/get_projects_title', [ProjectController::class, 'get_projects_title'])->name('get_projects_title');
 
+
 Route::post('/projects_info_admin', [ProjectController::class, 'projects_info_admin'])->name('projects_info_admin');
 Route::post('/update_project_info', [ProjectController::class, 'update_project_info'])->name('update_project_info');
 Route::post('/save_update_proj', [ProjectController::class, 'save_update_proj'])->name('save_update_proj');
 Route::post('/delete_project', [ProjectController::class, 'delete_project'])->name('delete_project');
-Route::post('/save_create_project', [ProjectController::class, 'save_create_project'])->name('save_create_project');
-Route::post('create_proj_modal_info', [ProjectController::class, 'create_proj_modal_info']);
+Route::post('/create_proj_modal_info', [ProjectController::class, 'create_proj_modal_info']);
+Route::post('/save_created_project', [ProjectController::class, 'save_created_project']);
 
 
 Route::post('/users', [UserController::class, 'all_users'])->name('users');

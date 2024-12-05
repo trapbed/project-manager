@@ -31,19 +31,14 @@
                 </a>
                 <div class="br1"></div>
                 <div id="linksNav">
-                        <a href="users.php" class="linkNav backgroundNav">
-                            <img src="/img/team-leader.png" alt="">
-                            <h2 class="mouseHid">Пользователи</h2>
-                        </a>
-                    <div class="br04"></div>
                     <a href="tasks.php" class="linkNav backgroundNav">
                         <img src="/img/contacts.png" alt="">
-                        <h2 class="mouseHid">Задачи</h2>
+                        <h2 class="mouseHid">Мои задачи</h2>
                     </a>
                     <div class="br04"></div>
                     <a href="projects.php" class="linkNav backgroundNav">
                         <img src="/img/projects.png" alt="">
-                        <h2 class="mouseHid">Проекты</h2>
+                        <h2 class="mouseHid">Мои проекты</h2>
                     </a>
                     <div class="br04"></div>
                     <a href="reports.php" class="linkNav backgroundNav">

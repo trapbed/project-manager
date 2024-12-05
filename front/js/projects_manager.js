@@ -45,9 +45,7 @@ $.ajax({
             </div>`;
                 $("#infoRows").append(div);
             })
-            if(count>2){
-                paginate_func(count);
-            }
+            
         }
         else{
             div = document.createElement(`div`);
@@ -237,9 +235,7 @@ function save_update_project(event){
                     </div>`;
                     $("#infoRows").append(div);
                     })
-                    if(count>2){
-                        paginate_func(count);
-                    }
+                    
                 }
                 else{
                     div = document.createElement(`div`);
@@ -322,27 +318,27 @@ function modal_create_project(){
                 <div id='title_close'>
                     <span>Создание проекта : </span><img onclick='close_modal()' src='../img/x.svg' alt='close'>
                 </div>
-                    <form id='form_create_project_end' onsubmit='save_create_project(event)'>
+                    <form id='form_create_project_end' onsubmit='save_created_project(event)'>
                     <input class='display_none' type='text' name='id_user' value='${sessionStorage.getItem('id')}'>
                     <div>   
                         <label for='user'>Заголовок:</label>
-                        <input class='fix_inp_width' name='title' id='str' type="text" value="">
+                        <input class='fix_inp_width' name='title' id='title' type="text" value="">
                     </div>    
                     <div>
                         <label for='user'>Описание:</label>
-                        <textarea class='fix_inp_width mimax_w_ta' name='description'></textarea>
+                        <textarea class='fix_inp_width mimax_w_ta' id='desc' name='description'></textarea>
                     </div> 
                     <div>   
                         <label for='user'>Начало:</label>
-                        <input class='fix_inp_width' name='title' id='str' type="date" value="">
+                        <input class='fix_inp_width' name='start' id='start' type="date" value="" onchange = "change_min_end()">
                     </div>
                     <div>   
                         <label for='user'>Конец:</label>
-                        <input class='fix_inp_width' name='title' id='str' type="date" value="">
+                        <input class='fix_inp_width' name='end' id='end' type="date" value="">
                     </div>
                     <div>   
                         <label for='user'>Выберите исполнителей в команду:</label>
-                        <select class='fix_inp_width select_width' id='select_user_to_squad' name='status' onchange="modal_form_squad('add', event, null)">
+                        <select class='fix_inp_width select_width' id='select_user_to_squad' name='users' onchange="modal_form_squad('add', event, null)">
                             <option value=''>Выберите исполнителей</option>
                             ${options_workers}
                         </select>
@@ -351,6 +347,7 @@ function modal_create_project(){
                         <label for='user'>Команда:</label>
                         <div id='for_add_squad'></div>
                     </div>
+                    <input type="hidden" name="squad" id="squad">
                     <input type='submit' value='Создать' id=''>
                     </form>
                 </div>`;
@@ -359,16 +356,24 @@ function modal_create_project(){
     })
     
 }
+
+function change_min_end(){
+    change = document.querySelectorAll("input")[2].value;
+    plus_day = new Date(change);
+    plus_day.setDate(plus_day.getDate() + 1);
+    plus_day = plus_day.getFullYear()+"-"+(plus_day.getMonth()+1)+"-"+plus_day.getDate();
+    $("input")[3].setAttribute('min', plus_day);
+}
+
 arr_workers_json = [];
 function modal_form_squad(act, event, id_w){
     if(act == 'add'){
-        // workers_list = JSON.parse(sessionStorage.getItem('workers_list'));
-        // console.log(workers_list);
         id_worker = event.target.value;
         worker_name = workers_list[id_worker];
         console.log(worker_name);
         add_to_squad = document.createElement(`div`);
         add_to_squad.classList.add(`worker`);
+        add_to_squad.setAttribute('id-user',id_worker);
         add_to_squad.innerHTML = `${worker_name}<img src='../img/x_white.svg' alt='x' onclick="modal_form_squad('delete',event, ${id_worker})">`;
         $("#for_add_squad").append(add_to_squad);
         $(`option[value='${id_worker}']`).remove();
@@ -378,54 +383,105 @@ function modal_form_squad(act, event, id_w){
             if(value !== undefined && value !== null && value !== ''){
                 acc[key] = value;
             }
-            // console.log(acc);
             return acc;
         }, {});
-        console.log(arr_wor_json);
-        // arr_workers_json = Object(arr_wor_json);
-        // console.log(arr_workers_json);
         sessionStorage.setItem('array_squad', JSON.stringify( arr_wor_json));
-
-        console.log(sessionStorage.getItem('array_squad'));
-        // // console.log(arr_workers_json);
-        // console.log(sessionStorage.getItem('array_squad'));
-
-        // console.log('FFFFFF');
     }
     else if(act == 'delete'){
-        // event.target.parentNode.remove();
+        event.target.parentNode.remove();
 
-        // arr_sq = JSON.parse(sessionStorage.getItem('array_squad'));
-        // delete arr_sq[id_w];
-        // console.log(arr_sq);
-        // add_opt = document.createElement(`option`);
-        // add_opt.setAttribute('value',id_w);
-        // add_opt.innerHTML = arr_sq[id_w];
-        // $("#select_user_to_squad").append(add_opt);
-        
-        // console.log(arr_sq);
-        // sessionStorage.setItem('array_squad', JSON.stringify( arr_sq));
-        
-        // console.log(id_w);
-        // console.log(arr_sq[id_w]);
-        // console.log(arr_sq);
-        // console.log('smth');
+        arr_sq = JSON.parse(sessionStorage.getItem('array_squad'));
+        add_opt = document.createElement(`option`);
+        add_opt.setAttribute('value',id_w);
+        add_opt.innerHTML = arr_sq[id_w];
+        $("#select_user_to_squad").append(add_opt);
     }
-    // sessionStorage.setItem('json_workers',JSON.stringify(arr_workers_json));
-    // console.log(sessionStorage.getItem('json_workers'));
-
+    console.log(Array.from($(".worker")));
+    array_squad = [];
+    worker_lists = Array.from($(".worker"));
+    worker_lists.forEach(element => {
+        id_user = element.getAttribute('id-user');
+        array_squad.push(id_user);
+    });
+    console.log(typeof array_squad);
+    console.log(array_squad);
+    $("#squad").attr("value", array_squad);
 }
 
-function paginate_func(count){
-    let paginate_d = $("#paginate");
-    let pages = Math.ceil(count/2);
-    for(let i=1; i<=pages; i++){
-        console.log(i);
-        paginate.innerHTML += `<div class="btn_paginate" onclick="change_page(${i})">${i}</div>`;
-        console.log(paginate);
-        paginate_d.append(paginate);
-    }
+function save_created_project(event){
+    event.preventDefault();
+    // alert('qwe');
+    $.ajax({
+        type: "POST",
+        data: $("#form_create_project_end").serialize(),        
+        url: "http://pm.b/save_created_project",
+        success:(response)=>{
+            console.log(response);
+            console.log(typeof response.finish);
+            console.log(typeof response.start);
+            alert(response.mess);
+            if(response.res == true){
+                close_modal();
+                $(".oneProject").remove();
+                count = response.count;
+                projects = response.projects;
+                if(count>0){
+                    $.each(projects, function(key,value){
+                        div = document.createElement(`div`);
+                        div.classList.add('oneProject');
+                        last = Math.ceil((new Date(value.finished_at)-new Date())/86400000);
+                        if(last<0 && value.status !== 'Завершен'){
+                            last = 'Просрочен';
+                        }
+                        else if(last<0 && value.status == 'Завершен'){
+                            last = value.status;
+                        }
+                        else if(last == 0){
+                            last = 'Последний день!';
+                        }
+                        div.innerHTML = `
+                        <div class="titleOneProject">Заголовок проекта: <br><br>${value.title}</div>
+                        <div class="moreOneProj">
+                            <hr class="BTWOneProj">
+                            <div class="oneProjMoreInfo">
+                                <div class="dateStatusOne">
+                                    <div class="row1">Дата начала: ${value.started_at}</div>
+                                    <div class="row2">Дата окончания: ${value.finished_at}</div>
+                                    <div class="row3">Осталось дней: ${last}</div>
+                                    <div class="row4">Статус: ${value.status}</div>
+                                </div>
+                                <div class="descOneProj">
+                                    <span>Описание:</span>
+                                    <div class="descOneProjMore"><span>${value.description}</span> </div>
+                                </div>
+                                <div class="btnsOneProj">
+                                    <button class="oneBTNproj update_project" onclick="update_project_modal(${value.id})">Редактировать</button>
+                                    <button class="oneBTNproj delete_project" onclick="delete_project(${value.id})">Удалить</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                    $("#infoRows").append(div);
+                    })
+                    
+                }
+                else{
+                    div = document.createElement(`div`);
+                    div.setAttribute('id','noContentText');
+                    div.innerHTML = `У вас нет проектов!`;
+                    $(".content").append(div);
+                }
+            }
+            // alert(response.mess);
+            // close_modal;
+        },
+        error:()=>{
+            console.log('ertgcbsl');
+        }
+    })
 }
+
+
 
 function change_page_proj(page_id){
 }
@@ -437,17 +493,3 @@ function close_modal(){
     $("#background_blur").remove();
     $("#add_to_squad_modal").remove();
 }
-
-// function save_create_project(){
-//     $.ajax({
-//         type: "POST",
-//         data: $("#").serialize(),
-//         url: "https://pm.b/save_create_project",
-//         success:()=>{
-
-//         },
-//         error:()=>{
-
-//         }
-//     })
-// }

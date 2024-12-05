@@ -23,7 +23,7 @@
 
    
    
-   <div id="infoRows">
+   <div id="infoRows" class="scroll_div">
         
    </div>
    <div class="hv2vx"></div>   

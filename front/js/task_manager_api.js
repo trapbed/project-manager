@@ -90,6 +90,7 @@ function choose_proj_to_task(event){
                                     <option value="Средний">Средний</option>
                                 </select>
                             </div>    
+                            <input type="hidden" name='manager_id' value="${sessionStorage.getItem("id")}">
                             <input type='submit' value='Назначить' id='submit_update_squad'>
                         </form>
                 </div> `;
@@ -102,11 +103,11 @@ function choose_proj_to_task(event){
 }
 
 function change_min_end(){
-    change = document.querySelectorAll("input")[5].value;
+    change = document.querySelectorAll("input")[4].value;
     plus_day = new Date(change);
     plus_day.setDate(plus_day.getDate() + 1);
     plus_day = plus_day.getFullYear()+"-"+(plus_day.getMonth()+1)+"-"+plus_day.getDate();
-    $("input")[6].setAttribute('min', plus_day);
+    $("input")[5].setAttribute('min', plus_day);
 }
 
 
@@ -119,9 +120,9 @@ function create_task(event){
         url: "http://pm.b/save_create_task",
         success:(response)=>{
             if(response.res == true){
-                $("#background_blur").remove();
-                $("#add_to_squad_modal").remove();
+                close_modal();
                 alert(response.mess);
+                render_tasks(response);
             }
         },
         error:()=>{
@@ -164,6 +165,7 @@ function edit_task(id_task){
                                 <label for='user'>Конец:</label>
                                 <input name='finished_at' id='date_finished_at' type="date" min='${dates.started_at}' max='${dates.finished_at}' value="${task.finished_at}">
                             </div>  
+                            <input type="hidden" name='manager_id' value="${sessionStorage.getItem('id')}">
                             <input type='submit' value='Назначить' id='submit_update_squad'>
                         </form>
                     </div>
@@ -185,48 +187,10 @@ function update_task(event){
         url: "http://pm.b/update_task",
         success:(response)=>{
             if(response.res == true){
-                alert(response.mess);
-                $("#background_blur").remove();
-                $("#add_to_squad_modal").remove();
-                $(".infoRow").remove();
-                $(".btn_paginate").remove();
-                let tasks = response.tasks; 
-                title = "";
-                $.each(tasks, function(key, value){ 
-                        let tr = document.createElement('tr'); 
-                        tr.classList.add("infoRow");
-                        if(sessionStorage.getItem('role') == 'admin'){
-                            newClass = 'blur'; 
-                            title = title=`title = "админу не доступны инструменты управления!"`;
-                        }
-                        actions =  `<img onclick="edit_task(${value.tasks_id})" src="../img/edit.png">`;
-                        console.log( value.status);
-                        if(value.status == 'Назначена'){
-                            actions =  `<img onclick="edit_task(${value.tasks_id})" src="../img/edit.png"><img onclick="delete_task(${value.tasks_id})" src="../img/delete.png">`;
-                        }
-                        tr.innerHTML = `
-                            <td class="taskN">${value.title_task}</td>
-                            <td class="taskD" onclick= "modalTaskDesc(${value.tasks_id})">Подробнее</td>
-                            <td class="taskNP">${value.title_project}</td>
-                            <td class="taskW"> ${value.worker}</td>
-                            <td class="taskP">${value.priority}</td>
-                            <td class="taskE">${value.finished_at}</td>
-                            <td class="taskS">${value.status}</td>
-                            <td class="taskA"><div ${title} class="BTWAct ${newClass}">${actions}</div></td>`;
-                        $("#tasksTable").append(tr);
-                });
-                if(response.count>10){
-                    let paginate_d = $("#paginate");
-                    let pages = Math.ceil(response.count/10);
-                    for(let i=1; i<=pages; i++){
-                        paginate.innerHTML += `<div class="btn_paginate" onclick="change_page(${i})">${i}</div>`;
-                    }
-                    $("#session").append(paginate);
-                }
+                close_modal();                
+                render_tasks(response);
             }
-            else{
-                alert(response.mess);
-            }
+            alert(response.mess);
         },
         error:()=>{
             // VOID
@@ -254,40 +218,7 @@ function delete_task(id_task){
                 console.log(response);
                 if(response.res == true){
                     let tasks = response.tasks;
-                $(".infoRow").remove();
-                $(".btn_paginate").remove();
-                title = "";
-                    $.each(tasks, function(key, value){ 
-                            let tr = document.createElement('tr');
-                            tr.classList.add("infoRow");
-                            if(sessionStorage.getItem('role') == 'admin'){
-                                newClass = 'blur'; 
-                                title = title=`title = "админу не доступны инструменты управления!"`;
-                            }
-                            actions =  `<img onclick="edit_task(${value.tasks_id})" src="../img/edit.png">`;
-                            console.log( value.status);
-                            if(value.status == 'Назначена'){
-                                actions =  `<img onclick="edit_task(${value.tasks_id})" src="../img/edit.png"><img onclick="delete_task(${value.tasks_id})" src="../img/delete.png">`;
-                            }
-                            tr.innerHTML = `
-                                <td class="taskN">${value.title_task}</td>
-                                <td class="taskD" onclick= "modalTaskDesc(${value.tasks_id})">Подробнее</td>
-                                <td class="taskNP">${value.title_project}</td>
-                                <td class="taskW"> ${value.worker}</td>
-                                <td class="taskP">${value.priority}</td>
-                                <td class="taskE">${value.finished_at}</td>
-                                <td class="taskS">${value.status}</td>
-                                <td class="taskA"><div ${title} class="BTWAct ${newClass}">${actions}</div></td>`;
-                            $("#tasksTable").append(tr);
-                    });
-                    if(response.count>10){
-                        let paginate_d = $("#paginate");
-                        let pages = Math.ceil(response.count/10);
-                            for(let i=1; i<=pages; i++){
-                                paginate.innerHTML += `<div class="btn_paginate" onclick="change_page(${i})">${i}</div>`;
-                            }
-                        $("#session").append(paginate);
-                    }
+                    render_tasks(response);
                 }
                 alert(response.mess);
             },
@@ -299,4 +230,8 @@ function delete_task(id_task){
     else{
 
     }
+}
+function close_modal(){
+    $("#background_blur").remove();
+    $("#add_to_squad_modal").remove();
 }

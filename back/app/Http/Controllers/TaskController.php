@@ -12,20 +12,58 @@ use Response;
 
 class TaskController extends Controller 
 { 
-    public function all_tasks(){ 
-        $tasks_all = DB::table('tasks')->select('tasks.id as tasks_id', 'projects.id as project_id','tasks.title as title_task','projects.title as title_project','users.name as worker','tasks.priority','tasks.finished_at', 'tasks.status')-> 
-        join('projects', 'projects.id','=', 'tasks.project_id')-> 
-        join('users', 'users.id', '=', 'tasks.user_id')-> 
-        limit(8)->offset(0)->get(); 
+    public function all_tasks(Request $request){ 
+        if($request->role == 'manager'){
+            $tasks_all = 
+            DB::table('tasks')
+            ->select('tasks.id as tasks_id', 'projects.id as project_id','tasks.title as title_task','projects.title as title_project','users.name as worker','tasks.priority','tasks.finished_at', 'tasks.status')
+            ->where('manager_id','=',$request->id_user)
+            ->join('projects','projects.id','=','tasks.project_id')
+            ->join('users','users.id','=','tasks.user_id')
+            ->orderBy('tasks.updated_at','desc')
+            ->limit(8)
+            ->offset(0)
+            ->get(); 
+        
+        }
+        else if($request->role=='admin'){
+            $tasks_all = 
+            DB::table('tasks')
+            ->select('tasks.id as tasks_id', 'projects.id as project_id','tasks.title as title_task','projects.title as title_project','users.name as worker','tasks.priority','tasks.finished_at', 'tasks.status')
+            ->join('projects','projects.id','=','tasks.project_id')
+            ->join('users','users.id','=','tasks.user_id')
+            ->orderBy('tasks.updated_at','desc')
+            ->limit(8)
+            ->offset(0)
+            ->get();    
+        }
         return response()->json(['tasks'=>$tasks_all, 'count'=>Task::latest()->count()]); 
-    } 
+    }
     public function get_tasks_on_page(Request $request){ 
         $page = $request->page_id; 
         $offset = $page*8-8; 
-        $tasks = DB::table('tasks')->select('tasks.id as tasks_id', 'projects.id as project_id','tasks.title as title_task','projects.title as title_project','users.name as worker','tasks.priority','tasks.finished_at', 'tasks.status')-> 
-        join('projects', 'projects.id','=', 'tasks.project_id')-> 
-        join('users', 'users.id', '=', 'tasks.user_id')-> 
-        limit(8)->offset($offset)->get(); 
+        if($request->role == 'manager'){
+            $tasks = DB::table('tasks')
+            ->select('tasks.id as tasks_id', 'projects.id as project_id','tasks.title as title_task','projects.title as title_project','users.name as worker','tasks.priority','tasks.finished_at', 'tasks.status')
+            ->where('manager_id','=',$request->id_user)
+            ->join('projects','projects.id','=','tasks.project_id')
+            ->join('users','users.id','=','tasks.user_id')
+            ->orderBy('tasks.updated_at','desc')
+            ->limit(8)
+            ->offset($offset)
+            ->get(); 
+        }
+        else if($request->role == 'admin'){
+            $tasks = DB::table('tasks')
+            ->select('tasks.id as tasks_id', 'projects.id as project_id','tasks.title as title_task','projects.title as title_project','users.name as worker','tasks.priority','tasks.finished_at', 'tasks.status')
+            ->join('projects','projects.id','=','tasks.project_id')
+            ->join('users','users.id','=','tasks.user_id')
+            ->orderBy('tasks.updated_at','desc')
+            ->limit(8)
+            ->offset($offset)
+            ->get(); 
+        }
+        
         return response()->json($tasks); 
     } 
     public function get_manager_of_project(Request $request){ 
@@ -64,6 +102,7 @@ class TaskController extends Controller
         $finish = isset($request->finished_at) ? $request->finished_at: false;
         $worker = isset($request->worker) ? $request->worker: false;
         $priority = isset($request->priority) ? $request->priority: false;
+        $manager_id = isset($request->manager_id)?$request->manager_id:false;
         if($id_proj && $title && $desc && $start && $finish && $worker && $worker && $priority){
             $task = Task::create([
                 'title'=>$title,
@@ -73,11 +112,21 @@ class TaskController extends Controller
                 'finished_at'=>$finish,
                 'user_id'=>$worker,
                 'priority'=>$priority,
+                'manager_id'=>$manager_id,
                 'status'=>'Назначена'
             ]);
             if($task){
                 $mess = 'Успешное создание задачи!';
                 $res = true;
+                $tasks_all = DB::table('tasks')
+                ->select('tasks.id as tasks_id', 'projects.id as project_id','tasks.title as title_task','projects.title as title_project','users.name as worker','tasks.priority','tasks.finished_at', 'tasks.status')
+                ->join('projects','projects.id','=','tasks.project_id')
+                ->join('users','users.id','=','tasks.user_id')
+                ->orderBy('tasks.updated_at','desc')
+                ->limit(8)
+                ->offset(0)
+                ->get();
+                // return response()->json([]); 
             }   
             else{
                 $mess = 'Не удалось назначить задачу!';
@@ -88,7 +137,7 @@ class TaskController extends Controller
             $mess = 'Заполните все поля!';
             $res =false;
         }
-        return response()->json(['mess'=>$mess, 'res'=>$res]);
+        return response()->json(['mess'=>$mess, 'res'=>$res, 'tasks'=>$tasks_all, 'count'=>Task::latest()->count()]);
     }
     public function get_info_to_edit_task(Request $request){
         $info_task = DB::table('tasks')->select('id','title','description','started_at','finished_at','user_id', 'priority', 'project_id')->where('id','=', $request->id_task)->get();
@@ -102,14 +151,20 @@ class TaskController extends Controller
         $start = isset($request->started_at) ? $request->started_at: false;
         $finish = isset($request->finished_at) ? $request->finished_at: false;
         if($title && $desc && $start && $finish && $id_task){
-            $task_update = Task::where('id', '=', $id_task)->update(['title'=>$title, 'description'=>$desc,'started_at'=>$start, 'finished_at'=>$finish]);
+            $task_update = Task::where('id', '=', $id_task)->update(['title'=>$title, 'description'=>$desc,'started_at'=>$start, 'finished_at'=>$finish, 'updated_at'=>date('Y-m-d H:i:s')]);
             if($task_update){
+                
+
                 $mess = 'Успешное изменение задачи!';
                 $res = true;
-                $tasks_all = DB::table('tasks')->select('tasks.id as tasks_id', 'projects.id as project_id','tasks.title as title_task','projects.title as title_project','users.name as worker','tasks.priority','tasks.finished_at', 'tasks.status')-> 
-                join('projects', 'projects.id','=', 'tasks.project_id')-> 
-                join('users', 'users.id', '=', 'tasks.user_id')-> 
-                limit(8)->offset(0)->get();  
+                $tasks_all = DB::table('tasks')
+                ->select('tasks.id as tasks_id', 'projects.id as project_id','tasks.title as title_task','projects.title as title_project','users.name as worker','tasks.priority','tasks.finished_at', 'tasks.status')
+                ->join('projects','projects.id','=','tasks.project_id')
+                ->join('users','users.id','=','tasks.user_id')
+                ->orderBy('tasks.updated_at','desc')
+                ->limit(8)
+                ->offset(0)
+                ->get();  
             }
             else{
                 $mess = 'Не удалось изменить задачу!';
@@ -132,10 +187,14 @@ class TaskController extends Controller
             $mess = 'Не удалось удалить задачу!';
             $res = false;
         }
-        $tasks_all = DB::table('tasks')->select('tasks.id as tasks_id', 'projects.id as project_id','tasks.title as title_task','projects.title as title_project','users.name as worker','tasks.priority','tasks.finished_at', 'tasks.status')-> 
-        join('projects', 'projects.id','=', 'tasks.project_id')-> 
-        join('users', 'users.id', '=', 'tasks.user_id')-> 
-        limit(8)->offset(0)->get(); 
+        $tasks_all = DB::table('tasks')
+        ->select('tasks.id as tasks_id', 'projects.id as project_id','tasks.title as title_task','projects.title as title_project','users.name as worker','tasks.priority','tasks.finished_at', 'tasks.status')
+        ->join('projects','projects.id','=','tasks.project_id')
+        ->join('users','users.id','=','tasks.user_id')
+        ->orderBy('tasks.updated_at','desc')
+        ->limit(8)
+        ->offset(0)
+        ->get(); ; 
         return response()->json(['res'=>$res, 'mess'=>$mess,'tasks'=>$tasks_all, 'count'=>Task::latest()->count()]);
     }
 }

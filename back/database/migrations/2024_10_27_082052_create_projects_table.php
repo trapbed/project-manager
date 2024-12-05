@@ -21,6 +21,7 @@ return new class extends Migration
             $table->date('started_at');
             $table->date('finished_at');
             $table->enum('status', ['Создан','Впроцессе','Завершен']);
+            $table->json('squad');
             $table->timestamps();
         });
     }
