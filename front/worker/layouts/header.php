@@ -36,10 +36,6 @@
                         <h2 class="mouseHid">Мои задачи</h2>
                     </a>
                     <div class="br04"></div>
-                    <a href="projects.php" class="linkNav backgroundNav">
-                        <img src="/img/projects.png" alt="">
-                        <h2 class="mouseHid">Мои проекты</h2>
-                    </a>
                     <div class="br04"></div>
                     <a href="reports.php" class="linkNav backgroundNav">
                         <img src="/img/report.png" alt="">
@@ -51,7 +47,7 @@
             <a href=""  id="accountNav" class="backgroundNav">
                 <img src="/img/profile (1).png" alt="">
                 
-                <span class="mouseHid">Профиль</span>
+                <span class="mouseHid"><script> document.write(sessionStorage.getItem('name')); </script></span>
             </a>
             
         </div>
@@ -62,7 +58,6 @@
             sessionStorage.removeItem('mess');
         }
 
-        console.log(sessionStorage.getItem('mess'));
         
 
 

@@ -2,7 +2,7 @@
     require 'layouts/header.php';
    //  require "js/tasks_api.js";
 ?>
-<script src=" ../js\tasks_api.js"></script>
+<script src=" ../js\tasks_worker_api.js"></script>
 
 <div id="left_block">
    <div id="search_select">
@@ -20,15 +20,13 @@
    <div id="infoRows">
       <table class="table" id="tasksTable">
          <tr id="infoRowHeader">
-            <td class="taskN">Название задачи</td>
-            <td class="taskD">Описание</td>
-            <td class="taskNP">Название проекта</td>
+            <td class="taskN worker_task_N">Название задачи</td>
+            <td class="taskD worker_task_D">Осталось дней</td>
+            <td class="taskNP worker_task_P">Приоритет</td>
             <!-- <td class="taskM">Руководитель</td> -->
-            <td class="taskW"> Исполнитель</td>
-            <td class="taskP">Приоритет</td>
-            <td class="taskE">Окончание</td>
-            <td class="taskS">Статус</td>
-            <td class="taskA">Действия</td>
+            <td class="taskW worker_task_S"> Статус</td>
+            <td class="taskP worker_task_M">Подробнее</td>
+            <td class="taskE worker_task_C">Комментарии</td>
          </tr>
       </table>
    </div>

@@ -51,7 +51,8 @@ class TaskController extends Controller
             ->orderBy('tasks.updated_at','desc')
             ->limit(8)
             ->offset($offset)
-            ->get(); 
+            ->get();
+            return response()->json($tasks); 
         }
         else if($request->role == 'admin'){
             $tasks = DB::table('tasks')
@@ -62,9 +63,22 @@ class TaskController extends Controller
             ->limit(8)
             ->offset($offset)
             ->get(); 
+            $count = DB::table('tasks')->where('user_id','=', $request->id_worker)->count();
+            return response()->json(['tasks'=>$tasks, 'count'=>$count]);
+        }
+        else if($request->role == 'worker'){
+            // $workers_task = DB::table('tasks')->select('title', 'started_at', 'finished_at', 'priority', 'status', 'comments')->where('user_id','=', $request->id_worker)->get();
+
+            $tasks = DB::table('tasks')
+            ->select('title', 'started_at', 'finished_at', 'priority', 'status', 'comments')
+            ->where('user_id','=', $request->id_worker)
+            ->orderBy('tasks.updated_at','desc')
+            ->limit(8)
+            ->offset($offset)
+            ->get();
+            return response()->json(['tasks'=>$tasks]); 
         }
         
-        return response()->json($tasks); 
     } 
     public function get_manager_of_project(Request $request){ 
         $manager_p = DB::table('projects')->select('users.name')->where('users.id','projects.user.id')-> 
@@ -196,5 +210,11 @@ class TaskController extends Controller
         ->offset(0)
         ->get(); ; 
         return response()->json(['res'=>$res, 'mess'=>$mess,'tasks'=>$tasks_all, 'count'=>Task::latest()->count()]);
+    }
+
+    public function tasks_worker(Request $request){
+        $workers_task = DB::table('tasks')->select('title', 'started_at', 'finished_at', 'priority', 'status', 'comments')->where('user_id','=', $request->id_worker)->orderBy('tasks.updated_at','desc')->limit(8)->get();
+        $count = DB::table('tasks')->where('user_id','=', $request->id_worker)->count();
+        return response()->json(['tasks'=>$workers_task, 'count'=>$count]);
     }
 }

@@ -892,3 +892,42 @@ select, input{
     overflow-y: scroll;
     scrollbar-width: thin;
 }
+.worker_task_N{
+    /* background-color: rgba(203, 118, 118, 1); */
+    width: 20vmax !important;
+    font-size: 1vmax;
+}
+.worker_task_D{
+    /* background-color: rgba(203, 118, 118, 0.4); */
+    width: 7vmax !important;
+    font-size: 1vmax;
+}
+.worker_task_P{
+    /* background-color: rgba(118, 159, 203, 1); */
+    width: 7vmax !important;
+    font-size: 1vmax;
+}
+.worker_task_S{
+    /* background-color: rgba(118, 159, 203, 0.5); */
+    width: 6vmax !important;
+    font-size: 1vmax;
+}
+.worker_task_M{
+    /* background-color: rgba(118, 159, 203, 0.4); */
+    width: 6vmax !important;
+    font-size: 1vmax;
+}
+.worker_task_C{
+    /* background-color: rgba(0, 0, 0, 0.1); */
+    width: 3vmax !important;
+    font-size: 1vmax;
+}
+.line_comm{
+    display: flex;
+    flex-direction: row;
+    gap: 1vmax;
+}
+.comments_worker{
+    width: 1vmax;
+    height: 1vmax;
+}

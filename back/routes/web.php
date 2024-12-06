@@ -35,6 +35,8 @@ Route::post('/update_task', [TaskController::class, 'update_task'])->name('updat
 Route::post('/delete_task', [TaskController::class, 'delete_task'])->name('delete_task');
 Route::get('/tasks_manager', [ProjectController::class, 'tasks_manager'])->name('tasks_manager');
 
+Route::post('/tasks_worker', [TaskController::class, 'tasks_worker']);
+// Route::post('/page_tasks_worker', [TaskController::class, 'page_tasks_worker']);
 
 Route::post('/manager_p', [TaskController::class, 'get_manager_of_project'])->name('manager_p');
 Route::post('/projects', [ProjectController::class, 'all_projects'])->name('projects');
