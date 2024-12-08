@@ -827,7 +827,15 @@ a{
     color: white;
     border: transparent;
 }
-
+#form_update_squad>div>*{
+    font-size: 1vmax;
+    padding: 0.5vmax;
+    width: 8vmax;
+    border-radius: 0.5vmax;
+    background-color: #769FCB;
+    color: white;
+    border: transparent;
+}
 #form_create_task>div, #form_create_task_end>div, #form_update_task_end>div, #form_create_project_end>div{
     display: flex;
     flex-direction: row;
@@ -925,11 +933,32 @@ select, input{
 .line_comm{
     display: flex;
     flex-direction: row;
-    gap: 1vmax;
+    gap: 0.5vmax;
 }
+.line_comm>img{
+    height: 1vmax;
+}
+/* .start?_task_worker{ */
+    /* height: 1.4vmax !important;
+    width: 1.4vmax !important;
+} */
 .comments_worker{
     width: 1vmax;
     height: 1vmax;
+}
+.actions_task_worker{
+    display: flex;
+    flex-direction: row;
+    gap: 1.5vmax;
+    align-items: end;
+}
+.actions_task_worker>img{
+    width: 1.2vmax;
+    height: 1.2vmax;
+}
+.empty_actions_task{
+    width: 1.2vmax;
+    height: 1.2vmax;
 }
 
 #block_comments{

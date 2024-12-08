@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -40,6 +41,7 @@ Route::post('/get_comments_for_task', [TaskController::class, 'get_comments_for_
 Route::post('/create_comm', [TaskController::class, 'create_comm']);
 Route::post('/delete_comment', [TaskController::class, 'delete_comment']);
 Route::post('/see_more_task_worker', [TaskController::class, 'see_more_task_worker']);
+Route::post('/change_status', [TaskController::class, 'change_status']);
 
 
 Route::post('/manager_p', [TaskController::class, 'get_manager_of_project'])->name('manager_p');
@@ -66,6 +68,9 @@ Route::post('/blocked_user', [UserController::class, 'blocked_user'])->name('blo
 
 Route::post('/create_user', [UserController::class, 'create_user'])->name('create_user');
 
+
+Route::post('/get_data_for_report', [ReportController::class, 'get_data_for_report']);
+Route::post('/create_report', [ReportController::class, 'create_report']);
 // Route::group(['middleware'=>['auth']], function(){
 //     Route::group(['middleware'=>['admin']], function(){
 //     });

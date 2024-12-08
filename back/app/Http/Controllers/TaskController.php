@@ -222,7 +222,7 @@ class TaskController extends Controller
         ->orderBy('tasks.updated_at','desc')
         ->limit(8)
         ->offset(0)
-        ->get(); ; 
+        ->get(); 
         return response()->json(['res'=>$res, 'mess'=>$mess,'tasks'=>$tasks_all, 'count'=>Task::latest()->count()]);
     }
 
@@ -310,5 +310,28 @@ class TaskController extends Controller
         $task_info = DB::table('tasks')->select('title', 'users.name', 'description')->where('id','=', $id_task)->join('users', 'users.id','=','tasks.user_id')->get();
         $project_manager = DB::table('projects')->select('users.name')->where('', '=',$id_task)->join('users', 'users.id', '=', 'projects.user_id')->get();
         return response()->json(['task_worker'=>$task_info, 'boss'=>$project_manager]);
+    }
+    public function change_status(Request $request){
+        $today = date('Y-m-d');
+        $change = Task::where('id', '=', $request->id_task)->update(['status'=>$request->status, 'finished_at'=>$today]);
+        if($change){
+            $res = true;
+            $mess = 'Успешное изменение статуса!';
+            if(!isset($request->page) || $request->page == 1){
+                $workers_task = DB::table('tasks')->select('id','title', 'started_at', 'finished_at', 'priority', 'status', 'comments')->where('user_id','=', $request->id_worker)->limit(8)->get();
+                $count = DB::table('tasks')->where('user_id','=', $request->id_worker)->count();
+            }
+            else{
+                $offset = $request->page*8-8;
+                $workers_task = DB::table('tasks')->select('id','title', 'started_at', 'finished_at', 'priority', 'status', 'comments')->where('user_id','=', $request->id_worker)->limit(8)->offset($offset)->get();
+                $count = DB::table('tasks')->where('user_id','=', $request->id_worker)->count();
+            }
+            
+        }
+        else{
+            $res = true;
+            $mess = 'Не удалось изменить статус!';
+        }
+        return response()->json(['mess'=>$mess, 'res'=>$res, 'tasks'=>$workers_task, 'count'=>$count]);
     }
 }
