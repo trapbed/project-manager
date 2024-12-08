@@ -26,6 +26,7 @@ return new class extends Migration
             $table->integer('manager_id');
             // $table->unsignedBigInteger('user_id');
             $table->foreignid('user_id')->constrained();
+            $table->json('comments');
             $table->enum('priority', ['Низкий','Высокий','Средний']);
             $table->enum('status', ['Назначена','Выполняется','Завершена']);
             $table->timestamps();

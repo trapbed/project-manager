@@ -37,7 +37,7 @@ function create_task_modal(){
 function close_modal(){
     $("#background_blur").remove();
     $("#add_to_squad_modal").remove();
- }
+}
 
 function choose_proj_to_task(event){
     event.preventDefault();

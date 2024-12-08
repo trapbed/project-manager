@@ -4,10 +4,10 @@
 ?>
 <script src=" ../js\tasks_worker_api.js"></script>
 
+
 <div id="left_block">
    <div id="search_select">
       <form action="">
-         <input type="search" name="" id=""> 
          <select name="" id="">
             <option value="">Рейтинг</option>
             <option value="">Высокий</option>

@@ -55,24 +55,38 @@ class TaskController extends Controller
             return response()->json($tasks); 
         }
         else if($request->role == 'admin'){
-            $tasks = DB::table('tasks')
-            ->select('tasks.id as tasks_id', 'projects.id as project_id','tasks.title as title_task','projects.title as title_project','users.name as worker','tasks.priority','tasks.finished_at', 'tasks.status')
-            ->join('projects','projects.id','=','tasks.project_id')
-            ->join('users','users.id','=','tasks.user_id')
-            ->orderBy('tasks.updated_at','desc')
-            ->limit(8)
-            ->offset($offset)
-            ->get(); 
-            $count = DB::table('tasks')->where('user_id','=', $request->id_worker)->count();
+            if($request->page_id == null){
+                $tasks = DB::table('tasks')
+                ->select('tasks.id as tasks_id', 'projects.id as project_id','tasks.title as title_task','projects.title as title_project','users.name as worker','tasks.priority','tasks.finished_at', 'tasks.status')
+                ->join('projects','projects.id','=','tasks.project_id')
+                ->join('users','users.id','=','tasks.user_id')
+                ->orderBy('tasks.updated_at','desc')
+                ->limit(8)
+                ->offset($offset)
+                ->get(); 
+                $count = DB::table('tasks')->where('user_id','=', $request->id_worker)->count();
+            }
+            else{
+                if($request->page_id == null){
+                    $tasks = DB::table('tasks')
+                    ->select('tasks.id as tasks_id', 'projects.id as project_id','tasks.title as title_task','projects.title as title_project','users.name as worker','tasks.priority','tasks.finished_at', 'tasks.status')
+                    ->join('projects','projects.id','=','tasks.project_id')
+                    ->join('users','users.id','=','tasks.user_id')
+                    ->orderBy('tasks.updated_at','desc')
+                    ->limit(8)
+                    ->get(); 
+                    $count = DB::table('tasks')->where('user_id','=', $request->id_worker)->count();
+                }
+            }
             return response()->json(['tasks'=>$tasks, 'count'=>$count]);
         }
         else if($request->role == 'worker'){
             // $workers_task = DB::table('tasks')->select('title', 'started_at', 'finished_at', 'priority', 'status', 'comments')->where('user_id','=', $request->id_worker)->get();
 
             $tasks = DB::table('tasks')
-            ->select('title', 'started_at', 'finished_at', 'priority', 'status', 'comments')
+            ->select('id','title', 'started_at', 'finished_at', 'priority', 'status', 'comments')
             ->where('user_id','=', $request->id_worker)
-            ->orderBy('tasks.updated_at','desc')
+            // ->orderBy('tasks.updated_at','desc')
             ->limit(8)
             ->offset($offset)
             ->get();
@@ -213,8 +227,88 @@ class TaskController extends Controller
     }
 
     public function tasks_worker(Request $request){
-        $workers_task = DB::table('tasks')->select('title', 'started_at', 'finished_at', 'priority', 'status', 'comments')->where('user_id','=', $request->id_worker)->orderBy('tasks.updated_at','desc')->limit(8)->get();
+        $workers_task = DB::table('tasks')->select('id','title', 'started_at', 'finished_at', 'priority', 'status', 'comments')->where('user_id','=', $request->id_worker)->limit(8)->get();
         $count = DB::table('tasks')->where('user_id','=', $request->id_worker)->count();
         return response()->json(['tasks'=>$workers_task, 'count'=>$count]);
+    }
+    public function get_comments_for_task(Request $request){
+        $task = DB::table('tasks')->select('id','comments', 'title')->where('id', '=', $request->id_task)->get()[0];
+        $comments = $task->comments;
+        $title = $task->title;
+        $id = $task->id;
+        return response()->json(['comments'=>$comments, 'title'=>$title, 'id_task'=>$id]);
+    }
+    public function create_comm(Request $request){
+        $mess = 'Что-то пошло не так!';
+        $res = false;
+        $amount_comm = 0;
+        $content_comment = $request->content_comment;
+        $workers_task = false;
+        $count = false;
+        if($content_comment == null || strlen(trim($content_comment))<0){
+            $mess = 'Напишите что-нибудь для создания комментария!';
+        }else{
+            $count_comms =DB::table('tasks')->select('comments')->where('id', '=', $request->id_task)->get()[0]->comments; 
+            $current_date = date('Y-m-d H:i:s');
+            $date_time = date("Y-m-d H:i:s", strtotime("$current_date +5 hours"));
+            $new_json_comm = [];
+                if($count_comms == null){
+                    $new_json_comm[$date_time] = $content_comment;
+                    $amount_comm = 1;
+                }
+                else{
+                    $get_old_comms = json_decode(DB::table('tasks')->select('comments')->where('id', '=', $request->id_task)->get()[0]->comments);
+                    foreach($get_old_comms as $old_date=>$old_content){
+                        $new_json_comm[$old_date] = $old_content;
+                        $amount_comm++;
+                    }
+                    $new_json_comm[$date_time] = $content_comment;
+                    $amount_comm++;
+                }
+            $update_comm = Task::where('id', '=', $request->id_task)->update(['comments'=> $new_json_comm]);
+            if($update_comm){
+                $mess = 'Комментарий успешно создан!';
+                $res = true;
+                $task = DB::table('tasks')->select('comments')->where('id', '=', $request->id_task)->get()[0];
+                $comments = $task->comments;
+            }
+            else{
+                $mess = 'Не удалось создать комментарий!';
+            }
+            
+        }
+        return response()->json(['comments'=>$new_json_comm, 'amount'=>$amount_comm, 'mess'=>$mess, 'res'=>$res, 'id_task'=>$request->id_task]);
+    }
+
+    public function delete_comment(Request $request){
+        $array_comms =json_decode(DB::table('tasks')->select('comments')->where('id','=',$request->id_task)->get()[0]->comments);
+        $count = 0;
+        $res = false;
+        $new_comms = [];
+        foreach($array_comms as $date=>$content){
+            if($count != $request->id_comm){
+                $new_comms[$date] = $content;
+            }
+            $count++;
+        }
+        $new_comms = json_encode($new_comms);
+        $update = DB::table('tasks')->where('id','=',$request->id_task)->update(['comments'=>$new_comms]);
+        if($update){
+            $res = true;
+            $mess = 'Комментарии обновлены!';
+            $comm_render = DB::table('tasks')->select('comments')->where('id', '=', $request->id_task)->get()[0]->comments;
+        }
+        else{
+            $mess = 'Не удалось обновить комментарии!';
+        }
+        return response()->json(['mess'=>$mess,'amount'=>$count-1, 'comments'=>$comm_render, 'res'=>$res, 'id_task'=>$request->id_task, 'act'=>'delete']);
+        // return response()->json($array_comms);
+        // return response()->json($request);
+    }
+    public function see_more_task_worker(Request $request){
+        $id_task = $request->id;
+        $task_info = DB::table('tasks')->select('title', 'users.name', 'description')->where('id','=', $id_task)->join('users', 'users.id','=','tasks.user_id')->get();
+        $project_manager = DB::table('projects')->select('users.name')->where('', '=',$id_task)->join('users', 'users.id', '=', 'projects.user_id')->get();
+        return response()->json(['task_worker'=>$task_info, 'boss'=>$project_manager]);
     }
 }

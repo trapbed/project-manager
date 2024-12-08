@@ -48,7 +48,7 @@ function render_tasks(response){
             tr.classList.add("infoRow");
             if(sessionStorage.getItem('role') == 'admin'){
                 newClass = 'blur'; 
-                title = title=`title = "админу не доступны инструменты управления!"`;
+                title=`title = "админу не доступны инструменты управления!"`;
             }
             actions =  `<img onclick="edit_task(${value.tasks_id})" src="../img/edit.png">`;
             console.log( value.status);

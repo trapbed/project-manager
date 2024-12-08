@@ -36,7 +36,11 @@ Route::post('/delete_task', [TaskController::class, 'delete_task'])->name('delet
 Route::get('/tasks_manager', [ProjectController::class, 'tasks_manager'])->name('tasks_manager');
 
 Route::post('/tasks_worker', [TaskController::class, 'tasks_worker']);
-// Route::post('/page_tasks_worker', [TaskController::class, 'page_tasks_worker']);
+Route::post('/get_comments_for_task', [TaskController::class, 'get_comments_for_task']);
+Route::post('/create_comm', [TaskController::class, 'create_comm']);
+Route::post('/delete_comment', [TaskController::class, 'delete_comment']);
+Route::post('/see_more_task_worker', [TaskController::class, 'see_more_task_worker']);
+
 
 Route::post('/manager_p', [TaskController::class, 'get_manager_of_project'])->name('manager_p');
 Route::post('/projects', [ProjectController::class, 'all_projects'])->name('projects');

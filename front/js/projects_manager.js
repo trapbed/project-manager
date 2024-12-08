@@ -1,5 +1,4 @@
 console.log(sessionStorage);
-// sessionStorage.getItem('workers_list').remove();
 $.ajax({
     type: "POST",
     data: {'id': sessionStorage.getItem('id')},
@@ -479,11 +478,6 @@ function save_created_project(event){
             console.log('ertgcbsl');
         }
     })
-}
-
-
-
-function change_page_proj(page_id){
 }
 
 function close_modal(){

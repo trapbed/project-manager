@@ -11,17 +11,7 @@
 </head>
 <body>
 <div class="background_blur" id="task_desc_more_info">
-    <!-- <div id="modalTaskDesc">
-        <div id="close_modal_task">
-            <img onclick="close_tasks()" src="../img/x.svg" alt="close modal">
-        </div> 
-        <div id="headerTask">Название проекта название проекта название проекта название</div>
-        <div id="usersTask"><span>Руководитель: </span><span>Исполнитель: </span></div>
-        <div id="descTaskTitle">Описание:</div>
-        <div id="descriptionTask">Название проекта название проекта название проекта название проекта  название проекта название проекта название проекта название проекта </div>
-    </div> -->
 </div>
-
     <div class="content">
         <div id="leftNavbar">
             <div id="topNavContent">
@@ -44,26 +34,38 @@
                 </div>
                 </br>
             </div>
-            <a href=""  id="accountNav" class="backgroundNav">
+            <div id="accountNav" class="backgroundNav" onclick="logout()">
                 <img src="/img/profile (1).png" alt="">
-                
-                <span class="mouseHid"><script> document.write(sessionStorage.getItem('name')); </script></span>
-            </a>
-            
+                <span class="mouseHid"> <script> document.write(sessionStorage.getItem('name')); </script></span>
+            </div>
         </div>
         
-        <script>    
-        if(sessionStorage.getItem('mess')){
-            alert(sessionStorage.getItem('mess'));
-            sessionStorage.removeItem('mess');
-        }
+        <script> 
 
-        
+            function logout(){
+                $.ajax({
+                    type:"POST",
+                    url: "http://pm.b/logout",
+                    success:(response)=>{
+                        alert(response);
+                        sessionStorage.clear();
+                        location.href='../index.php';
+                        // console.log(response);
+                    },
+                    error:()=>{
+                        alert('Не удалось выполнить запрос!');
+                    }
+                })
+            }
+  
+            if(sessionStorage.getItem('mess')){
+                alert(sessionStorage.getItem('mess'));
+                sessionStorage.removeItem('mess');
+            }
 
-
-    if(sessionStorage.getItem('role') != 'worker'){
-        sessionStorage.setItem('mess', 'Вам не доступны возможности этого пользователя!');
-        // alert();
-        location.href= '../'+sessionStorage.getItem('role')+'/tasks.php';
-    }
-    </script>
+            if(sessionStorage.getItem('role') != 'worker'){
+                sessionStorage.setItem('mess', 'Вам не доступны возможности этого пользователя!');
+                // alert();
+                location.href= '../'+sessionStorage.getItem('role')+'/tasks.php';
+            }
+        </script>

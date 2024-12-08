@@ -790,7 +790,7 @@ a{
 
 #background_blur{
     position: absolute;
-    z-index: 1;
+    /* z-index: 1; */
     align-items: center;
     justify-content: center;
     display: flex;
@@ -930,4 +930,112 @@ select, input{
 .comments_worker{
     width: 1vmax;
     height: 1vmax;
+}
+
+#block_comments{
+    display: flex;
+    flex-direction: column;
+    gap: 1vmax;
+    position: relative;
+    padding: 1vmax;
+    width: 36vmax;
+    height: 30vmax;
+    background-color: white;
+    border: 0.2vmax solid #769FCB;
+    border-radius: 0.5vmax;
+}
+#block_input_comment{
+    display: flex;
+    align-items: center;
+    width: 34vmax;
+    height: 3vmax;
+}
+#form_create_comment{
+    display: flex;
+    align-items: center;
+    justify-self: flex-end;
+    /* position: fixed; */
+    /* z-index: 4; */
+    margin-left: 0.5vmax;
+    width: 34vmax;
+    height: 3vmax;
+    background-color: white;
+    border-radius: 0.5vmax;
+    box-shadow: 0vmax 0vmax 0.5vmax #769FCB;
+}
+#block_input_comment>input{
+    width: 30vmax;
+    padding: 0 1vmax;
+    font-size: 1vmax;
+    font-family: 'inter';
+    height: 2vmax;
+    outline: transparent;
+    border: transparent;
+}
+#block_input_comment>img{
+    height: 1vmax;
+}
+.one_comment{
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 0.5vmax;
+    position: relative;
+    padding: 1vmax;
+    margin: 0.4vmax 0;
+    width: 32vmax;
+    height: auto;
+    min-height: 3vmax;
+    border-radius: 0.5vmax;
+    box-shadow: 0vmax 0vmax 0.5vmax rgba(0, 0, 0, 0.3);
+    font-family: 'inter';
+}
+.one_comment>img{
+    position: absolute;
+    top: 1vmax;
+    right: 1vmax;
+    height: 1vmax;
+}
+.content_comment{
+    font-size: 1vmax;
+    color: #0C122A;
+}
+.date_comment{
+    font-size: 0.8vmax;
+    color: rgba(0, 0, 0, 0.3);
+}
+#close_modal_comm{
+    position: fixed;
+    align-self: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 34vmax;
+    height: 3vmax;
+    /* z-index: 3; */
+}
+#close_modal_comm>img{
+    /* z-index: 4; */
+    height: 2.5vmax;
+}
+#for_form_comm{
+    display: flex;
+    align-items: end;
+    padding: 0.2vmax;
+    justify-content: center;
+    align-self: center;
+    justify-self: center;
+    /* position: absolute; */
+    width: 36vmax;
+    /* z-index:2; */
+}
+#comments_block{
+    display: flex;
+    flex-direction: column;
+    padding-top: 0.2vmax;
+    margin-top: 2.8vmax;
+    height: 23vmax;
+    overflow-y: scroll;
+    scrollbar-width: thin;
 }
