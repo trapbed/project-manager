@@ -27,21 +27,39 @@ $.ajax({
                     $("#one_current_m").append(value.name);
             });
             squad = response.squad;
-
-            let arr_from_squad = [];
-            $.each(squad, function(key, value){
-                console.log(key);
-                arr_from_squad.push(key);
-                let div = document.createElement('div');
-                div.classList.add('worker');
-                div.innerHTML = `${value} <img src='../img/x_white.svg' alt='' onclick(delete_from_squad(${key}))>`;
-                $("#current_squad").append(div);
-            })
-            let btn_add_squad = document.createElement('div');
-            btn_add_squad.classList.add('updateSquad');
-            btn_add_squad.setAttribute('onclick', 'add_to_squad_modal(['+arr_from_squad+'], '+id_proj+')');
-            btn_add_squad.innerHTML = `+`;
-            $("#current_squad").append(btn_add_squad);
+            console.log(Object.keys(squad).length);
+            // if(squad != null){
+            
+                let arr_from_squad = [];
+                $.each(squad, function(key, value){
+                    if(Object.keys(squad).length == 1){
+                        onclick_del = `delete_from_squad(false, ${key})`
+                    }
+                    else{
+                        onclick_del = `delete_from_squad(true, ${key})`
+        
+                    }
+                    console.log(key);
+                    console.log(value);
+                    arr_from_squad.push(key);
+                    let div = document.createElement('div');
+                    div.classList.add('worker');
+                    div.innerHTML = `${value} <img src='../img/x_white.svg' alt='' onclick="${onclick_del}">`;
+                    $("#current_squad").append(div);
+                })
+                let btn_add_squad = document.createElement('div');
+                btn_add_squad.classList.add('updateSquad');
+                btn_add_squad.setAttribute('onclick', 'add_to_squad_modal(['+arr_from_squad+'], '+id_proj+')');
+                btn_add_squad.innerHTML = `+`;
+                $("#current_squad").append(btn_add_squad);
+            // }
+            // else{
+            //     let btn_add_squad = document.createElement('div');
+            //     btn_add_squad.classList.add('updateSquad');
+            //     btn_add_squad.setAttribute('onclick', 'add_to_squad_modal(['+arr_from_squad+'], '+id_proj+')');
+            //     btn_add_squad.innerHTML = `+`;
+            //     $("#current_squad").append(btn_add_squad);
+            // }
             
 
     },
@@ -143,19 +161,26 @@ function save_update_squad(event){
                     $(".row4").empty();
                     $(".row4").append(`Статус: ${value.status}`);
                     $("#descProj").empty();
-                    $("#descProj").append(`Описание:<br> ${value.description}`);
+                    $("#descProj").append(`${value.description}`);
                     $("#one_current_m").empty();
-                    $("#one_current_m").append(`Руководитель: ${value.name}`);
+                    $("#one_current_m").append(` ${value.name}`);
             });
             squad = response.squad;
 
             let arr_from_squad = [];
             $.each(squad, function(key, value){
+                if(Object.keys(squad).length == 1){
+                    onclick_del = `delete_from_squad(false, ${key})`
+                }
+                else{
+                    onclick_del = `delete_from_squad(true, ${key})`
+    
+                }
                 console.log(key);
                 arr_from_squad.push(key);
                 let div = document.createElement('div');
                 div.classList.add('worker');
-                div.innerHTML = `${value} <img src='../img/x_white.svg' alt='' onclick(delete_from_squad(${key}))>`;
+                div.innerHTML = `${value} <img src='../img/x_white.svg' alt='' onclick="${onclick_del}">`;
                 $("#current_squad").append(div);
             })
             let btn_add_squad = document.createElement('div');
@@ -165,11 +190,88 @@ function save_update_squad(event){
             $("#current_squad").append(btn_add_squad);
         },
         error:()=>{
-
+            alert('Не удалось изменить команду!');
         }
     })
 }
 
+function delete_from_squad(bool, id_worker){
+    if(bool == false){
+        alert("В команде должен быть хотя бы один исполнитель!");
+    }
+    else{
+        $.ajax({
+            type:"POST", 
+            data:{'id_worker':id_worker, 'id_project':sessionStorage.getItem('project_id')},
+            url:"http://pm.b/delete_from_squad",
+            success:(response)=>{
+                console.log(response);
+                alert(response.mess);
+            console.log(response);
+            $("#background_blur").remove();
+            $("#add_to_squad_modal").remove();
+            $(".updateSquad").remove();
+            $(".worker").remove();
+            let project = response.project;
+            $.each(project, function(key, value){ 
+                    id_proj = value.id;
+                    finish = Math.floor(Date.parse(value.finished_at)/86400000);
+                    today = Math.floor(Date.now()/86400000);
+                    if(finish == today){
+                        diff = 'Последний день!';
+                    }
+                    else if(finish > today){
+                        diff = finish-today;
+                    }
+                    else{
+                        diff = 'Просрочено!';
+                    }
+                    $(".titleOneProject").empty();
+                    $(".titleOneProject").append(value.title);
+                    $(".row1").empty();
+                    $(".row1").append(`Дата начала: ${value.started_at}`);
+                    $(".row2").empty();
+                    $(".row2").append(`Дата окончания: ${value.finished_at}`);
+                    $(".row3").empty();
+                    $(".row3").append(`Осталось дней: ${diff}`);
+                    $(".row4").empty();
+                    $(".row4").append(`Статус: ${value.status}`);
+                    $("#descProj").empty();
+                    $("#descProj").append(`${value.description}`);
+                    $("#one_current_m").empty();
+                    $("#one_current_m").append(` ${value.name}`);
+            });
+            squad = response.squad;
+
+            let arr_from_squad = [];
+            $.each(squad, function(key, value){
+                if(Object.keys(squad).length == 1){
+                    onclick_del = `delete_from_squad(false, ${key})`
+                }
+                else{
+                    onclick_del = `delete_from_squad(true, ${key})`
+    
+                }
+                console.log(key);
+                arr_from_squad.push(key);
+                let div = document.createElement('div');
+                div.classList.add('worker');
+                div.innerHTML = `${value} <img src='../img/x_white.svg' alt='' onclick="${onclick_del}">`;
+                $("#current_squad").append(div);
+            })
+            let btn_add_squad = document.createElement('div');
+            btn_add_squad.classList.add('updateSquad');
+            btn_add_squad.setAttribute('onclick', 'add_to_squad_modal(['+arr_from_squad+'], '+id_proj+')');
+            btn_add_squad.innerHTML = `+`;
+            $("#current_squad").append(btn_add_squad);
+            },
+            error:()=>{
+                alert('Не удалось изменить команду!');
+            }
+        })
+    }
+    
+}
 // $("#form_update_squad").submit(function(event){
 //     alert('qwerty');
 //     sessionStorage.setItem('resp', 'yes');

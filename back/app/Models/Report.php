@@ -9,7 +9,7 @@ class Report extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['project_id','date_report','user_id','statistics'];
+    protected $fillable = ['type','aspect_id','date_report','user_id','statistics'];
 
     public function user(){
         return $this->belongsTo(User::class);

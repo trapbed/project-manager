@@ -15,15 +15,15 @@ class ProjectController extends Controller
     public function all_projects(){
         $projects_db = DB::table('projects')->
         select('projects.id as project_id','projects.title','projects.description','users.name','projects.status','projects.started_at', 'projects.finished_at')->
-        join('users', 'users.id','=', 'projects.user_id')->limit(8)->get();
+        join('users', 'users.id','=', 'projects.user_id')->get();
         return response()->json(['projects'=>$projects_db, 'count'=>Project::latest()->count()]);
     }
     public function get_projects_on_page(Request $request){
-        $page = $request->page_id;
-        $offset = $page*8-8;
+        // $page = $request->page_id;
+        // $offset = $page*8-8;
         $projects_db = DB::table('projects')->
         select('projects.id as project_id','projects.title','projects.description','users.name','projects.status','projects.started_at', 'projects.finished_at')->
-        join('users', 'users.id','=', 'projects.user_id')->limit(8)->offset($offset)->get();
+        join('users', 'users.id','=', 'projects.user_id')->get();
         return response()->json(['projects'=>$projects_db, 'count'=>Project::latest()->count()]);
     }
     public function get_info_one_project(Request $request){
@@ -33,13 +33,18 @@ class ProjectController extends Controller
         ->join('users', 'users.id','=', 'projects.user_id')->get();
         
         $arr_squad = [];
-        foreach(json_decode($project[0]->squad) as $squad_r){
-            $squad = $squad_r;
-            foreach($squad as $user){
-                $user_n = DB::table('users')->select('id','name')->where('id', $user)->get();
-                $arr_squad[$user_n[0]->id] = $user_n[0]->name;
+        if(json_decode($project[0]->squad) != null){
+            foreach(json_decode($project[0]->squad) as $squad_r){
+                $squad = $squad_r;
+                foreach($squad as $user){
+                    $user_n = DB::table('users')->select('id','name')->where('id', $user)->get();
+                    $arr_squad[$user_n[0]->id] = $user_n[0]->name;
+                }
             }
+        }else{
+            $arr_squad = null;
         }
+        
         $users = DB::table('users')->select('name')->where('role', '=', 'worker')->get();
         return response()->json(['project'=>$project, 'users'=>$users, 'squad'=>$arr_squad]);
     }
@@ -84,7 +89,55 @@ class ProjectController extends Controller
         return response()->json(['mess'=>$mess, 'project'=>$project, 'users'=>$users, 'squad'=>$arr_squad]);
     }
     public function delete_from_squad(Request $request){
+        
+        $new_squad = [];
+        $res = false;
+        $old_squad = json_decode(DB::table('projects')->select('squad')->where('id', '=', $request->id_project)->get('squad')[0]->squad)->squad;
+        foreach($old_squad as $user_from_squad){
+            $old_squad = $user_from_squad;
+            if($user_from_squad != $request->id_worker){
+                array_push($new_squad, $user_from_squad);
+            }
+        }
+        
+        // foreach($new_squad as $member){
 
+        // }
+        $json_squad['squad'] = $new_squad;
+        $json_squad = json_encode($json_squad);
+
+        $update_squad = Project::where('id', '=', $request->id_project)->update(['squad'=>$json_squad]);
+        if($update_squad){
+            $mess = 'Успешное изменение команды!';
+            $res = true;
+            $arr_squad = DB::table('projects')->select('squad')->where('id', '=', $request->id_project)->get('squad')[0]->squad;            
+            $project = DB::table('projects')->
+            select('projects.id','title','description','users.name','started_at','finished_at','status', 'squad')
+            ->where('projects.id', '=', $request->id_project)
+            ->join('users', 'users.id','=', 'projects.user_id')->get();
+           
+            $arr_squad = [];
+            foreach(json_decode($project[0]->squad) as $squad_r){
+                $squad = $squad_r;
+                foreach($squad as $user){
+                    $user_n = DB::table('users')->select('id','name')->where('id', $user)->get();
+                    $arr_squad[$user_n[0]->id] = $user_n[0]->name;
+                }
+            }
+            $users = DB::table('users')->select('name')->where('role', '=', 'worker')->get();
+            return response()->json(['res'=>$res,'mess'=>$mess,'squad'=>$arr_squad,'users'=>$users, 'project'=>$project]);
+    
+                            
+        }
+        else{
+            $mess = 'Не удалось изменить команду!';
+            return response()->json(['mess'=>$mess, 'res'=>$res]);
+        }
+
+        
+        // return response()->json($json_squad);
+
+        // $old_squad = DB::table('projects')->select('squad')->where('id', '=', $request->id_project)->get();
     }
 
     public function get_projects_title(){

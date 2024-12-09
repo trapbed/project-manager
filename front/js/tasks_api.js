@@ -39,43 +39,51 @@ function render_tasks(response){
     console.log(response);
     $(".infoRow").remove();
     $(".btn_paginate").remove();
-    let tasks = response.tasks; 
-        // console.log(response);
-    title = "";
-    $.each(tasks, function(key, value){ 
-            let tr = document.createElement('tr'); 
-            // console.log(value);
-            tr.classList.add("infoRow");
-            if(sessionStorage.getItem('role') == 'admin'){
-                newClass = 'blur'; 
-                title=`title = "админу не доступны инструменты управления!"`;
-            }
-            actions =  `<img onclick="edit_task(${value.tasks_id})" src="../img/edit.png">`;
-            console.log( value.status);
-            if(value.status == 'Назначена'){
-                actions =  `<img onclick="edit_task(${value.tasks_id})" src="../img/edit.png"><img onclick="delete_task(${value.tasks_id})" src="../img/delete.png">`;
-            }
-            tr.innerHTML = `
-                <td class="taskN">${value.title_task}</td>
-                <td class="taskD" onclick= "modalTaskDesc(${value.tasks_id})">Подробнее</td>
-                <td class="taskNP">${value.title_project}</td>
-                <td class="taskW"> ${value.worker}</td>
-                <td class="taskP">${value.priority}</td>
-                <td class="taskE">${value.finished_at}</td>
-                <td class="taskS">${value.status}</td>
-                <td class="taskA"><div ${title} class="BTWAct ${newClass}">${actions}</div></td>`;
-            $("#tasksTable").append(tr);
-    });
-
-    if(response.count>10){
-        let paginate_d = $("#paginate");
-        let pages = Math.ceil(response.count/10);
-            for(let i=1; i<=pages; i++){
-                // console.log(i);
-                paginate.innerHTML += `<div class="btn_paginate" onclick="change_page(${i})">${i}</div>`;
-            }
-        $("#session").append(paginate);
+    if(response.count <= 0){
+        let div = document.createElement('div');
+        div.innerHTML = `У вас нет задач!`;
+        $("#infoRows").append(div);
     }
+    else{
+        let tasks = response.tasks; 
+        // console.log(response);
+        title = "";
+        $.each(tasks, function(key, value){ 
+                let tr = document.createElement('tr'); 
+                // console.log(value);
+                tr.classList.add("infoRow");
+                if(sessionStorage.getItem('role') == 'admin'){
+                    newClass = 'blur'; 
+                    title=`title = "админу не доступны инструменты управления!"`;
+                }
+                actions =  `<img onclick="edit_task(${value.tasks_id})" src="../img/edit.png">`;
+                console.log( value.status);
+                if(value.status == 'Назначена'){
+                    actions =  `<img onclick="edit_task(${value.tasks_id})" src="../img/edit.png"><img onclick="delete_task(${value.tasks_id})" src="../img/delete.png">`;
+                }
+                tr.innerHTML = `
+                    <td class="taskN">${value.title_task}</td>
+                    <td class="taskD" onclick= "modalTaskDesc(${value.tasks_id})">Подробнее</td>
+                    <td class="taskNP">${value.title_project}</td>
+                    <td class="taskW"> ${value.worker}</td>
+                    <td class="taskP">${value.priority}</td>
+                    <td class="taskE">${value.finished_at}</td>
+                    <td class="taskS">${value.status}</td>
+                    <td class="taskA"><div ${title} class="BTWAct ${newClass}">${actions}</div></td>`;
+                $("#tasksTable").append(tr);
+        });
+
+        if(response.count>9){
+            let paginate_d = $("#paginate");
+            let pages = Math.ceil(response.count/9);
+                for(let i=1; i<=pages; i++){
+                    // console.log(i);
+                    paginate.innerHTML += `<div class="btn_paginate" onclick="change_page(${i})">${i}</div>`;
+                }
+            $("#session").append(paginate);
+        }
+    }
+    
 }
 
 function change_page(page_id){
@@ -86,8 +94,8 @@ function change_page(page_id){
         success: (response)=>{
             console.log(response);
             $(".infoRow").remove();
-            window.sessionStorage.setItem('tasks', response);
-            let tasks = response; 
+            // window.sessionStorage.setItem('tasks', response);
+            let tasks = response.tasks; 
             title = "";
             $.each(tasks, function(key, value){
                     if(sessionStorage.getItem('role') == 'admin'){
@@ -113,20 +121,21 @@ function change_page(page_id){
                     // console.log(key);
                     $("#tasksTable").append(tr);
             });
-            if(response.count>10){
+            if(response.count>9){
+                $(".btn_paginate").remove();
                 let paginate_d = $("#paginate");
-                let pages = Math.ceil(response.count/10);
+                let pages = Math.ceil(response.count/9);
                 console.log(pages);
                 console.log(paginate_d);
                     for(let i=1; i<=pages; i++){
                         // console.log(i);
-                        paginate.innerHTML += `<div class="btn_paginate" onclick="chage_page(${i})">${i}</div>`;
+                        paginate.innerHTML += `<div class="btn_paginate" onclick="change_page(${i})">${i}</div>`;
                     }
                 $("#session").append(paginate);
             }
         },
         error: ()=>{
-            window.sessionStorage.setItem('tasks', 'Нет задач!');
+            alert('Не удалось прогрузить задачи!');
             console.log('NONO');
         }
     })  

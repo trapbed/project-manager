@@ -13,7 +13,7 @@
                     <input type="text" name="name">
                 </label>
                 <label>Почта
-                    <input type="text" name="email">
+                    <input type="email" name="email">
                 </label>
                 <label>Роль
                     <select name="role" id="">
@@ -36,9 +36,9 @@
          <div class="create"><img src="/img/group 189.svg" alt=""></div>
       </div>
 
-      <div id="infoRows">
+      <div id="infoRows" class="no_height">
          <table class="table" id="usersTable">
-            <tr id="infoRowHeader">
+            <tr id="infoRowHeader" class="fixed">
                <td class="userN">Имя пользователя</td>
                <td class="userE">Почта</td>
                <td class="userR">Роль</td>

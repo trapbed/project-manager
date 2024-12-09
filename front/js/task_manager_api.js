@@ -65,25 +65,25 @@ function choose_proj_to_task(event){
                                 <input name='title' id='str' type="text">
                             </div>    
                             <div>
-                                <label for='user'>Описание:</label>
+                                <label for='description'>Описание:</label>
                                 <input name='description' type="text">
                             </div>      
                             <div>   
-                                <label for='user'>Начало:</label>
+                                <label for='started_at'>Начало:</label>
                                 <input name='started_at' id='date_started_at' onchange="change_min_end()" type="date" min='${info.started_at}' max='${info.finished_at}'>
                             </div>    
                             <div> 
-                                <label for='user'>Конец:</label>
+                                <label for='finished_at'>Конец:</label>
                                 <input name='finished_at' id='date_finished_at' type="date" min='${info.started_at}' max='${info.finished_at}'>
                             </div>    
                             <div>   
-                                <label for='user'>Исполнитель:</label>
+                                <label for='worker'>Исполнитель:</label>
                                 <select name='worker'>
                                     ${selects}
                                 </select>
                             </div>    
                             <div>   
-                                <label for='user'>Приоритет:</label>
+                                <label for='priority'>Приоритет:</label>
                                 <select name='priority'>
                                     <option value="Низкий">Низкий</option>
                                     <option value="Высокий">Высокий</option>
@@ -113,12 +113,14 @@ function change_min_end(){
 
 function create_task(event){
     event.preventDefault();
-    data_cr_task = $("#form_create_task_end").serialize();
+    // data_cr_task = ;
+    // console.log(data_cr_task);
     $.ajax({
         type: "POST",
-        data: data_cr_task,
+        data: $("#form_create_task_end").serialize(),
         url: "http://pm.b/save_create_task",
         success:(response)=>{
+            console.log(response);
             if(response.res == true){
                 close_modal();
                 alert(response.mess);
@@ -212,7 +214,7 @@ function delete_task(id_task){
     if(ask_delete){
         $.ajax({
             type: "POST",
-            data: {"id_task": id_task},
+            data: {"id_task": id_task, 'id_manager': sessionStorage.getItem('id')},
             url: "http://pm.b/delete_task",
             success:(response)=>{
                 console.log(response);
@@ -235,3 +237,53 @@ function close_modal(){
     $("#background_blur").remove();
     $("#add_to_squad_modal").remove();
 }
+
+// function render_tasks(response){
+//     console.log(response);
+    
+//     $(".infoRow").remove();
+//     $(".btn_paginate").remove();
+//     if(){
+        
+//     }
+//     else{
+
+//     }
+//     let tasks = response.tasks; 
+//         // console.log(response);
+//     title = "";
+//     $.each(tasks, function(key, value){ 
+//             let tr = document.createElement('tr'); 
+//             // console.log(value);
+//             tr.classList.add("infoRow");
+//             if(sessionStorage.getItem('role') == 'admin'){
+//                 newClass = 'blur'; 
+//                 title=`title = "админу не доступны инструменты управления!"`;
+//             }
+//             actions =  `<img onclick="edit_task(${value.tasks_id})" src="../img/edit.png">`;
+//             console.log( value.status);
+//             if(value.status == 'Назначена'){
+//                 actions =  `<img onclick="edit_task(${value.tasks_id})" src="../img/edit.png"><img onclick="delete_task(${value.tasks_id})" src="../img/delete.png">`;
+//             }
+//             tr.innerHTML = `
+//                 <td class="taskN">${value.title_task}</td>
+//                 <td class="taskD" onclick= "modalTaskDesc(${value.tasks_id})">Подробнее</td>
+//                 <td class="taskNP">${value.title_project}</td>
+//                 <td class="taskW"> ${value.worker}</td>
+//                 <td class="taskP">${value.priority}</td>
+//                 <td class="taskE">${value.finished_at}</td>
+//                 <td class="taskS">${value.status}</td>
+//                 <td class="taskA"><div ${title} class="BTWAct ${newClass}">${actions}</div></td>`;
+//             $("#tasksTable").append(tr);
+//     });
+
+//     if(response.count>10){
+//         let paginate_d = $("#paginate");
+//         let pages = Math.ceil(response.count/10);
+//             for(let i=1; i<=pages; i++){
+//                 // console.log(i);
+//                 paginate.innerHTML += `<div class="btn_paginate" onclick="change_page(${i})">${i}</div>`;
+//             }
+//         $("#session").append(paginate);
+//     }
+// }

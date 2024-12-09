@@ -30,6 +30,7 @@ a{
 
 #leftNavbar{
     display: flex;
+    /* position: sticky; */
     flex-direction: column;
     justify-content: space-between;
     width: 5vmax;
@@ -352,8 +353,10 @@ a{
 
 #infoRowHeader{
     /* background-color: darkgoldenrod; */
+    
+    /* z-index: 1; */
     height: 3.2vmax;
-    width: 100%;
+    width: 88vmax;
     font-family: 'inter';
     font-size: 1vmax;
 }
@@ -361,7 +364,10 @@ a{
     color: #769FCB;
     text-decoration: underline;
 }
-
+.fixed{
+    background-color: white;
+    position: fixed;
+}
 .infoRow{
     /* background-color: green; */
     height: 3vmax;
@@ -375,19 +381,20 @@ a{
 
 
 .userN{
-    width: 31.05%;
+    /* width: 31.05%; */
+    width: 27.3vmax;
 }
 .userE{
-    width: 31.05%;
-    /* width: 27.3vmax; */
+    /* width: 31.05%; */
+    width: 27.3vmax;
 }
 .userR{
-    width: 31.05%;
-    /* width: 27.3vmax; */
+    /* width: 31.05%; */
+    width: 27.3vmax;
 }
-/* .userA{
-    width: 6.84%;
-} */
+.userA{
+    width: 6.011vmax;
+}
 
 .create{
     display: flex;
@@ -413,6 +420,7 @@ a{
     display: flex;
     flex-direction: column;
     position: absolute;
+    z-index: 3;
     transform: translate(-50%, 50%);
     left: 50%;
     top: -20%;
@@ -1068,3 +1076,19 @@ select, input{
     overflow-y: scroll;
     scrollbar-width: thin;
 }
+
+.instead_filter{
+    width: 100%;
+    height: 5.5vmax;
+}
+.no_height{
+    overflow-y: scroll;
+    height: 50vmax !important;
+    /* height:  auto !important; */
+}
+
+.back_modal{
+    z-index: 2;
+}
+
+

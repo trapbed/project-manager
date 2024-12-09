@@ -28,7 +28,7 @@
                         </div>
                         
                         <div class="descOneProj">
-                            <span>Описание:</span>
+                            <span id="">Описание:</span>
                             <!-- <span class="more descOneProjMore">Смотреть</span> -->
                             <!-- <div class="descOneProjHide"> -->
                                 <span id="descProj"></span> 

@@ -23,20 +23,20 @@ $.ajax({
                     <td class="taskP">${value.started_at}</td>
                     <td class="taskE">${value.finished_at}</td>
                     <td class="taskS" onclick="get_info_one_project(${value.project_id})">Подробнее</td>
-                        <td class="taskA"><div ${title} class="BTWAct"><img src="../img/edit.png"><img src="../img/delete.png"></div></td>`;
+                        <td class="taskA"><div ${title} class="BTWAct"><img onclick="get_info_one_project(${value.project_id})" src="../img/edit.png"><img src="../img/delete.png"></div></td>`;
                     $("#projectsTable").append(tr);
             });
 
-            if(response.count>10){
-                let paginate_d = $("#paginate");
-                let pages = Math.ceil(response.count/10);
-                    for(let i=1; i<=pages; i++){
-                        console.log(i);
-                        paginate.innerHTML += `<div class="btn_paginate" onclick="change_page(${i})">${i}</div>`;
-                        paginate_d.append(paginate);
-                    }
-                // paginate_d.append(paginate);
-            }
+            // if(response.count>10){
+            //     let paginate_d = $("#paginate");
+            //     let pages = Math.ceil(response.count/10);
+            //         for(let i=1; i<=pages; i++){
+            //             console.log(i);
+            //             paginate.innerHTML += `<div class="btn_paginate" onclick="change_page(${i})">${i}</div>`;
+            //             paginate_d.append(paginate);
+            //         }
+            //     // paginate_d.append(paginate);
+            // }
     },
     error:()=>{
         alert('Не удалось получить данные о проектах!');
@@ -74,16 +74,16 @@ function change_page(page_id){
                     $("#projectsTable").append(tr);
             });
 
-            if(response.count>10){
-                let paginate_d = $("#paginate");
-                let pages = Math.ceil(response.count/10);
-                    for(let i=1; i<=pages; i++){
-                        console.log(i);
-                        paginate.innerHTML += `<div class="btn_paginate" onclick="change_page(${i})">${i}</div>`;
-                        paginate_d.append(paginate);
-                    }
-                // paginate_d.append(paginate);
-            }
+            // if(response.count>10){
+            //     let paginate_d = $("#paginate");
+            //     let pages = Math.ceil(response.count/10);
+            //         for(let i=1; i<=pages; i++){
+            //             console.log(i);
+            //             paginate.innerHTML += `<div class="btn_paginate" onclick="change_page(${i})">${i}</div>`;
+            //             paginate_d.append(paginate);
+            //         }
+            //     // paginate_d.append(paginate);
+            // }
         },
         error: ()=>{
             window.sessionStorage.setItem('tasks', 'Нет задач!');

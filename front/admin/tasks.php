@@ -5,15 +5,8 @@
 <script src=" ../js\tasks_api.js"></script>
 
 <div id="left_block">
-   <div id="search_select">
-      <form action="">
-         <select name="" id="">
-            <option value="">Рейтинг</option>
-            <option value="">Высокий</option>
-            <option value="">Средний</option>
-            <option value="">Низкий</option>
-         </select>
-      </form>
+   <div class="instead_filter">
+      
    </div>
 
    <div id="infoRows">

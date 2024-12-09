@@ -36,7 +36,7 @@
     </div> -->
 </div>
 
-    <div class="content">
+    <div class="content scroll">
         <div id="leftNavbar">
             <div id="topNavContent">
                 <a href="tasks/" id="logoNav" class="backgroundNav">

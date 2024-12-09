@@ -8,100 +8,139 @@ $.ajax({
     type: 'post',
     url: 'http://pm.b/users',
     success:(response)=>{
-        let users = response.users; 
-        console.log(response);
-            $.each(users, function(key, value){ 
-                let img_block = 'block_user';
-                let src_block = '';
-                if(value.blocked == '1'){
-                    img_block = 'unblock_user';
-                }
-                    let tr = document.createElement('tr'); 
-                    tr.classList.add("infoRow");
-                    
-                    if(sessionStorage.getItem('role') != 'admin'){
-                        newClass = 'blur'; 
-                        title = 'title="Aдмину не доступны инструменты управления!"';
-                    }
-                    if(sessionStorage.getItem('id') == value.id){
-                        src_block = '';
-                    }
-                    else{
-                        src_block = `<div onClick="block_user(${value.id}, ${value.blocked})"><img  src="../img/${img_block}.svg"></div>`;
-                    }
-                    tr.innerHTML = `
-                        <td class="userN">${value.name}</td>
-                        <td class="userE">${value.email}</td>
-                        <td class="userR">${value.role}</td>
-                        <td class="taskA"><div class="BTWAct ${newClass}">${src_block}</div></td>`;
-
-                        // <td class="taskA"><div ${title} class="BTWAct ${newClass}"><img src="../img/edit.png"><img src="../img/delete.png"></div></td>`;
-                    $("#usersTable").append(tr);
-                    // console.log(value.blocked);
-            });
-
-            if(response.count>10){
-                let paginate_d = $("#paginate");
-                let pages = Math.ceil(response.count/10);
-                    for(let i=1; i<=pages; i++){
-                        console.log(i);
-                        paginate.innerHTML += `<div class="btn_paginate" onclick="change_page(${i})">${i}</div>`;
-                    }
-                $("#session").append(paginate);
-                alert(response.mess);
-                sessionStorage.removeItem('mess');
-            }
+        render_users(response);
     },
     error: ()=>{
         window.sessionStorage.setItem('tasks', 'Нет пользователей!');
         console.log('NONO');
     }
 })
-function change_page(page_id){
-    $.ajax({
-        type : "POST",
-        data: {page_id:page_id}, 
-        url: "http://pm.b/page",
-        success: (response)=>{
-            $(".infoRow").remove();
-            window.sessionStorage.setItem('tasks', response);
-            let tasks = response; 
-            $.each(tasks, function(key, value){
-                    if(sessionStorage.getItem('role') == 'admin'){
-                        newClass = 'blur'; 
-                    }
-                  let tr = document.createElement('tr'); 
-                  tr.classList.add("infoRow");
-                  tr.innerHTML = `
-                    <td class="taskN">${value.title_task}</td>
-                    <td class="taskD" onclick= "modalTaskDesc(${value.tasks_id})">Подробнее</td>
-                    <td class="taskNP">${value.title_project}</td>
-                    <td class="taskW"> ${value.worker}</td>
-                    <td class="taskP">${value.priority}</td>
-                    <td class="taskE">${value.finished_at}</td>
-                    <td class="taskS">${value.status}</td>
-                    <td class="taskA"><div class="BTWAct ${newClass}"><img src="../img/block_user.png"></div></td>`;
-                    // console.log(key);
-                    $("#tasksTable").append(tr);
-            });
-            if(response.count>10){
-                let paginate_d = $("#paginate");
-                let pages = Math.ceil(response.count/10);
-                console.log(pages);
-                console.log(paginate_d);
-                    for(let i=1; i<=pages; i++){
-                        console.log(i);
-                        paginate.innerHTML += `<div class="btn_paginate" onclick="chage_page(${i})">${i}</div>`;
-                    }
-                $("#session").append(paginate);
+
+function render_users(response){
+    if(response.mess){
+        alert(response.mess);
+
+    }
+
+    let users = response.users; 
+    console.log(response);
+    count = 1;
+    $.each(users, function(key, value){ 
+        if(count == 1){
+            let img_block = 'block_user';
+            let src_block = '';
+            if(value.blocked == '1'){
+                img_block = 'unblock_user';
             }
-        },
-        error: ()=>{
-            window.sessionStorage.setItem('tasks', 'Нет задач!');
-            console.log('NONO');
+            let tr = document.createElement('tr'); 
+            tr.classList.add("infoRow");
+            
+            if(sessionStorage.getItem('role') != 'admin'){
+                newClass = 'blur'; 
+                title = 'title="Aдмину не доступны инструменты управления!"';
+            }
+            if(sessionStorage.getItem('id') == value.id){
+                src_block = '';
+            }
+            else{
+                src_block = `<div onClick="block_user(${value.id}, ${value.blocked})"><img  src="../img/${img_block}.svg"></div>`;
+            }
+            tr.innerHTML = `
+            <td class="userN"></td>
+            <td class="userE"></td>
+            <td class="userR"></td>
+            <td class="taskA"><div class="BTWAct"></div></td>`;
+            $("#usersTable").append(tr)
         }
-    })  
+        let img_block = 'block_user';
+        let src_block = '';
+        if(value.blocked == '1'){
+            img_block = 'unblock_user';
+        }
+            let tr = document.createElement('tr'); 
+            tr.classList.add("infoRow");
+            
+            if(sessionStorage.getItem('role') != 'admin'){
+                newClass = 'blur'; 
+                title = 'title="Aдмину не доступны инструменты управления!"';
+            }
+            if(sessionStorage.getItem('id') == value.id){
+                src_block = '';
+            }
+            else{
+                src_block = `<div onClick="block_user(${value.id}, ${value.blocked})"><img  src="../img/${img_block}.svg"></div>`;
+            }
+            
+            
+            tr.innerHTML = `
+                <td class="userN">${value.name}</td>
+                <td class="userE">${value.email}</td>
+                <td class="userR">${value.role}</td>
+                <td class="taskA"><div class="BTWAct ${newClass}">${src_block}</div></td>`
+                // <td class="taskA"><div ${title} class="BTWAct ${newClass}"><img src="../img/edit.png"><img src="../img/delete.png"></div></td>`;
+            $("#usersTable").append(tr);
+            count++;
+            // console.log(value.blocked);
+    })
+    if(response.count>10){
+        let paginate_d = $("#paginate");
+        let pages = Math.ceil(response.count/10);
+            for(let i=1; i<=pages; i++){
+                console.log(i);
+                paginate.innerHTML += `<div class="btn_paginate" onclick="change_page(${i})">${i}</div>`;
+            }
+        $("#session").append(paginate);
+        alert(response.mess);
+        sessionStorage.removeItem('mess');
+    }
+
+
 }
+// function change_page(page_id){
+//     $.ajax({
+//         type : "POST",
+//         data: {page_id:page_id}, 
+//         url: "http://pm.b/page",
+//         success: (response)=>{
+//             $(".infoRow").remove();
+//             window.sessionStorage.setItem('tasks', response);
+//             let tasks = response; 
+//             $.each(tasks, function(key, value){
+//                     if(sessionStorage.getItem('role') == 'admin'){
+//                         newClass = 'blur'; 
+//                     }
+//                   let tr = document.createElement('tr'); 
+//                   tr.classList.add("infoRow");
+//                   tr.innerHTML = `
+//                     <td class="taskN">${value.title_task}</td>
+//                     <td class="taskD" onclick= "modalTaskDesc(${value.tasks_id})">Подробнее</td>
+//                     <td class="taskNP">${value.title_project}</td>
+//                     <td class="taskW"> ${value.worker}</td>
+//                     <td class="taskP">${value.priority}</td>
+//                     <td class="taskE">${value.finished_at}</td>
+//                     <td class="taskS">${value.status}</td>
+//                     <td class="taskA"><div class="BTWAct ${newClass}"><img src="../img/block_user.png"></div></td>`;
+//                     // console.log(key);
+//                     $("#tasksTable").append(tr);
+//             });
+//             if(response.count>10){
+//                 let paginate_d = $("#paginate");
+//                 let pages = Math.ceil(response.count/10);
+//                 console.log(pages);
+//                 console.log(paginate_d);
+//                     for(let i=1; i<=pages; i++){
+//                         console.log(i);
+//                         paginate.innerHTML += `<div class="btn_paginate" onclick="chage_page(${i})">${i}</div>`;
+//                     }
+//                 $("#session").append(paginate);
+//             }
+//         },
+//         error: ()=>{
+//             window.sessionStorage.setItem('tasks', 'Нет задач!');
+//             console.log('NONO');
+//         }
+//     })  
+// }
 function block_user(id, now_blocked){
     // console.log(id, now_blocked);
     $.ajax({
@@ -109,6 +148,7 @@ function block_user(id, now_blocked){
         url: 'http://pm.b/blocked_user',
         data: {"id":id, "now_blocked":now_blocked},
         success:(response)=>{
+            alert(response.mess);
             $(".infoRow").remove();
             // let new_src = 'unblock_user';
             // if(now_blocked == 1){
@@ -160,11 +200,9 @@ function block_user(id, now_blocked){
                         }
                     $("#session").append(paginate);
                 } 
-                alert(response.mess);
-                sessionStorage.removeItem('mess');
         },
         error:()=>{
-
+            alert('');
         }
     })
         // $.ajax({
@@ -223,70 +261,13 @@ $("document").ready(()=>{
             method: "POST", 
             data: $("#form_create_user").serialize(),
             success:(response)=>{
-                $(".back_modal").css('display','none');
-                $(".infoRow").remove();
-                // let new_src = 'unblock_user';
-                // if(now_blocked == 1){
-                //     new_src = 'block_user';
-                // }
-                // $(this).attr('src', new_src+'.svg');
-    
-    
-    
-    
-                $(".infoRow").remove();
-                // let new_src = 'unblock_user';
-                // if(now_blocked == 1){
-                //     new_src = 'block_user';
-                // }
-                // $(this).attr('src', new_src+'.svg');
-    
-    
-    
-    
-                let users = response.users; 
-                console.log(response);
-                    $.each(users, function(key, value){ 
-                        let img_block = 'block_user';
-                        let src_block = '';
-                        if(value.blocked == '1'){
-                            img_block = 'unblock_user';
-                        }
-                            let tr = document.createElement('tr'); 
-                            tr.classList.add("infoRow");
-                            
-                            if(sessionStorage.getItem('role') != 'admin'){
-                                newClass = 'blur'; 
-                                title = 'title="админу не доступны инструменты управления!"';
-                            }
-                            if(sessionStorage.getItem('id') == value.id){
-                                src_block = '';
-                            }
-                            else{
-                                src_block = `<div onClick="block_user(${value.id}, ${value.blocked})"><img  src="../img/${img_block}.svg"></div>`;
-                            }
-                            tr.innerHTML = `
-                                <td class="userN">${value.name}</td>
-                                <td class="userE">${value.email}</td>
-                                <td class="userR">${value.role}</td>
-                                <td class="taskA"><div class="BTWAct ${newClass}">${src_block}</div></td>`;
-        
-                                // <td class="taskA"><div ${title} class="BTWAct ${newClass}"><img src="../img/edit.png"><img src="../img/delete.png"></div></td>`;
-                            $("#usersTable").append(tr);
-                            // console.log(value.blocked);
-                    });
-        
-                    if(response.count>10){
-                        let paginate_d = $("#paginate");
-                        let pages = Math.ceil(response.count/10);
-                            for(let i=1; i<=pages; i++){
-                                console.log(i);
-                                paginate.innerHTML += `<div class="btn_paginate" onclick="change_page(${i})">${i}</div>`;
-                            }
-                        $("#session").append(paginate);
-                    }
-                    alert(response.mess);
-                    sessionStorage.removeItem('mess');
+                if(response.res){
+                    $(".back_modal").css('display','none');
+                    $(".infoRow").remove();
+                    render_users(response);
+                    $("#form_create_user").reset();
+                }
+                alert(response.mess);
                 },
             error: ()=>{
                 alert('Не удалось создать пользователя!');

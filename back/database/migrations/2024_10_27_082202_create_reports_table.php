@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('project_id')->constrained()->onDelete('cascade');
+            $table->enum('type', ['project', 'worker']);
+            $table->integer('aspect_id');
             $table->date('date_report');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->json('statistics');

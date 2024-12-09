@@ -13,8 +13,7 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     public function all_users(){
-        $users = DB::table('users')->select('users.id','users.name','users.email','users.role', 'users.blocked')->
-        limit(8)->get();
+        $users = DB::table('users')->select('users.id','users.name','users.email','users.role', 'users.blocked')->get();
         $count = User::latest()->count();
         return response()->json(['users'=>$users, 'count'=>$count]);
     }
@@ -34,8 +33,7 @@ class UserController extends Controller
         ->update(['blocked'=>$blocked]);
 
         if($bloced_action){
-            $users = DB::table('users')->select('users.id','users.name','users.email','users.role', 'users.blocked')->
-            limit(8)->get();
+            $users = DB::table('users')->select('users.id','users.name','users.email','users.role', 'users.blocked')->get();
             $count = User::latest()->count();
             
             return response()->json(['mess'=>$mess,'users'=>$users, 'count'=>$count]);
@@ -46,6 +44,7 @@ class UserController extends Controller
     }
 
     public function create_user(Request $request){
+        $res = false;
         $name = isset($request->name) ? $request->name : false;
         $email = isset($request->email) ? $request->email : false;
         $role = isset($request->role) ? $request->role : false;
@@ -66,6 +65,7 @@ class UserController extends Controller
                 ]);
                 if($user){
                     $mess = 'Пользователь создан!';
+                    $res = true;
                 }
                 else{
                     $mess = 'Не удалось созать пользователя';
@@ -75,9 +75,8 @@ class UserController extends Controller
         else{
             $mess = 'Заполните все поля!';
         }
-        $users = DB::table('users')->select('users.id','users.name','users.email','users.role', 'users.blocked')->
-        limit(8)->get();
+        $users = DB::table('users')->select('users.id','users.name','users.email','users.role', 'users.blocked')->get();
         $count = User::latest()->count();
-        return response()->json(['mess'=>$mess,'users'=>$users, 'count'=>$count]);
+        return response()->json(['mess'=>$mess,'users'=>$users, 'count'=>$count, 'res'=>$res]);
     }
 }

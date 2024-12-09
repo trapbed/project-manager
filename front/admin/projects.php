@@ -15,11 +15,10 @@
          </select>
       </form>
    </div>
-
    
-   <div id="infoRows">
+   <div id="infoRows" class="no_height">
         <table class="table" id="projectsTable">
-            <tr id="infoRowHeader">
+            <tr id="infoRowHeader" class="fixed">
             <td class="taskN">Название проекта</td>
             <td class="taskD">Описание</td>
             <td class="taskM">Руководитель</td>
