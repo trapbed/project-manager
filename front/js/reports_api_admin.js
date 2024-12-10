@@ -1,3 +1,14 @@
+// $.ajax({
+//     type:"POST",
+//     data:{'id':sessionStorage.getItem('id'), 'role':sessionStorage.getItem('role')},
+//     url:"http://pm.b/get_reports",
+//     success:(response)=>{
+
+//     },
+//     error:()=>{
+
+//     }
+// })
 function first_step_create_project(){
     let div = document.createElement('div');
     div.setAttribute('id','background_blur');
@@ -20,9 +31,6 @@ function first_step_create_project(){
     `;
     $(".content").append(div);
 }
-
-
-
 function go_back(event, aspect){
     event.preventDefault();
     $("#add_to_squad_modal").remove();
@@ -53,8 +61,6 @@ function go_back(event, aspect){
     `;
     $(".content").append(div);
 }
-
-
 function second_step_create_report(event){
     event.preventDefault();
     aspect = $("#form_update_squad").serialize().replace('aspect=','');
@@ -126,8 +132,6 @@ function second_step_create_report(event){
         }
     })
 }
-
-
 function get_data_to_create_report(event){
     event.preventDefault();
     $.ajax({
@@ -184,9 +188,21 @@ function create_report(response, future_json){
         }
     })
 }
-
 function close_modal(){
     $("#background_blur").remove();
     $("#add_to_squad_modal").remove();
 }
-
+function change_page_reports(aspect){
+    console.log(aspect);
+    $.ajax({
+        type:"POST",
+        data:{'role':sessionStorage.getItem('role'), 'id_user':sessionStorage.getItem('id'), 'aspect':aspect},
+        url:"http://pm.b/get_reports",
+        success:(response)=>{
+            console.log(response);
+        },
+        error:()=>{
+            alert('Не удалось загрузить отчеты!');
+        }
+    })
+}

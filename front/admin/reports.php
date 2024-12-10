@@ -8,10 +8,13 @@
 
 <div id="left_block">
     <div id="search_select">
-      <div id="create_something" onclick="first_step_create_project()">
-      <div class="create"><img src="/img/group 189.svg" alt=""></div>
+      <div id="create_something" onclick="first_step_create_project()"><div class="create"><img src="/img/group 189.svg" alt=""></div></div>
    </div>
-
+   
+   <div id="main_block_reports">
+        <div id="reports_for_btns"><button onclick="change_page_reports('worker')">По пользователям</button><button onclick="change_page_reports('project')">По проектам</button></div>
+        <div id="content_reports"></div>
+    </div>
 
 
 </div>

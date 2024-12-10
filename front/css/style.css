@@ -1094,3 +1094,30 @@ select, input{
     width: 1.6vmax;
     height: 1.6vmax;
 }
+
+#main_block_reports{
+    display: flex;
+    flex-direction: column;
+    /* background-color: red; */
+    width: 88vmax;
+    height: 37vmax;
+}
+#reports_for_btns{
+    width: 87vmax;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+#reports_for_btns>button{
+    width: 47%;
+    height: 3vmax;
+    outline: transparent;
+    background-color: transparent;
+    font-size: 1vmax;
+    border-radius: 1vmax;
+    border: 0.1vmax solid #769FCB;
+}
+#reports_for_btns>button:hover{
+    background-color: #769FCB;
+    color: white;
+}

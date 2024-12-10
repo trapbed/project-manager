@@ -152,5 +152,9 @@ class ReportController extends Controller
         // return response()->json(json_encode((object) $request->report, JSON_UNESCAPED_UNICODE));
         // return response()->json($request);
     }
+
+    public function get_reports(Request $request){
+        return response()->json($request);
+    }
     
 }

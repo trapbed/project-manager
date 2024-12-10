@@ -72,6 +72,7 @@ Route::post('/create_user', [UserController::class, 'create_user'])->name('creat
 Route::post('/get_data_for_report', [ReportController::class, 'get_data_for_report']);
 Route::post('/get_data_to_create_report', [ReportController::class, 'get_data_to_create_report']);
 Route::post('/create_report', [ReportController::class, 'create_report']);
+Route::post('/get_reports', [ReportController::class, 'get_reports']);
 // Route::group(['middleware'=>['auth']], function(){
 //     Route::group(['middleware'=>['admin']], function(){
 //     });
