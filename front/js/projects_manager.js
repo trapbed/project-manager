@@ -36,7 +36,7 @@ $.ajax({
                             <div class="descOneProjMore"><span>${value.description}</span> </div>
                         </div>
                         <div class="btnsOneProj">
-                            <button class="oneBTNproj update_project" onclick="update_project_modal(${value.id})">Редактировать</button>
+                            <button class="oneBTNproj update_project" onclick="update_project_modal('${value.status}',${value.id})">Редактировать</button>
                             <button class="oneBTNproj delete_project" onclick="delete_project(${value.id})">Удалить</button>
                         </div>
                     </div>
@@ -68,6 +68,7 @@ function delete_project(id){
             url: "http://pm.b/delete_project",
             success:(response)=>{
                 alert(response.mess);
+                console.log(response);
                 $(".oneProject").remove();
                 if(response.res == true){
                     count = response.count;
@@ -102,7 +103,7 @@ function delete_project(id){
                                         <div class="descOneProjMore"><span>${value.description}</span> </div>
                                     </div>
                                     <div class="btnsOneProj">
-                                        <button class="oneBTNproj update_project" onclick="update_project_modal(${value.id})">Редактировать</button>
+                                        <button class="oneBTNproj update_project" onclick="update_project_modal('${value.status}',${value.id})">Редактировать</button>
                                         <button class="oneBTNproj delete_project" onclick="delete_project(${value.id})">Удалить</button>
                                     </div>
                                 </div>
@@ -129,57 +130,80 @@ function delete_project(id){
     }
 }
 
-function update_project_modal(id){
-    id_project = id;
-    $.ajax({
-        type: "POST",
-        data: {"id_proj": id_project},
-        url: "http://pm.b/update_project_info",
-        success:(response)=>{
-            project = response.project[0];
-            div_form = document.createElement(`div`);
-            div_form.setAttribute('id','background_blur'); 
-            selects = ``;
-            statuses = ['Создан','В процессе','Завершен'];
-            $.each(statuses, function(key, value){
-                if(value === project.status){
-                    selects += `<option selected value='${value}'>${value}</option>`;
+function update_project_modal(status, id){
+    console.log(status);
+    console.log(id);
+    if(status == 'Завершен'){
+        alert('Статус проекта- завершен, его нельзя изменить!');
+    }
+    else{
+        id_project = id;
+        $.ajax({
+            type: "POST",
+            data: {"id_proj": id_project},
+            url: "http://pm.b/update_project_info",
+            success:(response)=>{
+                project = response.project[0];
+                div_form = document.createElement(`div`);
+                div_form.setAttribute('id','background_blur'); 
+
+
+                if(project.status == 'Создан'){
+                    statuses = ['Создан','В процессе','Завершен'];
+    
                 }
-                else{
-                    selects += `<option value='${value}'>${value}</option>`;
+                else if(project.status == 'В процессе'){
+                    statuses = ['В процессе','Завершен'];
                 }
-            })
-            div_form.innerHTML = `
-            <div id="add_to_squad_modal">
-                <div id='title_close'>
-                    <span>Редактирование проекта : ${project.title}</span><img onclick='close_modal()' src='../img/x.svg' alt='close'>
-                </div>
-                    <form id='form_create_project_end' onsubmit='save_update_project(event)'>
-                       <input class='display_none' type='text' name='id_user' value='${sessionStorage.getItem('id')}'>
-                       <input class='display_none' type='text' name='id_project' value='${project.id}'>
-                       <div>   
-                           <label for='user'>Заголовок:</label>
-                           <input class='fix_inp_width' name='title' id='str' type="text" value="${project.title}">
-                       </div>    
-                       <div>
-                           <label for='user'>Описание:</label>
-                           <textarea class='fix_inp_width mimax_w_ta' name='description'>${project.description}</textarea>
-                       </div> 
-                       <div>   
-                           <label for='user'>Статус:</label>
-                           <select class='fix_inp_width select_width' name='status'>
-                               ${selects}
-                           </select>
-                       </div>    
-                       <input type='submit' value='Изменить' id='submit_update_squad'>
-                    </form>
-                </div>`;
-            $('.content').append(div_form);
-        }, 
-        error:()=>{
-            alert('Не удалось загрузить форму!');
-        }
-    })
+
+
+                console.log(project);
+                selects=``;
+                // statuses = ['Создан','В процессе','Завершен'];
+                $.each(statuses, function(key, value){
+                    selected = ``;
+                    if(value === project.status){
+                        // selected = ` selected `;
+                        selects += `<option selected value='${value}'>${value}</option>`;
+                    }
+                    
+                    else{
+                        selects += `<option value='${value}'>${value}</option>`;
+                    }
+                })
+                div_form.innerHTML = `
+                <div id="add_to_squad_modal">
+                    <div id='title_close'>
+                        <span>Редактирование проекта : ${project.title}</span><img onclick='close_modal()' src='../img/x.svg' alt='close'>
+                    </div>
+                        <form id='form_create_project_end' onsubmit='save_update_project(event)'>
+                           <input class='display_none' type='text' name='id_user' value='${sessionStorage.getItem('id')}'>
+                           <input class='display_none' type='text' name='id_project' value='${project.id}'>
+                           <div>   
+                               <label for='user'>Заголовок:</label>
+                               <input class='fix_inp_width' name='title' id='str' type="text" value="${project.title}">
+                           </div>    
+                           <div>
+                               <label for='user'>Описание:</label>
+                               <textarea class='fix_inp_width mimax_w_ta' name='description'>${project.description}</textarea>
+                           </div> 
+                           <div>   
+                               <label for='user'>Статус:</label>
+                               <select class='fix_inp_width select_width' name='status'>
+                                   ${selects}
+                               </select>
+                           </div>    
+                           <input type='submit' value='Изменить' id='submit_update_squad'>
+                        </form>
+                    </div>`;
+                $('.content').append(div_form);
+            }, 
+            error:()=>{
+                alert('Не удалось загрузить форму!');
+            }
+        })
+    }
+    
 }
 
 function save_update_project(event){
@@ -226,7 +250,7 @@ function save_update_project(event){
                                     <div class="descOneProjMore"><span>${value.description}</span> </div>
                                 </div>
                                 <div class="btnsOneProj">
-                                    <button class="oneBTNproj update_project" onclick="update_project_modal(${value.id})">Редактировать</button>
+                                    <button class="oneBTNproj update_project" onclick="update_project_modal('${value.status}',${value.id})">Редактировать</button>
                                     <button class="oneBTNproj delete_project" onclick="delete_project(${value.id})">Удалить</button>
                                 </div>
                             </div>

@@ -205,9 +205,17 @@ class ProjectController extends Controller
         if($delete){
             $mess = 'Проект удален!';
             $res = true;
-            $projects = DB::table('projects')->select('id','title', 'description', 'user_id', 'started_at', 'finished_at', 'status', 'squad')->where('user_id', '=', $request->id_user)->get();
-            $count = DB::table('projects')->where('user_id', '=', $request->id_user)->count();
-            return response()->json(['mess'=>$mess, 'res'=>$res,'projects'=>$projects, 'count'=>$count]);
+            if($request->role == 'manager'){
+                $projects = DB::table('projects')->select('id','title', 'description', 'user_id', 'started_at', 'finished_at', 'status', 'squad')->where('user_id', '=', $request->id_user)->get();
+                $count = DB::table('projects')->where('user_id', '=', $request->id_user)->count();
+            }
+            else if($request->role == 'admin'){
+                $projects = DB::table('projects')->select('projects.id as project_id','projects.title','projects.description','users.name','projects.status','projects.started_at', 'projects.finished_at')->join('users', 'users.id','=', 'projects.user_id')->get();
+                $count = DB::table('projects')->where('user_id', '=', $request->id_user)->count();
+            }
+            
+            return response()->json(['mess'=>$mess, 'res'=>$res, 'projects'=>$projects,'count'=>$count]);
+            // , 
         }else{
             $mess = 'Не удалось удалить проект!';
             $res = false;

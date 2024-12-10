@@ -11,12 +11,12 @@
       <div id="create_something" onclick="create_task_modal()">
       <div class="create"><img src="/img/group 189.svg" alt=""></div>
    </div>
-      <form action="">
-         <select name="" id="">
-            <option value="">Статус</option>
-            <option value="">Создан</option>
-            <option value="">В процессе</option>
-            <option value="">Завершен</option>
+      <form >
+         <select onchange="tasks_with_filter()" name="" id="">
+            <option value="">Приоритет</option>
+            <option value="Низкий">Низкий</option>
+            <option value="Средний">Средний</option>
+            <option value="Высокий">Высокий</option>
          </select>
       </form>
    </div>
@@ -30,7 +30,7 @@
             <!-- <td class="taskM">Руководитель</td> -->
             <td class="taskW"> Исполнитель</td>
             <td class="taskP">Приоритет</td>
-            <td class="taskE">Окончание</td>
+            <td class="taskE">Осталось</td>
             <td class="taskS">Статус</td>
             <td class="taskA">Действия</td>
          </tr> 

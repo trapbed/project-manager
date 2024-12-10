@@ -11,14 +11,6 @@
       <div id="create_something" onclick="modal_create_project()">
       <div class="create"><img src="/img/group 189.svg" alt=""></div>
    </div>
-      <form action="">
-         <select name="" id="">
-            <option value="">Статус</option>
-            <option value="">Создан</option>
-            <option value="">В процессе</option>
-            <option value="">Завершен</option>
-         </select>
-      </form>
    </div>
 
    

@@ -7,12 +7,12 @@
 
 <div id="left_block">
    <div id="search_select">
-      <form action="">
-         <select name="" id="">
-            <option value="">Рейтинг</option>
-            <option value="">Высокий</option>
-            <option value="">Средний</option>
-            <option value="">Низкий</option>
+      <form >
+         <select onchange="tasks_with_filter()" name="" id="priority_filter">
+            <option value="">Приоритет</option>
+            <option value="Низкий">Низкий</option>
+            <option value="Средний">Средний</option>
+            <option value="Высокий">Высокий</option>
          </select>
       </form>
    </div>

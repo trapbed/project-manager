@@ -1,6 +1,3 @@
-// Добавить действие из подробнее в редактирвоание (админ)
-// Добавить удаление из команды (желательно найти код) 
-
 $.ajax({
     type: "post",
     url: "http://pm.b/projects",
@@ -23,7 +20,7 @@ $.ajax({
                     <td class="taskP">${value.started_at}</td>
                     <td class="taskE">${value.finished_at}</td>
                     <td class="taskS" onclick="get_info_one_project(${value.project_id})">Подробнее</td>
-                        <td class="taskA"><div ${title} class="BTWAct"><img onclick="get_info_one_project(${value.project_id})" src="../img/edit.png"><img src="../img/delete.png"></div></td>`;
+                        <td class="taskA"><div ${title} class="BTWAct"><img onclick="get_info_one_project(${value.project_id})" src="../img/edit.png"><img onclick="delete_project(${value.project_id})" src="../img/delete.png"></div></td>`;
                     $("#projectsTable").append(tr);
             });
 
@@ -43,6 +40,47 @@ $.ajax({
     }
 })
 
+function delete_project(id){
+    question = confirm('Вы точно хотите удалить проект?');
+    if(question){
+        id_project = id;
+        $.ajax({
+            type: "POST",
+            data: {"id_proj": id_project, "id_user":sessionStorage.getItem('id'), 'role':sessionStorage.getItem('role')},
+            url: "http://pm.b/delete_project",
+            success:(response)=>{
+                alert(response.mess);
+                $(".infoRow").remove();
+                let projects = response.projects;
+                title = ""; 
+                console.log(response);
+                    $.each(projects, function(key, value){ 
+                            let tr = document.createElement('tr'); 
+                            tr.classList.add('infoRow');
+                            if(sessionStorage.getItem('role') == 'admin'){
+                                newClass = 'blur'; 
+                                title = title=`title = "админу не доступны инструменты управления!"`;
+                            }
+                            tr.innerHTML = `
+                            <td class="taskN">${value.title}</td>
+                            <td class="taskD">${value.description}</td>
+                            <td class="taskM">${value.name}</td>
+                            <td class="taskW">${value.status}</td>
+                            <td class="taskP">${value.started_at}</td>
+                            <td class="taskE">${value.finished_at}</td>
+                            <td class="taskS" onclick="get_info_one_project(${value.project_id})">Подробнее</td>
+                                <td class="taskA"><div ${title} class="BTWAct"><img onclick="get_info_one_project(${value.project_id})" src="../img/edit.png"><img onclick="delete_project(${value.project_id})" src="../img/delete.png"></div></td>`;
+                            $("#projectsTable").append(tr);
+                    });
+            }, 
+            error:()=>{
+                alert('');
+            }
+        })
+    }else{
+        alert('Проект еще существует!');
+    }
+}
 
 function change_page(page_id){
     $.ajax({

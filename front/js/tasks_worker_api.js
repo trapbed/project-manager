@@ -1,4 +1,10 @@
-console.log(sessionStorage);
+function tasks_with_filter (){
+//    console.log();
+   console.log(sessionStorage.getItem('page_id'))
+   sessionStorage.setItem('filter',$("#priority_filter").val());
+}
+
+console.log(sessionStorage.getItem('filter'));
 $.ajax({
     type:"POST",
     data: {"id_worker": sessionStorage.getItem('id')},
@@ -57,18 +63,32 @@ function render_tasks(response){
         tr.classList.add("infoRow");
         
         let last = Math.ceil((new Date(value.finished_at)-new Date())/86400000);
+        
+        if(last<0 && value.status != 'Завершена'){
+            last = 'Просрочена';
+        }
+        else if(last<0 && value.status == 'Завершена'){
+            last = value.status;
+        }
+        else if(value.status == 'Завершена' ){
+            last = 'Завершена';
+        }
+        else if(last == 0){
+            last = 'Последний день!';
+        }
+        console.log(last);
         tr.innerHTML = `
             <td class="taskN worker_task_N">${value.title}</td>
             <td class="taskD worker_task_D">${last}</td>
-            <td class="taskNP worker_task_P">${value.priority}</td>
+            <td class="taskNP worker_task_P"><img src="../img/priority/${value.priority}.svg" alt="priority ${value.priority}">${value.priority}</td>
             <td class="taskW worker_task_S"> ${value.status}</td>
             <td class="taskP worker_task_M" onclick="modalTaskDesc(${value.id})">Смотреть</td>
             <td class="taskE worker_task_C"><div class="actions_task_worker">
                                                 ${actions}
-                                                <div class="line_comm" onclick="see_comments(this, event, ${value.id})"><img src="../img/worker/comm_dark.svg" alt="" class='comments_worker'><div>${count_comm}</div></div>
+                                                <div class="line_comm" onclick="see_comments('${last}',this, event, ${value.id})"><img src="../img/worker/comm_dark.svg" alt="" class='comments_worker'><div>${count_comm}</div></div>
                                             </div></td>
             `;
-            console.log(value.id);
+        console.log(value.id);
         $("#tasksTable").append(tr);
     });
 }
@@ -96,6 +116,7 @@ function change_status(id_task, status){
         data: {'id_task':id_task, 'status':status, "id_worker": sessionStorage.getItem('id'), 'page':sessionStorage.getItem('page_id')},
         url: "http://pm.b/change_status",
         success:(response)=>{
+            console.log(response);
             render_tasks(response);
             alert(response.mess);
         },
@@ -117,14 +138,33 @@ function paginate_tasks(response){
     }
 }
 
-function see_comments(elem, event, id){
+function see_comments(last, elem, event, id){
+    // console.log(last);
+    event.preventDefault();
     elem.setAttribute('id', 'set_one_comments');
     $.ajax({
         type: "POST",
         data: {'id_task':id},
         url:"http://pm.b/get_comments_for_task",
         success:(response)=>{
-            console.log(response);
+            // console.log(response);
+            if(last == 'Просрочена' || last == 'Завершена'){
+                console.log(last);
+                form = `<div id="for_form_comm">
+                            <form id="form_create_comment"> 
+                                <input type="hidden" name="id_task" value="${response.id_task}">
+                                <div id='block_input_comment'><input placeholder="Задача завершена" disabled type="text" id='input_to_search_comm' name="content_comment"><img onclick="create_comment(event)" src="../img/worker/send.png" alt="click to sent"></div>
+                            </form>
+                        </div>`;
+            }else{
+                form = `<div id="for_form_comm">
+                            <form id="form_create_comment" onsubmit="create_comment(event)"> 
+                                <input type="hidden" name="id_task" value="${response.id_task}">
+                                <div id='block_input_comment'><input placeholder="Введите комметарий" type="text" id='input_to_search_comm' name="content_comment"><img onclick="create_comment(event)" src="../img/worker/send.png" alt="click to sent"></div>
+                            </form>
+                        </div>`;
+            }
+            
             comments_blocks = render_comments(response);
             let background_blur = document.createElement(`div`);
             background_blur.setAttribute('id','background_blur');
@@ -136,12 +176,7 @@ function see_comments(elem, event, id){
                     <div id='comments_block'>
                     ${comments_blocks}
                     </div>
-                    <div id="for_form_comm">
-                        <form id="form_create_comment" onsubmit="create_comment(event)"> 
-                            <input type="hidden" name="id_task" value="${response.id_task}">
-                            <div id='block_input_comment'><input type="text" id='input_to_search_comm' name="content_comment"><img onclick="create_comment(event)" src="../img/worker/send.png" alt="click to sent"></div>
-                        </form>
-                    </div>
+                    ${form}
                 </div> 
             `; 
             $(".content").append(background_blur);

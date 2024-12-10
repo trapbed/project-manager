@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request; 
  
 use App\Models\Task; 
+use App\Models\Project; 
 
 use Illuminate\Support\Facades\DB;
 use Response;
@@ -37,6 +38,9 @@ class TaskController extends Controller
             ->get();    
             $count = Task::latest()->count();
         }
+        // if(){
+
+        // }
         return response()->json(['tasks'=>$tasks_all, 'count'=>$count]); 
     }
     public function get_tasks_on_page(Request $request){ 
@@ -74,7 +78,7 @@ class TaskController extends Controller
             // $workers_task = DB::table('tasks')->select('title', 'started_at', 'finished_at', 'priority', 'status', 'comments')->where('user_id','=', $request->id_worker)->get();
             $workers_task = DB::table('tasks')->select('id','title', 'started_at', 'finished_at', 'priority', 'status', 'comments')
             ->where('user_id','=', $request->id_worker)
-            ->orderBy('tasks.updated_at','desc')
+            // ->orderBy('tasks.updated_at','desc')
             ->limit(9)
             ->offset($offset)
             ->get();
@@ -249,7 +253,7 @@ class TaskController extends Controller
     }
 
     public function tasks_worker(Request $request){
-        $workers_task = DB::table('tasks')->select('id','title', 'started_at', 'finished_at', 'priority', 'status', 'comments')->where('user_id','=', $request->id_worker)->limit(8)->get();
+        $workers_task = DB::table('tasks')->select('id','title', 'started_at', 'finished_at', 'priority', 'status', 'comments')->where('user_id','=', $request->id_worker)->limit(9)->get();
         $count = DB::table('tasks')->where('user_id','=', $request->id_worker)->count();
         return response()->json(['tasks'=>$workers_task, 'count'=>$count]);
     }
@@ -338,6 +342,12 @@ class TaskController extends Controller
         $change = Task::where('id', '=', $request->id_task)->update(['status'=>$request->status, 'finished_at'=>$today]);
         if($change){
             $res = true;
+            $project_id = DB::table('tasks')->where('id','=', $request->id_task)->select('project_id')->get()[0]->project_id;
+            $status_project = DB::table('projects')->where('id', '=', $project_id)->select(columns: 'status')->get()[0]->status;
+            if($status_project == 'Создан'){
+                $update_status_project = Project::where('id', '=',$project_id)->update(['status'=>'В процессе']);
+            }
+            
             $mess = 'Успешное изменение статуса!';
             if(!isset($request->page) || $request->page == 1){
                 $workers_task = DB::table('tasks')->select('id','title', 'started_at', 'finished_at', 'priority', 'status', 'comments')->where('user_id','=', $request->id_worker)->limit(9)->get();
@@ -354,6 +364,7 @@ class TaskController extends Controller
             $res = true;
             $mess = 'Не удалось изменить статус!';
         }
-        return response()->json(['mess'=>$mess, 'res'=>$res, 'tasks'=>$workers_task, 'count'=>$count]);
+        
+        return response()->json([ 'status'=>$status_project, 'proj'=>$project_id,'mess'=>$mess, 'res'=>$res, 'tasks'=>$workers_task, 'count'=>$count]);
     }
 }

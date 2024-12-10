@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Дек 10 2024 г., 07:47
+-- Время создания: Ноя 26 2024 г., 08:05
 -- Версия сервера: 5.7.39
 -- Версия PHP: 8.1.9
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- База данных: `pm_v3p`
+-- База данных: `pm.v3p`
 --
 
 -- --------------------------------------------------------
@@ -102,12 +102,12 @@ CREATE TABLE `personal_access_tokens` (
 CREATE TABLE `projects` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `title` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci,
-  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `started_at` date DEFAULT NULL,
-  `finished_at` date DEFAULT NULL,
-  `status` enum('Создан','В процессе','Завершен') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `squad` json DEFAULT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `started_at` date NOT NULL,
+  `finished_at` date NOT NULL,
+  `status` enum('Создан','В процессе','Завершен') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `squad` json NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -117,20 +117,17 @@ CREATE TABLE `projects` (
 --
 
 INSERT INTO `projects` (`id`, `title`, `description`, `user_id`, `started_at`, `finished_at`, `status`, `squad`, `created_at`, `updated_at`) VALUES
-(31, 'New project #1', 'Description', 1, '2024-12-20', '2024-12-29', 'Создан', '{\"squad\": [\"7\"]}', '2024-12-05 08:21:34', '2024-12-05 08:21:34'),
-(32, 'tyty', 'desc', 1, '2024-12-18', '2024-12-25', 'В процессе', '{\"squad\": [\"7\", 10]}', NULL, '2024-12-09 16:11:13'),
-(33, 'project 8 Dec', 'desc', 1, '2024-12-03', '2024-12-11', 'Создан', '{\"squad\": [\"10\", \"12\", \"7\"]}', '2024-12-08 14:55:22', '2024-12-08 14:55:22'),
-(34, '123', '123', 3, '2024-12-06', '2024-12-08', 'Создан', '{\"squad\": [\"7\"]}', '2024-12-09 07:34:43', '2024-12-09 15:56:33'),
-(35, '123 r', '123', 3, '2024-12-04', '2024-12-13', 'Создан', '{\"squad\": [\"7\"]}', '2024-12-09 07:39:13', '2024-12-09 15:49:53'),
-(36, 'idk how named this project', 'desc', 13, '2024-12-02', '2024-12-12', 'В процессе', '{\"squad\": [\"10\", \"12\", \"7\"]}', NULL, NULL),
-(37, 'idk how named this project #1', 'desc', 13, '2024-12-02', '2024-12-12', 'В процессе', '{\"squad\": [\"7\"]}', NULL, '2024-12-09 16:09:00'),
-(38, 'idk how named this project #2', 'desc', 13, '2024-12-02', '2024-12-12', 'В процессе', '{\"squad\": [\"10\", \"12\", \"7\"]}', NULL, NULL),
-(39, 'idk how named this project #3', 'desc', 13, '2024-12-02', '2024-12-12', 'В процессе', '{\"squad\": [\"7\"]}', NULL, '2024-12-09 16:06:45'),
-(40, 'idk how named this project #4', 'desc', 13, '2024-12-02', '2024-12-12', 'В процессе', '{\"squad\": [\"7\"]}', NULL, '2024-12-09 16:05:00'),
-(41, 'idk how named this project #5', 'desc', 13, '2024-12-02', '2024-12-12', 'В процессе', '{\"squad\": [\"12\", \"7\"]}', NULL, '2024-12-09 16:09:23'),
-(42, 'idk how named this project #6', 'desc', 13, '2024-12-02', '2024-12-12', 'В процессе', '{\"squad\": [\"10\", \"12\", \"7\"]}', NULL, NULL),
-(43, 'idk how named this project #7', 'desc', 13, '2024-12-02', '2024-12-12', 'В процессе', '{\"squad\": [\"7\"]}', NULL, '2024-12-09 16:07:53'),
-(44, 'idk how named this project #8', 'desc', 13, '2024-12-02', '2024-12-12', 'В процессе', '{\"squad\": [\"10\", \"12\", \"7\"]}', NULL, NULL);
+(1, 'First project Title', 'First project Desc', 3, '2024-10-27', '2024-11-30', 'Создан', '{\"squad\": [10, 7, 3, 12]}', NULL, NULL),
+(2, 'second project', 'description second project', 3, '2024-11-12', '2024-11-27', 'Создан', '{\"squad\": [3, 7, 10, 12]}', NULL, NULL),
+(3, 'second project', 'description second project', 3, '2024-11-12', '2024-11-27', 'Создан', '{\"squad\": [3, 7, 10, 12]}', NULL, NULL),
+(4, 'second project', 'description second project', 3, '2024-11-12', '2024-11-27', 'Создан', '{\"squad\": [7, 10, 3, 3, 12, 12]}', NULL, NULL),
+(5, 'second project', 'description second project', 3, '2024-11-12', '2024-11-27', 'Создан', '{\"squad\": [3, 7, 10, 10, 12]}', NULL, NULL),
+(6, 'second project', 'description second project', 3, '2024-11-12', '2024-11-27', 'Создан', '{\"squad\": [3, 7, 10, 12, 12]}', NULL, NULL),
+(7, 'second project', 'description second project', 3, '2024-11-12', '2024-11-27', 'Создан', '{\"squad\": [3, 10, 7, 12, 12]}', NULL, NULL),
+(8, 'second project', 'description second project', 3, '2024-11-12', '2024-11-27', 'Создан', '{\"squad\": [3, 7, 10, 12]}', NULL, NULL),
+(9, 'second project', 'description second project', 3, '2024-11-12', '2024-11-27', 'Создан', '{\"squad\": []}', NULL, NULL),
+(10, 'second project', 'description second project', 3, '2024-11-12', '2024-11-27', 'Создан', '{\"squad\": [3, 10]}', NULL, NULL),
+(11, 'second project', 'description second project', 3, '2024-11-12', '2024-11-27', 'Создан', '{\"squad\": [3]}', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -140,13 +137,12 @@ INSERT INTO `projects` (`id`, `title`, `description`, `user_id`, `started_at`, `
 
 CREATE TABLE `reports` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `type` enum('project','worker') COLLATE utf8mb4_unicode_ci NOT NULL,
-  `aspect_id` bigint(20) UNSIGNED NOT NULL,
+  `project_id` bigint(20) UNSIGNED NOT NULL,
   `date_report` date NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `statistics` json NOT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -160,45 +156,44 @@ CREATE TABLE `tasks` (
   `title` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `project_id` bigint(20) UNSIGNED NOT NULL,
-  `manager_id` int(11) DEFAULT NULL,
   `started_at` date NOT NULL,
   `finished_at` date NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `priority` enum('Низкий','Высокий','Средний') COLLATE utf8mb4_unicode_ci NOT NULL,
   `status` enum('Назначена','Выполняется','Завершена') COLLATE utf8mb4_unicode_ci NOT NULL,
-  `comments` json DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Дамп данных таблицы `tasks`
 --
 
-INSERT INTO `tasks` (`id`, `title`, `description`, `project_id`, `manager_id`, `started_at`, `finished_at`, `user_id`, `priority`, `status`, `comments`, `created_at`, `updated_at`) VALUES
-(28, 't#123', 'desc', 31, 1, '2024-12-21', '2024-12-08', 10, 'Низкий', 'Завершена', '{\"2024-12-07 22:36:00\": \"100%\", \"2024-12-08 15:13:28\": \"today is 08 Dec 2024\", \"2024-12-08 15:16:00\": \"try #14\", \"2024-12-08 15:16:24\": \"1\", \"2024-12-10 00:41:13\": \"new comm\"}', '2024-12-05 08:22:37', '2024-12-09 16:41:13'),
-(29, 'title #12', 'description', 31, 1, '2024-12-26', '2024-12-08', 10, 'Высокий', 'Завершена', '{\"2024-12-07 21:20:21\": \"new comment to \\\"title #12\\\"\", \"2024-12-07 22:20:22\": \"ret\", \"2024-12-07 22:20:26\": \"ret\", \"2024-12-07 22:21:04\": \"nkn\", \"2024-12-07 22:30:11\": \"ebat`\", \"2024-12-07 22:33:33\": \"im tired\", \"2024-12-07 22:34:44\": \"really?\", \"2024-12-07 22:35:46\": \"really..\"}', '2024-12-05 09:30:20', '2024-12-08 14:45:22'),
-(30, 'parovoz', 'desc', 31, 1, '2024-12-21', '2024-12-08', 10, 'Высокий', 'Завершена', '{\"2024-12-07 21:42:16\": \"one_comm \\\"paravoz\\\"\", \"2024-12-07 22:10:38\": \"2\", \"2024-12-07 22:22:02\": \"3\", \"2024-12-07 22:22:27\": \"4\", \"2024-12-07 22:23:17\": \"5\"}', NULL, '2024-12-08 14:45:25'),
-(31, 'tutty-frutty', 'desc', 31, 1, '2024-11-01', '2024-12-08', 10, 'Высокий', 'Завершена', '{\"2024-12-07 22:12:09\": \"first \\\"tutty-frutty\", \"2024-12-07 22:12:23\": \"first \\\"tutty-frutty\", \"2024-12-07 22:13:22\": \"first \\\"tutty-frutty3\\\"\"}', NULL, '2024-12-08 14:45:29'),
-(32, 'title', '1234', 32, 1, '2024-12-20', '2024-12-08', 10, 'Высокий', 'Завершена', '{\"2024-12-07 22:24:59\": \"new\", \"2024-12-07 22:25:16\": \"new\"}', '2024-12-05 10:07:44', '2024-12-08 14:45:32'),
-(33, 'new task #12345', 'desc', 31, 1, '2024-12-20', '2024-12-08', 10, 'Средний', 'Завершена', '{\"2024-12-07 22:25:41\": \"new\"}', '2024-12-05 10:08:40', '2024-12-08 14:45:35'),
-(34, 'Black Star Mafia', 'How much ?', 31, 1, '2024-12-20', '2024-12-09', 10, 'Низкий', 'Завершена', '{\"2024-12-07 22:26:36\": \"1\"}', '2024-12-05 10:12:39', '2024-12-09 16:40:31'),
-(35, 'title #11', 'desc', 31, 1, '2024-12-21', '2024-12-24', 7, 'Низкий', 'Выполняется', NULL, '2024-12-05 10:26:53', '2024-12-05 10:50:22'),
-(36, 'create #34', 'desc', 32, 1, '2024-12-20', '2024-12-25', 3, 'Низкий', 'Выполняется', NULL, '2024-12-05 10:50:50', '2024-12-05 10:50:50'),
-(37, 'title #12345', 'esc', 31, 1, '2024-12-27', '2024-12-29', 10, 'Низкий', 'Выполняется', '{\"2024-12-07 22:28:13\": \"f\"}', '2024-12-05 13:37:00', '2024-12-07 14:28:13'),
-(38, 'roro', 'roro', 31, 1, '2024-12-20', '2024-12-29', 10, 'Низкий', 'Выполняется', '{\"2024-12-07 22:58:43\": \"first \\\"roro\\\"\"}', '2024-12-05 13:40:36', '2024-12-08 13:43:50'),
-(39, 'toto', 'roro', 31, 1, '2024-12-21', '2024-12-27', 10, 'Высокий', 'Выполняется', '{\"2024-12-07 23:00:46\": \"at home\", \"2024-12-07 23:01:58\": \"qwertyuio;lkjhbgvcxvbnmk,loiuytgfvghbjklndfhbvnkl sfmbnkitrlmv msrjkelfmtrsnskjlgvmefnbkls;er/mnvlg;blsrm/nlk;m/bv ldrkfnlmv fjb mnrsikl;mjrieofkw\", \"2024-12-07 23:03:10\": \"Каждый из нас понимает очевидную вещь: глубокий уровень погружения напрямую зависит от инновационных методов управления процессами.\"}', '2024-12-05 13:41:22', '2024-12-08 13:42:34'),
-(40, 'ete', 'ete', 32, 1, '2024-12-19', '2024-12-23', 3, 'Средний', 'Выполняется', NULL, '2024-12-05 13:42:18', '2024-12-05 13:42:18'),
-(41, 'test test IDK', 'i dont know', 31, 1, '2024-12-27', '2024-12-29', 10, 'Низкий', 'Выполняется', '{\"2024-12-07 23:06:23\": \"try\"}', '2024-12-05 13:44:13', '2024-12-08 13:41:58'),
-(42, 'title', 'desc', 33, 1, '2024-12-03', '2024-12-08', 10, 'Высокий', 'Выполняется', NULL, '2024-12-08 14:55:48', '2024-12-08 14:56:47'),
-(43, '12', 'description', 33, 1, '2024-12-04', '2024-12-08', 10, 'Средний', 'Завершена', NULL, '2024-12-08 14:56:10', '2024-12-08 14:59:44'),
-(44, '27', 'club', 33, 1, '2024-12-06', '2024-12-08', 10, 'Низкий', 'Назначена', NULL, '2024-12-08 14:56:32', '2024-12-08 14:59:42'),
-(47, '123', '123', 31, 3, '2024-12-21', '2024-12-23', 7, 'Низкий', 'Назначена', NULL, '2024-12-09 07:36:04', '2024-12-09 07:36:04'),
-(48, '456', '456', 31, 3, '2024-12-22', '2024-12-25', 7, 'Низкий', 'Назначена', NULL, '2024-12-09 07:37:56', '2024-12-09 07:37:56'),
-(49, '789', '789', 31, 3, '2024-12-22', '2024-12-25', 7, 'Высокий', 'Назначена', NULL, '2024-12-09 07:38:39', '2024-12-09 07:38:39'),
-(50, 'listen music', 'listen forever', 39, 1, '2024-12-04', '2024-12-05', 15, 'Низкий', 'Назначена', NULL, NULL, '2024-12-09 17:13:30'),
-(51, 'Task for Kiara', 'desc', 35, 1, '2024-12-05', '2024-12-11', 7, 'Высокий', 'Назначена', NULL, '2024-12-09 16:12:43', '2024-12-09 16:12:43'),
-(52, 'nikogo ne budet v dome', 'krome sumerek', 32, 1, '2024-12-20', '2024-12-24', 10, 'Высокий', 'Назначена', NULL, '2024-12-09 16:37:40', '2024-12-09 16:37:40');
+INSERT INTO `tasks` (`id`, `title`, `description`, `project_id`, `started_at`, `finished_at`, `user_id`, `priority`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'First task Title', 'First task Desc', 1, '2024-10-27', '2024-10-29', 2, 'Высокий', 'Выполняется', NULL, NULL),
+(2, 'Second task Title', 'Second task Desc', 1, '2024-10-27', '2024-10-29', 2, 'Высокий', 'Выполняется', NULL, NULL),
+(3, 'Сходить за кофе', 'Адрес Кофейни: Республика Башкортостан, город Уфа, Советский район, улица Кирова, дом 91\r\nЗаказ: Матча Латте с карамельным сиропом, Тыквенный Латте.', 1, '2024-11-09', '2024-11-09', 2, 'Высокий', 'Выполняется', NULL, NULL),
+(4, 'Сходить за кофе', 'Адрес Кофейни: Республика Башкортостан, город Уфа, Советский район, улица Кирова, дом 91\r\nЗаказ: Матча Латте с карамельным сиропом, Тыквенный Латте.', 1, '2024-11-09', '2024-11-09', 2, 'Высокий', 'Выполняется', NULL, NULL),
+(5, 'Сходить за кофе', 'Адрес Кофейни: Республика Башкортостан, город Уфа, Советский район, улица Кирова, дом 91\r\nЗаказ: Матча Латте с карамельным сиропом, Тыквенный Латте.', 1, '2024-11-09', '2024-11-09', 2, 'Высокий', 'Выполняется', NULL, NULL),
+(6, 'Сходить за кофе', 'Адрес Кофейни: Республика Башкортостан, город Уфа, Советский район, улица Кирова, дом 91\r\nЗаказ: Матча Латте с карамельным сиропом, Тыквенный Латте.', 1, '2024-11-09', '2024-11-09', 2, 'Высокий', 'Выполняется', NULL, NULL),
+(7, 'Сходить за кофе', 'Адрес Кофейни: Республика Башкортостан, город Уфа, Советский район, улица Кирова, дом 91\r\nЗаказ: Матча Латте с карамельным сиропом, Тыквенный Латте.', 1, '2024-11-09', '2024-11-09', 2, 'Высокий', 'Выполняется', NULL, NULL),
+(8, 'Сходить за кофе', 'Адрес Кофейни: Республика Башкортостан, город Уфа, Советский район, улица Кирова, дом 91\r\nЗаказ: Матча Латте с карамельным сиропом, Тыквенный Латте.', 1, '2024-11-09', '2024-11-09', 2, 'Высокий', 'Выполняется', NULL, NULL),
+(9, 'Сходить за кофе', 'Адрес Кофейни: Республика Башкортостан, город Уфа, Советский район, улица Кирова, дом 91\r\nЗаказ: Матча Латте с карамельным сиропом, Тыквенный Латте.', 1, '2024-11-09', '2024-11-09', 2, 'Высокий', 'Выполняется', NULL, NULL),
+(10, 'Сходить за кофе', 'Адрес Кофейни: Республика Башкортостан, город Уфа, Советский район, улица Кирова, дом 91\r\nЗаказ: Матча Латте с карамельным сиропом, Тыквенный Латте.', 1, '2024-11-09', '2024-11-09', 2, 'Высокий', 'Выполняется', NULL, NULL),
+(11, 'Уложится в сроки', 'Прошу своих сотрудников поторопиться', 1, '2024-11-10', '2024-11-14', 2, 'Высокий', 'Выполняется', NULL, NULL),
+(12, 'Уложится в сроки', 'Прошу своих сотрудников поторопиться', 1, '2024-11-10', '2024-11-14', 2, 'Высокий', 'Выполняется', NULL, NULL),
+(13, 'Уложится в сроки', 'Прошу своих сотрудников поторопиться', 1, '2024-11-10', '2024-11-14', 2, 'Высокий', 'Выполняется', NULL, NULL),
+(14, 'Уложится в сроки', 'Прошу своих сотрудников поторопиться', 1, '2024-11-10', '2024-11-14', 2, 'Высокий', 'Выполняется', NULL, NULL),
+(15, 'Уложится в сроки', 'Прошу своих сотрудников поторопиться', 1, '2024-11-10', '2024-11-14', 2, 'Высокий', 'Выполняется', NULL, NULL),
+(16, 'Уложится в сроки', 'Прошу своих сотрудников поторопиться', 1, '2024-11-10', '2024-11-14', 2, 'Высокий', 'Выполняется', NULL, NULL),
+(17, 'Уложится в сроки', 'Прошу своих сотрудников поторопиться', 1, '2024-11-10', '2024-11-14', 2, 'Высокий', 'Выполняется', NULL, NULL),
+(18, 'Уложится в сроки', 'Прошу своих сотрудников поторопиться', 1, '2024-11-10', '2024-11-14', 2, 'Высокий', 'Выполняется', NULL, NULL),
+(19, 'Уложится в сроки', 'Прошу своих сотрудников поторопиться', 1, '2024-11-10', '2024-11-14', 2, 'Высокий', 'Выполняется', NULL, NULL),
+(22, 'Выполнить задание 7', 'Сейчас важно выполнить задание под номером 7', 1, '2024-11-10', '2024-11-12', 2, 'Высокий', 'Выполняется', NULL, NULL),
+(23, 'Выполнить задание 7', 'Сейчас важно выполнить задание под номером 7', 1, '2024-11-10', '2024-11-12', 2, 'Высокий', 'Выполняется', NULL, NULL),
+(24, 'q', 'q', 1, '2024-11-27', '2024-11-30', 3, 'Низкий', 'Назначена', '2024-11-25 14:04:59', '2024-11-25 14:04:59'),
+(25, 'qwerty', 'qwerty', 1, '2024-11-28', '2024-11-30', 7, 'Низкий', 'Назначена', '2024-11-25 14:07:16', '2024-11-25 14:07:16'),
+(26, 'task #234', 'desc #234', 4, '2024-11-26', '2024-11-27', 10, 'Высокий', 'Назначена', '2024-11-25 14:07:46', '2024-11-25 14:07:46');
 
 -- --------------------------------------------------------
 
@@ -225,19 +220,11 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `role`, `password`, `remember_token`, `created_at`, `updated_at`, `blocked`) VALUES
 (1, 'Kate', 'kate@mail.ru', NULL, 'manager', '$2y$10$5xKOIYI67xLlsm1/xNNMXOLKAejfh0jMgo3R9v/2gI1C9iHzq9zwS', NULL, '2024-10-27 08:37:13', '2024-10-27 08:37:13', '0'),
-(2, 'rori', 'rori@mail.ru', NULL, 'admin', '$2y$10$kPrpnpHaJj7of/Jc1.gHEO5QzkLQT0/rozZoac6DEZ.Y0jFl67yA6', NULL, '2024-10-27 10:06:36', '2024-10-27 10:06:36', '0'),
-(3, 'Ulyana', 'Ulyana@mail.ru', NULL, 'worker', '$2y$10$jowmdvufAzf8h/5iuOEo/O1sXIJxju96cIHdypn3igz5q68NSIIgW', NULL, '2024-10-27 10:32:33', '2024-10-27 10:32:33', '0'),
+(2, 'rori', 'rori@mail.com', NULL, 'admin', '$2y$10$kPrpnpHaJj7of/Jc1.gHEO5QzkLQT0/rozZoac6DEZ.Y0jFl67yA6', NULL, '2024-10-27 10:06:36', '2024-10-27 10:06:36', '0'),
+(3, 'Ulyana', 'Ulyana@mail.com', NULL, 'worker', '$2y$10$jowmdvufAzf8h/5iuOEo/O1sXIJxju96cIHdypn3igz5q68NSIIgW', NULL, '2024-10-27 10:32:33', '2024-10-27 10:32:33', '0'),
 (7, 'kiara', 'kiara@mail.ru', NULL, 'worker', '$2y$10$Vvy6zjenCuS0.F8j5Ovu4O9RgF8xFt7wOLrbEFmkHBi0NzXlGhDtO', NULL, '2024-11-23 10:53:25', '2024-11-23 10:53:25', '0'),
-(10, 'shastoon', 'shastoon@label.com', NULL, 'worker', '$2y$10$l2gx6TNjLbeYd6rkpOIcYO.tpickqOSDlgNEG3u5qjuO5aXnUYpsy', NULL, '2024-11-18 13:52:59', '2024-11-18 13:52:59', '0'),
-(12, 'sergey', 'sergey@mail.ru', NULL, 'worker', '$2y$10$3Uaw.H0r3g99Lz8KtpGoVeNtPdRqVZXEaRQ3VmmNCqkr9/5iCq7qO', NULL, '2024-11-23 12:46:19', '2024-11-23 12:46:19', '0'),
-(13, 'chulpan88', 'chulpan@mail.ru', NULL, 'worker', '$2y$10$TMEV/04ET7c37Ji/jMlVpuM0NUgtemqQIfXzNWt1QX0mIuhGbyECG', NULL, '2024-12-09 12:27:34', '2024-12-09 12:27:34', '0'),
-(15, 'tretyakov', 'tretyakov@mail.ru', NULL, 'worker', '$2y$10$8ES631bfQ2.bfPkJpMegqOmzekfiRJWO2CQwSAi1wISD5QK5MxraW', NULL, '2024-12-09 12:32:39', '2024-12-09 12:32:39', '0'),
-(16, 'tretyakova', 'tretyakova@mail.ru', NULL, 'worker', '$2y$10$YwaL18MC/1ZJtmJ7HCCqs.roboC/yCrx0DjATzNfxiJScsD5auqKq', NULL, '2024-12-09 12:36:18', '2024-12-09 12:36:18', '0'),
-(17, 'popoi_42', 'popoi_42', NULL, 'worker', '$2y$10$ztu6ldzkCBGsoRNPJ2eP1.lDscqrIFaSHZGT4MIa8EsHYM.hxeDsK', NULL, '2024-12-09 12:37:02', '2024-12-09 12:37:02', '0'),
-(18, 'bad_boy_loo', 'bad_boy_loo@mail.ru', NULL, 'worker', '$2y$10$StW9jWbppmGx/alxQMowM.nE.EdAkO5gG.DXi6IKkkw5LvgtVTyd6', NULL, '2024-12-09 12:44:23', '2024-12-09 12:44:23', '0'),
-(19, 'jack_harlow', 'jack_harlow@mail.ru', NULL, 'worker', '$2y$10$vT2JoV6qzMzcHKOTS1CdyuMVU9Tv9zhJGNR/9Po4XVXE5HI1oQN8.', NULL, '2024-12-09 13:05:41', '2024-12-09 13:05:41', '0'),
-(20, 'maroccoco', 'maroccoco', NULL, 'worker', '$2y$10$WxrRHBNIKJ/0qZMwYCT/c.Gji27aDxiL9ZwdjHTNvWhh1gL2vtqom', NULL, '2024-12-09 13:33:32', '2024-12-09 13:33:32', '0'),
-(21, 'jimmyjim', 'jimmyjim@mail.ru', NULL, 'worker', '$2y$10$ZktquCExdjUYsuWNSjlkiegGI2a9VT5AAH6KZraRxdqZn16VlX7.e', NULL, '2024-12-09 13:35:41', '2024-12-09 13:35:41', '0');
+(10, 'shastoon', 'sastoon@label.com', NULL, 'worker', '$2y$10$l2gx6TNjLbeYd6rkpOIcYO.tpickqOSDlgNEG3u5qjuO5aXnUYpsy', NULL, '2024-11-18 13:52:59', '2024-11-18 13:52:59', '0'),
+(12, 'sergey', 'sergey@mail.ru', NULL, 'worker', '$2y$10$3Uaw.H0r3g99Lz8KtpGoVeNtPdRqVZXEaRQ3VmmNCqkr9/5iCq7qO', NULL, '2024-11-23 12:46:19', '2024-11-23 12:46:19', '0');
 
 --
 -- Индексы сохранённых таблиц
@@ -282,9 +269,8 @@ ALTER TABLE `projects`
 --
 ALTER TABLE `reports`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `reports_user_id_foreign` (`user_id`),
-  ADD KEY `aspect_id` (`aspect_id`),
-  ADD KEY `aspect_id_2` (`aspect_id`);
+  ADD KEY `reports_project_id_foreign` (`project_id`),
+  ADD KEY `reports_user_id_foreign` (`user_id`);
 
 --
 -- Индексы таблицы `tasks`
@@ -327,7 +313,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT для таблицы `projects`
 --
 ALTER TABLE `projects`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT для таблицы `reports`
@@ -339,13 +325,13 @@ ALTER TABLE `reports`
 -- AUTO_INCREMENT для таблицы `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
@@ -361,7 +347,7 @@ ALTER TABLE `projects`
 -- Ограничения внешнего ключа таблицы `reports`
 --
 ALTER TABLE `reports`
-  ADD CONSTRAINT `reports_project_id_foreign` FOREIGN KEY (`aspect_id`) REFERENCES `projects` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `reports_project_id_foreign` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `reports_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --

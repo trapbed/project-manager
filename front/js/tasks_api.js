@@ -1,40 +1,19 @@
 console.log(sessionStorage);
 let newClass ;
+console.log(sessionStorage.getItem('role'));
 
-
-// if(sessionStorage.getItem('role')=='manager'){
-    $.ajax({
-        type : "GET",
-        url: "http://pm.b/tasks",
-        data:{'role':sessionStorage.getItem('role'), 'id_user':sessionStorage.getItem('id')},
-        success: (response)=>{
-            // console.log(response);
-            render_tasks(response);
-        },
-        error: ()=>{
-            window.sessionStorage.setItem('tasks', 'Нет задач!');
-            console.log('NONO');
-        }
-    })
-// }
-// else if(sessionStorage.getItem('role')=='admin'){
-//     $.ajax({
-//         type : "GET",
-//         url: "http://pm.b/tasks_manager",
-//         data: {'id_manager':sessionStorage.getItem('id')},
-//         success: (response)=>{
-//             // render_tasks(response);
-//             console.log(response);
-//         },
-//         error: ()=>{
-//             window.sessionStorage.setItem('tasks', 'Нет задач!');
-//             console.log('NONO');
-//         }
-//     })
-// }
-
-
-// sessionStorage.getItem('role')=='manager'? "http://pm.b/tasks_manager" :
+$.ajax({
+    type : "GET",
+    url: "http://pm.b/tasks",
+    data:{'role':sessionStorage.getItem('role'), 'id_user':sessionStorage.getItem('id')},
+    success: (response)=>{
+        render_tasks(response);
+    },
+    error: ()=>{
+        window.sessionStorage.setItem('tasks', 'Нет задач!');
+        console.log('NONO');
+    }
+})
 function render_tasks(response){
     console.log(response);
     $(".infoRow").remove();
@@ -45,12 +24,24 @@ function render_tasks(response){
         $("#infoRows").append(div);
     }
     else{
+           
         let tasks = response.tasks; 
-        // console.log(response);
         title = "";
         $.each(tasks, function(key, value){ 
+                last = value.finished_at;
+                if(sessionStorage.getItem('role') == 'manager'){
+                    last = Math.ceil((new Date(value.finished_at)-new Date())/86400000);
+                    if(last<0 && value.status !== 'Завершен'){
+                        last = 'Просрочен';
+                    }
+                    else if(last<0 && value.status == 'Завершен'){
+                        last = value.status;
+                    }
+                    else if(last == 0){
+                        last = 'Последний день!';
+                    }
+                }
                 let tr = document.createElement('tr'); 
-                // console.log(value);
                 tr.classList.add("infoRow");
                 if(sessionStorage.getItem('role') == 'admin'){
                     newClass = 'blur'; 
@@ -66,8 +57,8 @@ function render_tasks(response){
                     <td class="taskD" onclick= "modalTaskDesc(${value.tasks_id})">Подробнее</td>
                     <td class="taskNP">${value.title_project}</td>
                     <td class="taskW"> ${value.worker}</td>
-                    <td class="taskP">${value.priority}</td>
-                    <td class="taskE">${value.finished_at}</td>
+                    <td class="taskP"><img src="../img/priority/${value.priority}.svg" alt="priority ${value.priority}">${value.priority}</td>
+                    <td class="taskE">${last}</td>
                     <td class="taskS">${value.status}</td>
                     <td class="taskA"><div ${title} class="BTWAct ${newClass}">${actions}</div></td>`;
                 $("#tasksTable").append(tr);
@@ -94,10 +85,22 @@ function change_page(page_id){
         success: (response)=>{
             console.log(response);
             $(".infoRow").remove();
-            // window.sessionStorage.setItem('tasks', response);
             let tasks = response.tasks; 
             title = "";
             $.each(tasks, function(key, value){
+                last = value.finished_at;
+                if(sessionStorage.getItem('role') == 'manager'){
+                    last = Math.ceil((new Date(value.finished_at)-new Date())/86400000);
+                    if(last<0 && value.status !== 'Завершен'){
+                        last = 'Просрочен';
+                    }
+                    else if(last<0 && value.status == 'Завершен'){
+                        last = value.status;
+                    }
+                    else if(last == 0){
+                        last = 'Последний день!';
+                    }
+                }
                     if(sessionStorage.getItem('role') == 'admin'){
                         newClass = 'blur'; 
                         title = title=`title = "админу не доступны инструменты управления!"`;
@@ -114,11 +117,10 @@ function change_page(page_id){
                     <td class="taskD" onclick= "modalTaskDesc(${value.tasks_id})">Подробнее</td>
                     <td class="taskNP">${value.title_project}</td>
                     <td class="taskW"> ${value.worker}</td>
-                    <td class="taskP">${value.priority}</td>
-                    <td class="taskE">${value.finished_at}</td>
+                    <td class="taskP"><img src="../img/priority/${value.priority}.svg" alt="priority ${value.priority}">${value.priority}</td>
+                    <td class="taskE">${last}</td>
                     <td class="taskS">${value.status}</td>
                     <td class="taskA"><div ${title} class="BTWAct ${newClass}">${actions}</div></td>`;
-                    // console.log(key);
                     $("#tasksTable").append(tr);
             });
             if(response.count>9){
@@ -128,7 +130,6 @@ function change_page(page_id){
                 console.log(pages);
                 console.log(paginate_d);
                     for(let i=1; i<=pages; i++){
-                        // console.log(i);
                         paginate.innerHTML += `<div class="btn_paginate" onclick="change_page(${i})">${i}</div>`;
                     }
                 $("#session").append(paginate);

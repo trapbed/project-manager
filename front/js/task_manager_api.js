@@ -101,7 +101,7 @@ function choose_proj_to_task(event){
         }
     })
 }
-
+// !!!
 function change_min_end(){
     change = document.querySelectorAll("input")[4].value;
     plus_day = new Date(change);
