@@ -15,11 +15,12 @@ return new class extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->enum('type', ['project', 'worker']);
+            $table->enum('aspect', ['project', 'worker']);
             $table->integer('aspect_id');
             $table->date('date_report');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->json('statistics');
+            $table->enum('interval', ['year', 'month', 'week']);
             $table->timestamps();
         });
     }

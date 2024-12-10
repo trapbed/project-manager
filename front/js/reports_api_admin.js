@@ -21,6 +21,40 @@ function first_step_create_project(){
     $(".content").append(div);
 }
 
+
+
+function go_back(event, aspect){
+    event.preventDefault();
+    $("#add_to_squad_modal").remove();
+    aspects = {'worker':'Исполнитель','project':'Проект'};
+    options = ``;
+    $.each(aspects, function(key, value){ 
+        if(aspect == key){
+            options += `<option selected value="${key}">${value}</option>`;
+        }
+        else{
+            options += `<option value="${key}">${value}</option>`;
+        }
+    })
+    let div = document.createElement('div');
+    div.setAttribute('id','add_to_squad_modal');
+    div.innerHTML = `
+            <div id='title_close'>
+                <span>Создание отчета</span><img onclick='close_modal()' src='../img/x.svg' alt='close'></div>
+                <form id='form_update_squad' onsubmit='second_step_create_report(event)'>
+                    <label for='user'>Параметр:
+                        <select required name='aspect'>
+                            ${options}
+                        </select>
+                    </label>
+                    <input type='submit' value='Создать' id='submit_update_squad'>
+                </form>
+            </div>
+    `;
+    $(".content").append(div);
+}
+
+
 function second_step_create_report(event){
     event.preventDefault();
     aspect = $("#form_update_squad").serialize().replace('aspect=','');
@@ -93,36 +127,6 @@ function second_step_create_report(event){
     })
 }
 
-function go_back(event, aspect){
-    event.preventDefault();
-    $("#add_to_squad_modal").remove();
-    aspects = {'worker':'Исполнитель','project':'Проект'};
-    options = ``;
-    $.each(aspects, function(key, value){ 
-        if(aspect == key){
-            options += `<option selected value="${key}">${value}</option>`;
-        }
-        else{
-            options += `<option value="${key}">${value}</option>`;
-        }
-    })
-    let div = document.createElement('div');
-    div.setAttribute('id','add_to_squad_modal');
-    div.innerHTML = `
-            <div id='title_close'>
-                <span>Создание отчета</span><img onclick='close_modal()' src='../img/x.svg' alt='close'></div>
-                <form id='form_update_squad' onsubmit='second_step_create_report(event)'>
-                    <label for='user'>Параметр:
-                        <select required name='aspect'>
-                            ${options}
-                        </select>
-                    </label>
-                    <input type='submit' value='Создать' id='submit_update_squad'>
-                </form>
-            </div>
-    `;
-    $(".content").append(div);
-}
 
 function get_data_to_create_report(event){
     event.preventDefault();
@@ -131,32 +135,44 @@ function get_data_to_create_report(event){
         data:$("#form_update_squad").serialize(),
         url:"http://pm.b/get_data_to_create_report",
         success:(response)=>{
-            create_report(response);
+            console.log(response.report);
+            report = response.report;
+            future_json= {};
+            count = 0;
+            report.forEach((key, value)=> {
+                // console.log(typeof e);
+                // console.log(Object.values(e));
+                // console.log(value);
+                // console.log(key);
+                // console.log(value);
+                future_json[`${count}`] = Object.values(key);
+                count++;
+            });
+        obj = {};
+        // future_json.forEach((item, index)=>{
+        //     obj[`key${index+1}`] = item;
+        // })
+            // future_json= {};
+            // $.each(report, function(key, value){
+            //     console.log( key);
+            //     console.log( Object.values(value));
+            //     future_json[key] = Object.values(value)
+            //     // console.log(Object.values(e));
+            // })
+            console.log(response);
+            console.log(future_json);
+            create_report(response, future_json);
         },
         error:()=>{
             alert('Не удалось собрать данные!');
         }
     })
 }
-function create_report(response){
-    console.log(response.report);
-    array_with_arrays = [];
-    $.each(response.report, function(key, value){
-        array2 = [];
-        count = 1;
-        $.each(value, function(key1, value1){
-            // array2[key1] = value1;
-            array2.push(value1);
-            // count++;
-        })
-        array_with_arrays[key] = array2;
-        // array_with_arrays.push(array2);
-    })
-    console.log(array_with_arrays);
-    console.log(array_with_arrays.length);
+function create_report(response, future_json){
+    
     $.ajax({
         type:"POST", 
-        data:{'report':JSON.stringify(array_with_arrays), 'aspect': response.aspect,'id':response.id,'id_creator': sessionStorage.getItem('id')},
+        data:{'report':future_json, 'aspect': response.aspect,'id':response.id,'id_creator': sessionStorage.getItem('id'), 'interval':response.interval},
         url:"http://pm.b/create_report",
         success:(response)=>{
             // console.log(array_with_arrays);

@@ -1,15 +1,37 @@
+if(!sessionStorage.getItem('filter')){
+    sessionStorage.setItem('filter', '');
+}
+if(!sessionStorage.getItem('page_id')){
+    sessionStorage.setItem('page_id', '1');
+}
 function tasks_with_filter (){
-//    console.log();
-   console.log(sessionStorage.getItem('page_id'))
    sessionStorage.setItem('filter',$("#priority_filter").val());
+  
+   $.ajax({
+    type:"POST",
+    data:{
+        'filter': sessionStorage.getItem('filter'),
+        'id_worker':sessionStorage.getItem('id'),
+        'page_id':'1'
+    },
+    url:"http://pm.b/tasks_worker",
+    success:(response)=>{
+        console.log(response);
+        render_tasks(response);
+        paginate_tasks(response);
+    },
+    error:()=>{
+        alert('Не удалось получить задачи с фильтром!');
+    }
+   })
 }
 
-console.log(sessionStorage.getItem('filter'));
 $.ajax({
     type:"POST",
     data: {"id_worker": sessionStorage.getItem('id')},
     url: "http://pm.b/tasks_worker",
     success:(response)=>{
+        console.log(response);
         if(sessionStorage.getItem('page_id') && sessionStorage.getItem('page_id') != 1 && sessionStorage.getItem('page_id') != 'null'){
             change_page(sessionStorage.getItem('page_id'));
         }
@@ -24,7 +46,6 @@ $.ajax({
 })
 
 let newClass;
-console.log(sessionStorage.getItem('page_id'));
 
 function render_tasks(response){
     $(".infoRow").remove();
@@ -97,7 +118,10 @@ function change_page(page_id){
     sessionStorage.setItem('page_id',page_id);
     $.ajax({
         type : "POST",
-        data: {'page_id':page_id, 'role':sessionStorage.getItem('role'), 'id_worker':sessionStorage.getItem('id')}, 
+        data: { 'page_id':page_id,
+                'filter':sessionStorage.getItem('filter'),
+                'role':sessionStorage.getItem('role'), 
+                'id_worker':sessionStorage.getItem('id')}, 
         url: "http://pm.b/page_tasks",
         success: (response)=>{
             console.log(response);
@@ -113,7 +137,10 @@ function change_page(page_id){
 function change_status(id_task, status){
     $.ajax({
         type: "POST",
-        data: {'id_task':id_task, 'status':status, "id_worker": sessionStorage.getItem('id'), 'page':sessionStorage.getItem('page_id')},
+        data: { 'id_task':id_task, 'status':status,
+                 "id_worker": sessionStorage.getItem('id'), 
+                 'page':sessionStorage.getItem('page_id'),
+                'filter':sessionStorage.getItem('filter')},
         url: "http://pm.b/change_status",
         success:(response)=>{
             console.log(response);

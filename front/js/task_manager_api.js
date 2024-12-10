@@ -1,3 +1,5 @@
+
+
 function create_task_modal(){
     $.ajax({
         type: "POST", 
@@ -50,7 +52,7 @@ function choose_proj_to_task(event){
             info = response.info[0];
             div_form = document.createElement(`div`);
             div_form.setAttribute('id','add_to_squad_modal');
-            console.log(response);
+            // console.log(response);
             selects = ``;
             $.each(response.arr, function(key, value){
                 selects +=`<option value='${key}'>${value}</option>`;
@@ -120,7 +122,7 @@ function create_task(event){
         data: $("#form_create_task_end").serialize(),
         url: "http://pm.b/save_create_task",
         success:(response)=>{
-            console.log(response);
+            // console.log(response);
             if(response.res == true){
                 close_modal();
                 alert(response.mess);
@@ -139,7 +141,7 @@ function edit_task(id_task){
         data:{"id_task": id_task},
         url:"http://pm.b/get_info_to_edit_task",
         success:(response)=>{
-            console.log(response);
+            // console.log(response);
             task = response.info;
             dates = response.dates;
             selects = ``;
@@ -150,6 +152,9 @@ function edit_task(id_task){
                     <div id='title_close'>
                     <span>Изменение задачи: </span><img onclick='close_modal()' src='../img/x.svg' alt='close'></div>
                         <form id='form_update_task_end' onsubmit='update_task(event)'>
+
+                            <input class='display_none' type='text' name='page_id' value='${sessionStorage.getItem('page_id')}'>
+                            <input class='display_none' type='text' name='filter' value='${sessionStorage.getItem('filter')}'>
                             <input class='display_none' type='text' name='id_task' value='${task.id}'>
                             <div>   
                                 <label for='user'>Заголовок:</label>
@@ -188,7 +193,11 @@ function update_task(event){
         data: form_data,
         url: "http://pm.b/update_task",
         success:(response)=>{
+            console.log('88');
+            console.log(response);
             if(response.res == true){
+                console.log('1234567890');
+                console.log(response);
                 close_modal();                
                 render_tasks(response);
             }
@@ -202,7 +211,7 @@ function update_task(event){
 
 function change_min_end_in_update(){
     change = document.querySelectorAll("input")[4].value;
-    console.log(change);
+    // console.log(change);
     plus_day = new Date(change);
     plus_day.setDate(plus_day.getDate() + 1);
     plus_day = plus_day.getFullYear()+"-"+(plus_day.getMonth()+1)+"-"+plus_day.getDate();
@@ -214,10 +223,14 @@ function delete_task(id_task){
     if(ask_delete){
         $.ajax({
             type: "POST",
-            data: {"id_task": id_task, 'id_manager': sessionStorage.getItem('id')},
+            data: { "id_task": id_task, 
+                    'id_manager': sessionStorage.getItem('id'),
+                    'filter': sessionStorage.getItem('filter'),
+                    'page_id':sessionStorage.getItem('page_id')},
+                   
             url: "http://pm.b/delete_task",
             success:(response)=>{
-                console.log(response);
+                // console.log(response);
                 if(response.res == true){
                     let tasks = response.tasks;
                     render_tasks(response);
@@ -238,52 +251,29 @@ function close_modal(){
     $("#add_to_squad_modal").remove();
 }
 
-// function render_tasks(response){
-//     console.log(response);
-    
-//     $(".infoRow").remove();
-//     $(".btn_paginate").remove();
-//     if(){
-        
-//     }
-//     else{
-
-//     }
-//     let tasks = response.tasks; 
-//         // console.log(response);
-//     title = "";
-//     $.each(tasks, function(key, value){ 
-//             let tr = document.createElement('tr'); 
-//             // console.log(value);
-//             tr.classList.add("infoRow");
-//             if(sessionStorage.getItem('role') == 'admin'){
-//                 newClass = 'blur'; 
-//                 title=`title = "админу не доступны инструменты управления!"`;
-//             }
-//             actions =  `<img onclick="edit_task(${value.tasks_id})" src="../img/edit.png">`;
-//             console.log( value.status);
-//             if(value.status == 'Назначена'){
-//                 actions =  `<img onclick="edit_task(${value.tasks_id})" src="../img/edit.png"><img onclick="delete_task(${value.tasks_id})" src="../img/delete.png">`;
-//             }
-//             tr.innerHTML = `
-//                 <td class="taskN">${value.title_task}</td>
-//                 <td class="taskD" onclick= "modalTaskDesc(${value.tasks_id})">Подробнее</td>
-//                 <td class="taskNP">${value.title_project}</td>
-//                 <td class="taskW"> ${value.worker}</td>
-//                 <td class="taskP">${value.priority}</td>
-//                 <td class="taskE">${value.finished_at}</td>
-//                 <td class="taskS">${value.status}</td>
-//                 <td class="taskA"><div ${title} class="BTWAct ${newClass}">${actions}</div></td>`;
-//             $("#tasksTable").append(tr);
-//     });
-
-//     if(response.count>10){
-//         let paginate_d = $("#paginate");
-//         let pages = Math.ceil(response.count/10);
-//             for(let i=1; i<=pages; i++){
-//                 // console.log(i);
-//                 paginate.innerHTML += `<div class="btn_paginate" onclick="change_page(${i})">${i}</div>`;
-//             }
-//         $("#session").append(paginate);
-//     }
-// }
+function tasks_with_filter (){
+    sessionStorage.setItem('filter',$("#priority_filter").val());
+    console.log(sessionStorage.getItem('page_id'));
+    console.log(sessionStorage.getItem('filter'));
+ //    page_id = sessionStorage.getItem('page_id');
+   
+    $.ajax({
+     type:"GET",
+     data:{
+         'filter': sessionStorage.getItem('filter'),
+         'id_user':sessionStorage.getItem('id'),
+         'role':sessionStorage.getItem('role'),
+         'page_id':'1'
+     },
+     url:"http://pm.b/tasks",
+     success:(response)=>{
+         console.log(response);
+         render_tasks(response);
+         sessionStorage.removeItem('page_id');
+     },
+     error:()=>{
+         alert('Не удалось получить задачи с фильтром!');
+     }
+    })
+ }
+ 

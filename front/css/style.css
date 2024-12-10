@@ -1090,5 +1090,7 @@ select, input{
 .back_modal{
     z-index: 2;
 }
-
-
+.dummy_img{
+    width: 1.6vmax;
+    height: 1.6vmax;
+}

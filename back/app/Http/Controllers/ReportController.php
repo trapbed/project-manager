@@ -47,14 +47,40 @@ class ReportController extends Controller
         $abc = 'c';
         if($aspect == 'worker'){
             $abc = 'a';
-            $report =  DB::table('tasks')->select('title','status','started_at', 'finished_at')->where('user_id', '=',$id)->where('started_at', '>', $x_ago)->where('status', '!=', 'Назначена')->where('started_at', '<', $today) ->get();
-            
+            $report =  DB::table('tasks')
+            ->select('title','status','started_at', 'finished_at')
+            ->where('user_id', '=',$id)
+            ->where('started_at', '>', $x_ago)
+            ->whereBetween('started_at', [$x_ago, $today])
+            ->get()->toArray();
+            $new_report = [];
+            $count = 0;
+            foreach($report as $r=>$k){
+                // array_push($new_report, json_decode(json_encode($k), true));
+                // $new_report[] =  $k;
+                $new_report[$count] = $k;
+                $count++;
+            }
         }
         else if($aspect == 'project'){
-            $abc = 'b';
-            $report = DB::table('tasks')->select('title','status','started_at','finished_at')->where('project_id', '=',$id)->where('started_at', '>', $x_ago)->where('status', '!=', 'Назначена')->where('started_at', '<', $today) ->get();
-            
+            $abc = 'a';
+            $report =  DB::table('tasks')
+            ->select('title','status','started_at', 'finished_at')
+            ->where('project_id', '=',$id)
+            ->where('status', '!=', 'Назначена')
+            ->whereBetween('started_at', [$x_ago, $today])
+            ->get()->toArray();
+            $new_report = [];
+            $count = 0;
+            foreach($report as $r=>$k){
+                // array_push($new_report, json_decode(json_encode($k), true));
+                // $new_report[] =  $k;
+                $new_report[$count] = $k;
+                $count++;
+            }            
         }
+        return response()->json(['aspect'=>$aspect, 'id'=>$id, 'n_report'=>$new_report, 'report'=>$report, 'interval'=>$request->time]);
+
         // foreach($report as $key=>$value){
         //     $array[$key] .=  $value->title ;
         //     // $array = $array_titles_field[$count_fields];
@@ -84,7 +110,9 @@ class ReportController extends Controller
         // return response()->json(['form_data'=>$request, 'report'=>$report]);
         // return response()->json($request);
         // return response()->json(['mess'=>$mess,'res'=>$res]);
-        return response()->json(['aspect'=>$aspect, 'id'=>$id, 'report'=>$report]);
+       
+        // return response()->json(['aspect'=>$aspect, 'id'=>$id, 'report'=>$new_report]);
+       
         // return response()->json([$array]);
 
     }
@@ -92,31 +120,37 @@ class ReportController extends Controller
         // $report = substr($request->report, 0, -1);
         // $report = mb_substr($report, 1);
         // $report = "{".$report."}";
-        $report = json_encode($request->report, JSON_UNESCAPED_UNICODE);
+        // $report = json_encode($request->report, JSON_UNESCAPED_UNICODE);
         $res = false;
         $aspect = $request->aspect;
         $id = $request->id;
+        $interval = $request->interval;
         $id_creator = $request->id_creator;
-        // if(count($report) == 0 ){
-        //     $mess = 'Нет данных для создания отчета!';
-        // }
-        // else{
-        //     $create_admin_report = Report::create([
-        //         'type'=>$aspect,
-        //         'aspect_id'=>$id,
-        //         'date_report'=>date('Y-m-d'),
-        //         'user_id'=>$id_creator
-        //     ]);
-        //     if($create_admin_report){
-        //         $mess = 'Успешное создание отчета!';
-        //         $res = true;
-        //     }
-        //     else{
-        //         $mess = 'Не удалось создать отчет!';
-        //     }
-        // }
-        // return response()->json(json_encode($request->report, JSON_UNESCAPED_UNICODE));
-        return response()->json($report);
+        if(count($request->report) == 0 ){
+            $mess = 'Нет данных для создания отчета!';
+        }
+        else{
+                $create_admin_report = Report::create([
+                    'aspect'=>$aspect,
+                    'aspect_id'=>$id,
+                    'date_report'=>date('Y-m-d'),
+                    'user_id'=>$id_creator,
+                    'statistics'=>json_encode((object) $request->report, JSON_UNESCAPED_UNICODE),
+                    'interval'=>$interval
+                     ]);
+                if($create_admin_report){
+                    $mess = 'Успешное создание отчета!';
+                    $res = true;
+                }
+                else{
+                    $mess = 'Не удалось создать отчет!';
+                }
+            
+            
+        }
+        return response()->json(['mess'=>$mess, 'res'=>$res]);
+        // return response()->json(json_encode((object) $request->report, JSON_UNESCAPED_UNICODE));
+        // return response()->json($request);
     }
     
 }

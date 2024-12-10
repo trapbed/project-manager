@@ -12,7 +12,7 @@
       <div class="create"><img src="/img/group 189.svg" alt=""></div>
    </div>
       <form >
-         <select onchange="tasks_with_filter()" name="" id="">
+         <select onchange="tasks_with_filter()" name="" id="priority_filter">
             <option value="">Приоритет</option>
             <option value="Низкий">Низкий</option>
             <option value="Средний">Средний</option>
