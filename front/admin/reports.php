@@ -18,7 +18,7 @@
                 <thead>
                     <tr>
                         <td class="report_aspect">Аспект</td>
-                        <td class="report_id">ID</td>
+                        <td class="report_id">ID создателя</td>
                         <td class="report_date">Дата создания</td>
                         <td class="report_interval">В промежутке</td>
                         <td class="report_statistics">Статистика</td>

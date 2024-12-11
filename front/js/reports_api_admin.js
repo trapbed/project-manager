@@ -110,19 +110,13 @@ function second_step_create_report(event){
                 console.log(value.name);
                 select_data += `<option value='${value.id}'>${value.name}</option>`;
             })
-            // if(sessionStorage.getItem('role') ==''){
-
-            // }
-            // else{
-
-            // }
-            // console.log(sessionStorage);
-            $("#add_to_squad_modal").remove();
-            let div = document.createElement('div');
-            div.setAttribute('id','add_to_squad_modal');
-            div.innerHTML = `
-                <div id='title_close'>
-                    <span>Создание отчета по ${title}</span><img onclick='close_modal()' src='../img/x.svg' alt='close'></div>
+            if(sessionStorage.getItem('role') !='worker'){
+                go_back_btn = ``;
+                if(sessionStorage.getItem('role') == 'admin'){
+                    go_back_btn = `<button onclick="go_back(event, '${aspect}')">Назад</button>`;
+                }
+                from_html = `
+                <span>Создание отчета по ${title}</span><img onclick='close_modal()' src='../img/x.svg' alt='close'></div>
                     <form id='form_update_squad' onsubmit='get_data_to_create_report(event)'>
                         <input type="hidden" name="id_creator" value="${sessionStorage.getItem('id')}">
                         <input type='hidden' value="${aspect}" name="aspect">
@@ -141,11 +135,44 @@ function second_step_create_report(event){
                             </select>
                         </label>
                         <div id='btns_create_project'>
-                            <button onclick="go_back(event, '${aspect}')">Назад</button>
+                            ${go_back_btn}
                             <input type='submit' value='Создать' id='submit_update_squad'>
                         </div>
                         
                     </form>
+                `;
+            }
+            else{
+                from_html = `
+                <span>Создание отчета</span><img onclick='close_modal()' src='../img/x.svg' alt='close'></div>
+                    <form id='form_update_squad' onsubmit='get_data_to_create_report(event)'>
+                        <input type="hidden" name="id_creator" value="${sessionStorage.getItem('id')}">
+                        <input type='hidden' value="worker" name="aspect">
+                        
+                        <input type="hidden" value = "${sessionStorage.getItem('id')}" name="data">
+                        <label for='time'>Сроки:
+                            <select name='time'>
+                                <option value="">Выберите промежуток времени</option>
+                                <option value="year">Год</option>
+                                <option value="month">Месяц</option>
+                                <option value="week">Неделя</option>
+                            </select>
+                        </label>
+                        <div id='btns_create_project'>
+                            
+                            <input type='submit' value='Создать' id='submit_update_squad'>
+                        </div>
+                        
+                    </form>
+                `;
+            }
+            // console.log(sessionStorage);
+            $("#add_to_squad_modal").remove();
+            let div = document.createElement('div');
+            div.setAttribute('id','add_to_squad_modal');
+            div.innerHTML = `
+                <div id='title_close'>
+                    ${from_html}
                 </div>
             `;
             $(".content").append(div);

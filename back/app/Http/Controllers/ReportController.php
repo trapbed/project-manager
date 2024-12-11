@@ -165,6 +165,13 @@ class ReportController extends Controller
                                     // }
                                     $reports = $reports->get();
                                 }
+                                else if($role == 'worker'){
+                                    $reports = DB::table('reports')->select('id','aspect', 'aspect_id', 'date_report', 'user_id', 'statistics', 'interval')->where('user_id', '=',$request->id_creator);
+                                    // if($aspect){
+                                    //     $reports = $reports->where('aspect','=', $aspect);
+                                    // }
+                                    $reports = $reports->get();
+                                }
                 }
                 else{
                     $mess = 'Не удалось создать отчет!';
@@ -191,6 +198,13 @@ class ReportController extends Controller
             $reports = $reports->get();
         }
         else if($role == 'manager'){
+            $reports = DB::table('reports')->select('id','aspect', 'aspect_id', 'date_report', 'user_id', 'statistics', 'interval')->where('user_id', '=',$request->id_user);
+            // if($aspect){
+            //     $reports = $reports->where('aspect','=', $aspect);
+            // }
+            $reports = $reports->get();
+        }
+        else if($role == 'worker'){
             $reports = DB::table('reports')->select('id','aspect', 'aspect_id', 'date_report', 'user_id', 'statistics', 'interval')->where('user_id', '=',$request->id_user);
             // if($aspect){
             //     $reports = $reports->where('aspect','=', $aspect);
