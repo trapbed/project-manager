@@ -12,7 +12,9 @@
 <body>
 <div class="background_blur" id="task_desc_more_info">
     <script>
-        // console.log(sessionStorage);
+        if(window.location.pathname != '/admin/report_more.php'){
+            sessionStorage.removeItem('one_report');
+        }
         let role = sessionStorage.getItem('role');
         // console.log(sessionStorage);
         if(role != 'admin'){

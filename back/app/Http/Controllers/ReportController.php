@@ -11,11 +11,18 @@ class ReportController extends Controller
 {
     public function get_data_for_report(Request $request){
         $aspect = $request->aspect;
+        $role = $request->role;
+        $id = $request->id;
         if($aspect == 'worker'){
             $data = DB::table('users')->select('id', 'name')->where('role','=', 'worker')->get();
         }
         else if($aspect == 'project'){
-            $data = DB::table('projects')->select('id', 'title as name')->get();
+            if($role == 'manager'){
+                $data = DB::table('projects')->where('user_id','=', $request->id)->select('id', 'title as name')->get();
+            }
+            else if($role == 'admin'){
+                $data = DB::table('projects')->select('id', 'title as name')->get();
+            }
         }
         return response()->json($data);
     }
@@ -126,7 +133,7 @@ class ReportController extends Controller
         $id = $request->id;
         $interval = $request->interval;
         $id_creator = $request->id_creator;
-        if(count($request->report) == 0 ){
+        if( $request->report == null ){
             $mess = 'Нет данных для создания отчета!';
         }
         else{
@@ -141,6 +148,23 @@ class ReportController extends Controller
                 if($create_admin_report){
                     $mess = 'Успешное создание отчета!';
                     $res = true;
+                                $role = $request->role;
+                                $reports = false;
+                                $aspect = $request->aspect != '' && $request->aspect != null ? $request->aspect : false;
+                                if($role == 'admin'){
+                                    $reports = DB::table('reports')->select('id','aspect', 'aspect_id', 'date_report', 'user_id', 'statistics', 'interval');
+                                    if($aspect){
+                                        $reports = $reports->where('aspect','=', $aspect);
+                                    }
+                                    $reports = $reports->get();
+                                }
+                                else if($role == 'manager'){
+                                    $reports = DB::table('reports')->select('id','aspect', 'aspect_id', 'date_report', 'user_id', 'statistics', 'interval')->where('user_id', '=',$request->id_creator);
+                                    // if($aspect){
+                                    //     $reports = $reports->where('aspect','=', $aspect);
+                                    // }
+                                    $reports = $reports->get();
+                                }
                 }
                 else{
                     $mess = 'Не удалось создать отчет!';
@@ -148,13 +172,44 @@ class ReportController extends Controller
             
             
         }
-        return response()->json(['mess'=>$mess, 'res'=>$res]);
+        return response()->json([
+            'mess'=>$mess, 'res'=>$res, 'report'=>$reports, 
+            'count'=>$request->report]);
         // return response()->json(json_encode((object) $request->report, JSON_UNESCAPED_UNICODE));
         // return response()->json($request);
     }
 
     public function get_reports(Request $request){
-        return response()->json($request);
+        $role = $request->role;
+        $reports = false;
+        $aspect = $request->aspect != '' && $request->aspect != null ? $request->aspect : false;
+        if($role == 'admin'){
+            $reports = DB::table('reports')->select('id','aspect', 'aspect_id', 'date_report', 'user_id', 'statistics', 'interval');
+            if($aspect){
+                $reports = $reports->where('aspect','=', $aspect);
+            }
+            $reports = $reports->get();
+        }
+        else if($role == 'manager'){
+            $reports = DB::table('reports')->select('id','aspect', 'aspect_id', 'date_report', 'user_id', 'statistics', 'interval')->where('user_id', '=',$request->id_user);
+            // if($aspect){
+            //     $reports = $reports->where('aspect','=', $aspect);
+            // }
+            $reports = $reports->get();
+        }
+        return response()->json(['report'=> $reports]);
+    }
+
+    public function get_info_one_rep(Request $request){
+        $report = DB::table('reports')->select('id','aspect', 'aspect_id', 'date_report', 'user_id', 'statistics', 'interval')->where('id', '=', $request->id)->get()[0];
+        $creator = DB::table('users')->select('name')->where('id', '=', $report->user_id)->get()[0]->name;
+        $title_or_name = '';
+        if($report->aspect == 'worker'){
+            $title_or_name = DB::table('users')->select('name')->where('id', '=', $report->aspect_id)->get()[0]->name;
+        }else if($report->aspect == 'project'){
+            $title_or_name = DB::table('projects')->select('title')->where('id', '=', $report->aspect_id)->get()[0]->title;
+        }
+        return response()->json([$creator, $report->date_report, $report->aspect, $report->statistics, $title_or_name, $report->interval]);
     }
     
 }

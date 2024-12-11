@@ -1,14 +1,29 @@
-// $.ajax({
-//     type:"POST",
-//     data:{'id':sessionStorage.getItem('id'), 'role':sessionStorage.getItem('role')},
-//     url:"http://pm.b/get_reports",
-//     success:(response)=>{
+$.ajax({
+    type:"POST",
+    data:{'id_user':sessionStorage.getItem('id'), 'role':sessionStorage.getItem('role')},
+    url:"http://pm.b/get_reports",
+    success:(response)=>{
+        console.log(response.report);
+        render_report(response);
+        
+    },
+    error:()=>{
 
-//     },
-//     error:()=>{
-
-//     }
-// })
+    }
+})
+// $.each(value, function(rey, row){
+            //     console.log(row);
+            //     tr_report = document.createElement(`tr`);
+            //     tr_report.innerHTML = `
+            //         <td class="report_aspect">${row}</td>
+            //         <td class="report_id">${row}</td>
+            //         <td class="report_date">${row}</td>
+            //         <td class="report_interval">${row}</td>
+            //         <td class="report_statistics">${row}</td>
+            //     `;
+            //     $("#report_table_body").append(tr_report);
+            // })
+            
 function first_step_create_project(){
     let div = document.createElement('div');
     div.setAttribute('id','background_blur');
@@ -63,10 +78,18 @@ function go_back(event, aspect){
 }
 function second_step_create_report(event){
     event.preventDefault();
-    aspect = $("#form_update_squad").serialize().replace('aspect=','');
+    if(sessionStorage.getItem('role') == 'manager'){
+        aspect = 'project';
+    }
+    else if(sessionStorage.getItem('role') == 'admin'){
+        aspect = $("#form_update_squad").serialize().replace('aspect=','');
+    }
+    else if (sessionStorage.getItem('role') == 'worker'){
+        aspect = 'worker';
+    }
     $.ajax({
         type:"POST", 
-        data:{'aspect':aspect},
+        data:{'aspect':aspect, 'role':sessionStorage.getItem('role'), 'id':sessionStorage.getItem('id')},
         url: "http://pm.b/get_data_for_report",
         success:(response)=>{
             console.log(response);
@@ -164,8 +187,12 @@ function get_data_to_create_report(event){
             //     // console.log(Object.values(e));
             // })
             console.log(response);
-            console.log(future_json);
-            create_report(response, future_json);
+            console.log();
+            if(Object.keys(future_json).length == 0){
+                alert('Нет данных для создания отчета!');
+            }else{
+                create_report(response, future_json);
+            }
         },
         error:()=>{
             alert('Не удалось собрать данные!');
@@ -176,10 +203,16 @@ function create_report(response, future_json){
     
     $.ajax({
         type:"POST", 
-        data:{'report':future_json, 'aspect': response.aspect,'id':response.id,'id_creator': sessionStorage.getItem('id'), 'interval':response.interval},
+        data:{'report':future_json, 'aspect': response.aspect,'id':response.id,'id_creator': sessionStorage.getItem('id'), 'interval':response.interval, 'role':sessionStorage.getItem('role')},
         url:"http://pm.b/create_report",
         success:(response)=>{
-            // console.log(array_with_arrays);
+            console.log(response);
+            if(response.res == true){
+                close_modal();
+                render_report(response);
+            }
+            alert(response.mess);
+
             console.log(response);
         },
         error:()=>{
@@ -199,10 +232,48 @@ function change_page_reports(aspect){
         data:{'role':sessionStorage.getItem('role'), 'id_user':sessionStorage.getItem('id'), 'aspect':aspect},
         url:"http://pm.b/get_reports",
         success:(response)=>{
-            console.log(response);
+            render_report(response);
         },
         error:()=>{
             alert('Не удалось загрузить отчеты!');
         }
+    })
+}
+
+function render_report(response){
+    console.log(response.report);
+    $(".report_row").remove();
+    report = response.report;
+        $.each(report, function(key, value){
+            console.log(key);
+            console.log(value);
+            tr_report = document.createElement(`tr`);
+            tr_report.classList.add(`report_row`);
+            tr_report.innerHTML = `
+                <td class="report_aspect_b">${value.aspect}</td>
+                <td class="report_id_b">${value.aspect_id}</td>
+                <td class="report_date_b">${value.date_report}</td>
+                <td class="report_interval_b">${value.interval}</td>
+                <td class="report_statistics_b" onclick="report_more(${value.id})">Смотреть</td>
+            `;
+            $("#table_report").append(tr_report);
+            
+        })
+}
+
+function report_more(id){
+    $.ajax({
+        type:"POST",
+        data:{'id':id},
+        url : "http://pm.b/get_info_one_rep",
+        success:(response)=>{
+            console.log(response);
+            location.href = 'report_more.php';
+            localStorage.setItem('one_report', JSON.stringify(response));
+        },
+        error:()=>{
+
+        }
+
     })
 }

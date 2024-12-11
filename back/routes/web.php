@@ -73,6 +73,7 @@ Route::post('/get_data_for_report', [ReportController::class, 'get_data_for_repo
 Route::post('/get_data_to_create_report', [ReportController::class, 'get_data_to_create_report']);
 Route::post('/create_report', [ReportController::class, 'create_report']);
 Route::post('/get_reports', [ReportController::class, 'get_reports']);
+Route::post('/get_info_one_rep', [ReportController::class, 'get_info_one_rep']);
 // Route::group(['middleware'=>['auth']], function(){
 //     Route::group(['middleware'=>['admin']], function(){
 //     });

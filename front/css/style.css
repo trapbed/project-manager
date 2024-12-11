@@ -1098,6 +1098,7 @@ select, input{
 #main_block_reports{
     display: flex;
     flex-direction: column;
+    gap: 1.5vmax;
     /* background-color: red; */
     width: 88vmax;
     height: 37vmax;
@@ -1106,10 +1107,10 @@ select, input{
     width: 87vmax;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    gap: 2vmax;    
 }
 #reports_for_btns>button{
-    width: 47%;
+    padding:0 1vmax ;
     height: 3vmax;
     outline: transparent;
     background-color: transparent;
@@ -1121,3 +1122,84 @@ select, input{
     background-color: #769FCB;
     color: white;
 }
+#content_reports{
+    width: 100%;
+    height: 32vmax;
+    /* background-color: palegoldenrod; */
+}
+#table_report{
+    display: inline-block;
+    width: 88vmax;
+}
+#table_report>tr{
+    font-family: 'inter';
+    font-size: 1vmax;
+    height: 3vmax;
+    /* width: 88vmax; */
+}
+/* #table_report>thead>tr{
+    width: 86vmax;
+} */
+#table_report{
+    display: block;
+    width: 87vmax;
+    height: 30vmax;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+#table_report>thead>tr{
+    font-size: 1vmax;
+    font-family: 'inter';
+    height: 2vmax;
+}
+#report_table_body>tr{
+    font-size: 1vmax;
+    font-family: 'inter';
+    height: 2vmax;
+}
+.report_aspect{
+    width: 18.2vmax;
+}
+.report_id{
+    width: 8vmax;
+}
+.report_date{
+    width: 20vmax;
+}
+.report_interval{
+    width: 20vmax;
+}
+.report_statistics{
+    width: 20vmax;
+}
+
+.report_aspect_b{
+    width: 18.2vmax;
+}
+.report_id_b{
+    width: 8.05vmax;
+}
+.report_date_b{
+    width: 20vmax;
+}
+.report_interval_b{
+    width: 20vmax;
+}
+.report_statistics_b{
+    width: 19vmax;
+    cursor: pointer;
+}
+#one_report_block{
+    display: flex;
+    flex-direction: column;
+    gap: 0.2vmax;
+    font-size: 1vmax;
+    width: 88vmax;
+    height: 42vmax;
+}
+.backToReports{
+    font-size: 1vmax;
+    color: #769FCB;
+    align-self: flex-start;
+}
+

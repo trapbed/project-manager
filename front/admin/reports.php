@@ -12,8 +12,21 @@
    </div>
    
    <div id="main_block_reports">
-        <div id="reports_for_btns"><button onclick="change_page_reports('worker')">По пользователям</button><button onclick="change_page_reports('project')">По проектам</button></div>
-        <div id="content_reports"></div>
+        <div id="reports_for_btns"><button onclick="change_page_reports()">Все</button><button onclick="change_page_reports('worker')">По пользователям</button><button onclick="change_page_reports('project')">По проектам</button></div>
+        <div id="content_reports">
+            <table id="table_report">
+                <thead>
+                    <tr>
+                        <td class="report_aspect">Аспект</td>
+                        <td class="report_id">ID</td>
+                        <td class="report_date">Дата создания</td>
+                        <td class="report_interval">В промежутке</td>
+                        <td class="report_statistics">Статистика</td>
+                    </tr>
+                </thead>
+                
+            </table>
+        </div>
     </div>
 
 
