@@ -41,7 +41,7 @@
     <div class="content scroll">
         <div id="leftNavbar">
             <div id="topNavContent">
-                <a href="tasks/" id="logoNav" class="backgroundNav">
+                <a href="tasks.php" id="logoNav" class="backgroundNav">
                     <img src="/img/icons8-бизнес-сеть-100 1.svg" alt="">
                     <h1 class="mouseHid">Project- Manager</h1>
                 </a>
@@ -71,7 +71,7 @@
             </div>
             <div id="accountNav" class="backgroundNav" onclick="logout()">
                 <img src="/img/profile (1).png" alt="">
-                <span class="mouseHid"> <script> document.write(sessionStorage.getItem('name')); </script></span>
+                <span class="mouseHid"> <script> document.write(sessionStorage.getItem('name')); </script> (Выход)</span>
             </div>
             
         </div>

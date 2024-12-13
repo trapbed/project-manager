@@ -5,15 +5,8 @@
 <script src=" ../js/projects_api.js"></script>
 
 <div id="left_block">
-   <div id="search_select">
-      <form action="">
-         <select name="" id="">
-            <option value="">Статус</option>
-            <option value="">Создан</option>
-            <option value="">В процессе</option>
-            <option value="">Завершен</option>
-         </select>
-      </form>
+   <div class="instead_filter">
+      
    </div>
    
    <div id="infoRows" class="no_height">
