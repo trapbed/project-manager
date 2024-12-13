@@ -86,4 +86,3 @@
     tbody.innerHTML = html_rep;
     $("#table_report").append(tbody);
 </script>
-
